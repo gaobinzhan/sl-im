@@ -117,7 +117,7 @@
                     <li data-uid="{{ item.from }}" data-id="{{ item.msgIdx }}" data-type="{{item.msgType}}"
                         data-name="{{ item.name }}"">
                                                 <a href="javascript:void(0);">
-                                                  <img src="{{ item.receiver_avatar }}"
+                                                  <img src="{{ item.user_avatar }}"
                                                        class="layui-circle layim-msgbox-avatar">
                                                 </a>
                                                 <p class="layim-msgbox-user">
@@ -128,7 +128,7 @@
                                                   {{# if(item.application_type == 'friend'){ }}
                                                   申请添加你为好友
                                                   {{# }else{ }}
-                                                  申请加入 {{ item.group_name }} 群
+                                                  申请加入 <b>{{ item.group_name }}</b> 群
                                                   {{# } }}
                                                   <span>{{ item.application_reason ? '附言: '+item.application_reason : '' }}</span>
                                                 </p>
@@ -143,18 +143,34 @@
   {{#  } else { }}
                         <li>
                           <a href="javascript:void(0);">
-                            <img src="{{ item.avatar }}" class="layui-circle layim-msgbox-avatar">
+                            <img src="{{ item.user_avatar }}" class="layui-circle layim-msgbox-avatar">
                           </a>
                           <p class="layim-msgbox-user">
-                            <a href="javascript:void(0);"><b>{{ item.name }}</b></a>
+                            <a href="javascript:void(0);"><b>{{ item.user_name }}</b></a>
                             <span>{{ item.created_at }}</span>
                           </p>
                           <p class="layim-msgbox-content">
-                            申请添加你为好友
+                            {{# if(item.application_type == 'friend'){ }}
+                                                  申请添加你为好友
+                                                  {{# }else{ }}
+                            申请加入 <b>{{ item.group_name }}</b> 群
+                                                  {{# } }}
                             <span>{{ item.application_reason ? '附言: '+item.application_reason : '' }}</span>
-                            {{# if(item.application_status == 2){ }}
-                            <button class="layui-btn layui-btn-xs btncolor chat" data-name="{{ item.name }}"
-                                    data-chattype="friend" data-type="chat" data-uid="{{item.user_id}}">发起会话</button>
+                            {{# if(item.application_status == 1){ }}
+                            <button class="layui-btn layui-btn-xs btncolor" data-name="{{# if(item.application_type == 'friend'){ }}
+                                  {{ item.user_name }}
+                                {{# }else{ }}
+                                  {{ item.group_name }}
+                                {{# } }}"
+                                    data-chat="{{item.application_type}}" data-type="chat" data-id="{{# if(item.application_type == 'friend'){ }}
+                                  {{ item.user_id }}
+                                {{# }else{ }}
+                                  {{ item.group_id }}
+                                {{# } }}" data-avatar="{{# if(item.application_type == 'friend'){ }}
+                                  {{ item.user_avatar }}
+                                {{# }else{ }}
+                                  {{ item.group_avatar }}
+                                {{# } }}">发起会话</button>
                             {{# } }}
                           </p>
                           <p class="layim-msgbox-btn">
@@ -172,11 +188,23 @@
                   {{#  if(item.application_type == 'friend'){ }}
 
                       <li class="layim-msgbox-system">
-                          <p><em>系统：</em><b>{{ item.name }}</b>
-                          {{# if(item.application_status == 2){ }}
-                          已同意你的好友申请 <button class="layui-btn layui-btn-xs btncolor chat"
-                                            data-name="{{ item.name }}" data-chattype="friend" data-type="chat"
-                                            data-uid="{{item.receiver_id}}">发起会话</button>
+                          <p><em>系统：</em><b>{{ item.receiver_name }}</b>
+                          {{# if(item.application_status == 1){ }}
+                          已同意你的好友申请
+                            <button class="layui-btn layui-btn-xs btncolor" data-name="{{# if(item.application_type == 'friend'){ }}
+                                  {{ item.user_name }}
+                                {{# }else{ }}
+                                  {{ item.group_name }}
+                                {{# } }}"
+                                    data-chat="{{item.application_type}}" data-type="chat" data-id="{{# if(item.application_type == 'friend'){ }}
+                                  {{ item.user_id }}
+                                {{# }else{ }}
+                                  {{ item.group_id }}
+                                {{# } }}" data-avatar="{{# if(item.application_type == 'friend'){ }}
+                                  {{ item.user_avatar }}
+                                {{# }else{ }}
+                                  {{ item.group_avatar }}
+                                {{# } }}">发起会话</button>
                           {{# }else{ }}
                           已拒绝你的好友申请
                           {{# } }}
@@ -185,14 +213,25 @@
                   {{#  } else { }}
 
                       <li class="layim-msgbox-system">
-                            <p><em>系统：</em> 管理员 {{ item.name }}
-                            {{# if(item.application_status == 2){ }}
-                            已同意你加入群 <b>{{ item.name }}</b> <button class="layui-btn layui-btn-xs btncolor chat"
-                                                                   data-name="{{ item.name }}"
-                                                                   data-chattype="group" data-type="chat"
-                                                                   data-uid="{{item.group_id}}">发起会话</button>
+                            <p><em>系统：</em> 管理员 {{ item.receiver_name }}
+                            {{# if(item.application_status == 1){ }}
+                            已同意你加入群 <b>{{ item.group_name }}</b>
+                              <button class="layui-btn layui-btn-xs btncolor" data-name="{{# if(item.application_type == 'friend'){ }}
+                                  {{ item.user_name }}
+                                {{# }else{ }}
+                                  {{ item.group_name }}
+                                {{# } }}"
+                                      data-chat="{{item.application_type}}" data-type="chat" data-id="{{# if(item.application_type == 'friend'){ }}
+                                  {{ item.user_id }}
+                                {{# }else{ }}
+                                  {{ item.group_id }}
+                                {{# } }}" data-avatar="{{# if(item.application_type == 'friend'){ }}
+                                  {{ item.user_avatar }}
+                                {{# }else{ }}
+                                  {{ item.group_avatar }}
+                                {{# } }}">发起会话</button>
                             {{# }else{ }}
-                            已拒绝你加入群 <b>{{ item.name }}</b>
+                            已拒绝你加入群 <b>{{ item.group_name }}</b>
                             {{# } }}
                             <span>{{ item.updated_at }}</span></p>
                         </li>
@@ -239,6 +278,14 @@
       }
     });
     var active = {
+      chat: function (data) {
+        parent.layui.layim.chat({
+          name: data.attr('data-name')
+          , type: data.attr('data-chat')
+          , avatar: data.attr('data-avatar')
+          , id: data.attr('data-id')
+        });
+      }
       /*IsExist: function (avatar) { //判断头像是否存在
         var ImgObj = new Image();
         ImgObj.src = avatar;
