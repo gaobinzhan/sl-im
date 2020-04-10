@@ -30,7 +30,7 @@ return [
                 'id' => 'createGroup',
                 'url' => '/static/createGroup',
                 'width' => '550px',
-                'height' => '420px',
+                'height' => '480px',
             ],
             [
                 'title' => '查找群',
