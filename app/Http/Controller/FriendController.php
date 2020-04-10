@@ -20,6 +20,7 @@ use Swoft\Http\Server\Annotation\Mapping\RequestMapping;
 use Swoft\Http\Server\Annotation\Mapping\RequestMethod;
 use App\Http\Middleware\AuthMiddleware;
 use Swoft\Validator\Annotation\Mapping\Validate;
+use Swoft\Validator\Annotation\Mapping\ValidateType;
 
 /**
  * Class FriendController
@@ -110,6 +111,22 @@ class FriendController
             $applicationReason = $request->parsedBody('application_reason');
             $this->friendLogic->apply($userId, $receiverId, $groupId, $applicationReason);
             return apiSuccess();
+        } catch (\Throwable $throwable) {
+            return apiError($throwable->getCode(), $throwable->getMessage());
+        }
+    }
+
+    /**
+     * @RequestMapping(route="info",method={RequestMethod::GET})
+     * @Validate(validator="UserValidator",fields={"user_id"},type=ValidateType::GET)
+     * @Middleware(AuthMiddleware::class)
+     */
+    public function userInfo(Request $request)
+    {
+        try {
+            $userId = $request->get('user_id');
+            $userInfo = $this->userLogic->findUserInfoById(intval($userId));
+            return apiSuccess($userInfo);
         } catch (\Throwable $throwable) {
             return apiError($throwable->getCode(), $throwable->getMessage());
         }

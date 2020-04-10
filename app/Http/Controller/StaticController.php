@@ -78,6 +78,14 @@ class StaticController
     }
 
     /**
+     * @RequestMapping(route="friendInfo",method={RequestMethod::GET})
+     */
+    public function friendInfo(Request $request, Response $response)
+    {
+        return view('friend/info');
+    }
+
+    /**
      * @RequestMapping(route="application",method={RequestMethod::GET})
      */
     public function msgBox()

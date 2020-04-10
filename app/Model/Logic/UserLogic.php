@@ -51,7 +51,11 @@ class UserLogic
 
     public function findUserInfoById(int $userId)
     {
-        return $this->userDao->findUserInfoById($userId);
+        $userInfo =  $this->userDao->findUserInfoById($userId);
+
+        if (!$userInfo) throw new \Exception('', ApiCode::USER_NOT_FOUND);
+
+        return $userInfo;
     }
 
     public function register(string $email, string $password)

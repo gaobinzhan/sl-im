@@ -26,7 +26,7 @@ trait AuthHelper
         /**
          * @var User $userInfo
          */
-        $userInfo = bean('App\Model\Logic\UserLogic')->findUserInfoById($userId);
+        $userInfo = bean('App\Model\Dao\UserDao')->findUserInfoById($userId);
 
         if (!$userInfo) {
             throw new ApiException('',ApiCode::USER_NOT_FOUND);

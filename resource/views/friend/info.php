@@ -131,60 +131,82 @@
     }
   </style>
 </head>
-<?= $this->include('chat/header', ['title' => '个人资料']) ?>
+<?= $this->include('chat/header', ['title' => '好友资料']) ?>
 <body>
 <div class="layui-form" id="LAY_view">
 
 </div>
-
 <script type="text/html" title="资料模版" id="LAY_tpl" style="display:none;">
-  <form class="layui-form" action="" style="margin-top: 15px;">
-    <div class="layui-form-item layui-col-xs11">
-      <label class="layui-form-label">用户昵称</label>
-      <div class="layui-input-block">
-        <input type="text" name="username" lay-verify="required" autocomplete="off"
-               placeholder="输入用户昵称" value="{{d.username}}" class="layui-input">
-      </div>
+  <div class="layui-form-item" style="padding-top: 15px;">
+    <div class="layim-msgbox">
+      <li>
+        <a href="javascript:void(0);" target="_blank">
+          <img src="{{ d.avatar }}"
+               class="layui-circle layim-msgbox-avatar">
+        </a>
+        <p class="layim-msgbox-user">
+          <span style="letter-spacing: 5px;">编 号</span> {{ d.userId }}
+        </p>
+        <p class="layim-msgbox-user">
+          <span style="letter-spacing: 5px;">昵 称</span> {{ d.username }}
+        </p>
+        <button class="layui-btn layui-btn layui-btn-primary chat" data-name="{{ d.username }}"
+                data-avatar="{{ d.avatar }}" data-type="chat" data-uid="{{d.userId}}">发送消息
+        </button>
+      </li>
     </div>
-    <div class="layui-form-item layui-col-xs11">
-      <label class="layui-form-label">用户头像</label>
-      <div class="layui-input-block">
-        <input type="text" name="avatar" lay-verify="required|url" autocomplete="off"
-               placeholder="输入url即可" value="{{d.avatar}}" class="layui-input">
-      </div>
+
+  </div>
+  <div class="layui-col-xs12 pt10">
+    <label class="label">邮&nbsp;&nbsp;箱</label>
+    <div class="block">
+      <div class="label_key">{{d.email}}</div>
     </div>
-    <div class="layui-form-item layui-col-xs11">
-      <label class="layui-form-label">注册时间</label>
-      <p class="layim-msgbox-user" style="line-height: 28px">
-        {{d.createdAt}}
-      </p>
+  </div>
+  <div class="layui-col-xs12 pt10">
+    <label class="label">签&nbsp;&nbsp;名</label>
+    <div class="block">
+      <div class="label_key">{{d.sign}}</div>
     </div>
-    <div class="layui-form-item" style="padding-top: 30px;">
-      <div class="layui-input-block">
-        <button class="layui-btn" lay-submit lay-filter="save">保存</button>
-      </div>
-    </div>
-  </form>
+  </div>
 </script>
 </body>
 <script type="module">
-  import {user_info} from '/chat/js/api.js';
+  import {getQueryValue} from '/chat/js/util.js';
+  import {friend_info} from '/chat/js/api.js';
   import {getRequest} from '/chat/js/request.js';
 
-  layui.use(['form', 'laydate'], function () {
+  layui.use(['laydate', 'form', 'laytpl', 'laydate'], function () {
     var form = layui.form
       , laydate = layui.laydate;
-    layui.use(['laydate', 'form', 'laytpl'], function () {
-      var layim = layui.layim
-        , layer = layui.layer
-        , laytpl = layui.laytpl
-        , $ = layui.jquery;
+    var layim = layui.layim
+      , layer = layui.layer
+      , laytpl = layui.laytpl
+      , $ = layui.jquery;
 
-      getRequest(user_info, {}, function (data) {
-        var html = laytpl(LAY_tpl.innerHTML).render(data);
-        $('#LAY_view').html(html);
+    let id = getQueryValue('id');
+    getRequest(friend_info, {user_id: id}, function (data) {
+      var html = laytpl(LAY_tpl.innerHTML).render(data);
+      $('#LAY_view').html(html);
+    }, function () {
+      setTimeout(function () {
+        let index = parent.layer.getFrameIndex(window.name);
+        parent.layer.close(index);
+      }, 1000)
+    });
+
+    $('body').on('click', '.chat', function () {
+      let index = parent.layer.getFrameIndex(window.name);
+      parent.layer.close(index);
+      parent.layui.layim.chat({
+        name: $(this).data('name')
+        , type: 'friend'
+        , avatar: $(this).data('avatar')
+        , id: $(this).data('uid')
       });
     });
   });
+
+
 </script>
 </html>

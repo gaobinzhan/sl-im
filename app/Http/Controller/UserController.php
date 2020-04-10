@@ -153,4 +153,17 @@ class UserController
         }
     }
 
+    /**
+     * @RequestMapping(route="info",method={RequestMethod::GET})
+     * @Middleware(AuthMiddleware::class)
+     */
+    public function userInfo(Request $request)
+    {
+        try {
+            return apiSuccess($request->userInfo);
+        } catch (\Throwable $throwable) {
+            return apiError($throwable->getCode(), $throwable->getMessage());
+        }
+    }
+
 }

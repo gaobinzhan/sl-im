@@ -70,7 +70,7 @@ EOF;
         title: '用户资料',
         type: 2,
         closeBtn: 1,
-        area: ['400px', '500px'],
+        area: ['400px', '300px'],
         id: 'userInfo',
         maxmin: true,
         zIndex: layer.zIndex,

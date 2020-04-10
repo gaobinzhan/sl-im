@@ -135,8 +135,7 @@ class FriendLogic
         $check = $this->friendRelationDao->checkIsFriendRelation($userId, $receiverId);
         if ($check && $check->getDeletedAt() == NUll) throw new \Exception('', ApiCode::FRIEND_RELATION_ALREADY);
 
-        $friendInfo = $this->userLogic->findUserInfoById($receiverId);
-        if (!$friendInfo) throw new \Exception('', ApiCode::FRIEND_NOT_FOUND);
+        $this->userLogic->findUserInfoById($receiverId);
 
         $friendGroupInfo = $this->friendGroupDao->findFriendGroupById($groupId);
         if (!$friendGroupInfo) throw new \Exception('', ApiCode::FRIEND_GROUP_NOT_FOUND);
