@@ -71,4 +71,12 @@ class FriendValidator
      * @var
      */
     protected $application_reason = '';
+
+    /**
+     * @IsInt()
+     * @Required()
+     * @NotEmpty()
+     * @var int
+     */
+    protected $user_application_id = '';
 }

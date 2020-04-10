@@ -137,15 +137,22 @@
                                                   申请添加你为好友
                                                   {{# }else{ }}
                                                   申请加入 <b data-chat="group"
-                                                          data-id="{{item.group_id}}" class="info">{{ item.group_name }}</b> 群
+                                                          data-id="{{item.group_id}}"
+                                                          class="info">{{ item.group_name }}</b> 群
                                                   {{# } }}
                                                   <span>{{ item.application_reason ? '附言: '+item.application_reason : '' }}</span>
                                                 </p>
                                                 <p class="layim-msgbox-btn">
                                                   <button class="layui-btn layui-btn-small"
-                                                          data-type="agree">同意</button>
+                                                          data-type="agree"
+                                                          data-name="{{item.user_name}}"
+                                                          data-avatar="{{item.user_avatar}}"
+                                                          data-chat="{{item.application_type}}"
+                                                          data-user-application-id="{{item.user_application_id}}">同意</button>
                                                   <button class="layui-btn layui-btn-small layui-btn-primary"
-                                                          data-type="refuse">拒绝</button>
+                                                          data-type="refuse"
+                                                          data-chat="{{item.application_type}}"
+                                                          data-user-application-id="{{item.user_application_id}}">拒绝</button>
                                                 </p>
   </li>
 
@@ -204,20 +211,10 @@
                                             class="info">{{ item.receiver_name }}</b>
                           {{# if(item.application_status == 1){ }}
                           已同意你的好友申请
-                            <button class="layui-btn layui-btn-xs btncolor" data-name="{{# if(item.application_type == 'friend'){ }}
-                                  {{ item.user_name }}
-                                {{# }else{ }}
-                                  {{ item.group_name }}
-                                {{# } }}"
-                                    data-chat="{{item.application_type}}" data-type="chat" data-id="{{# if(item.application_type == 'friend'){ }}
-                                  {{ item.user_id }}
-                                {{# }else{ }}
-                                  {{ item.group_id }}
-                                {{# } }}" data-avatar="{{# if(item.application_type == 'friend'){ }}
-                                  {{ item.user_avatar }}
-                                {{# }else{ }}
-                                  {{ item.group_avatar }}
-                                {{# } }}">发起会话</button>
+                            <button class="layui-btn layui-btn-xs btncolor" data-name="{{ item.receiver_name }}"
+                                    data-chat="{{item.application_type}}" data-type="chat"
+                                    data-id="{{ item.receiver_id }}"
+                                    data-avatar="{{ item.receiver_avatar }}">发起会话</button>
                           {{# }else{ }}
                           已拒绝你的好友申请
                           {{# } }}
@@ -231,16 +228,10 @@
                             {{# if(item.application_status == 1){ }}
                             已同意你加入群 <b data-chat="group"
                                        data-id="{{ item.group_id }}" class="info">{{ item.group_name }}</b>
-                              <button class="layui-btn layui-btn-xs btncolor" data-name="{{# if(item.application_type == 'friend'){ }}
-                                  {{ item.user_name }}
-                                {{# }else{ }}
-                                  {{ item.group_name }}
-                                {{# } }}"
-                                      data-chat="{{item.application_type}}" data-type="chat" data-id="{{# if(item.application_type == 'friend'){ }}
-                                  {{ item.user_id }}
-                                {{# }else{ }}
-                                  {{ item.group_id }}
-                                {{# } }}" data-avatar="{{# if(item.application_type == 'friend'){ }}
+                              <button class="layui-btn layui-btn-xs btncolor"
+                                      data-name="{{ item.group_name }}"
+                                      data-chat="{{item.application_type}}" data-type="chat"
+                                      data-id="{{ item.group_id }}" data-avatar="{{# if(item.application_type == 'friend'){ }}
                                   {{ item.user_avatar }}
                                 {{# }else{ }}
                                   {{ item.group_avatar }}
@@ -258,8 +249,17 @@
         </textarea>
 
 <script type="module">
-  import {user_get_application, static_friend_info,static_group_info} from '/chat/js/api.js';
-  import {postRequest} from '/chat/js/request.js';
+  import {
+    user_get_application,
+    static_friend_info,
+    static_group_info,
+    friend_agree_apply,
+    friend_refuse_apply,
+    group_agree_apply,
+    group_refuse_apply,
+  } from '/chat/js/api.js';
+  import {getRequest, postRequest} from '/chat/js/request.js';
+  import {addFriend} from '/chat/js/panel.js';
 
   layui.use(['layim', 'flow'], function () {
     var layim = layui.layim, layer = layui.layer, laytpl = layui.laytpl, $ = layui.jquery, flow = layui.flow;
@@ -293,21 +293,21 @@
         });
       }
     });
-    $('body').on('click', '.info',function () {
+    $('body').on('click', '.info', function () {
       let type = $(this).attr('data-chat').trim();
       let id = $(this).attr('data-id').trim();
       let url = (type == 'friend') ? static_friend_info : static_group_info;
       parent.layer.open({
-        title: id+'的资料',
+        title: id + '的资料',
         type: 2,
         closeBtn: 1,
         area: ['400px', '300px'],
-        id: id+type,
+        id: id + type,
         maxmin: true,
         zIndex: layer.zIndex,
         shade: 0,
-        content: url+'?id='+id,
-        success: function (layero,index) {
+        content: url + '?id=' + id,
+        success: function (layero, index) {
           layer.setTop(layero);
         }
       });
@@ -320,40 +320,44 @@
           , avatar: data.attr('data-avatar')
           , id: data.attr('data-id').trim()
         });
-      }
-      /*IsExist: function (avatar) { //判断头像是否存在
-        var ImgObj = new Image();
-        ImgObj.src = avatar;
-        if (ImgObj.fileSize > 0 || (ImgObj.width > 0 && ImgObj.height > 0)) {
-          return true;
+      },
+      agree: function () {
+        let type = $(this).attr('data-chat');
+        let name = $(this).attr('data-name');
+        let avatar = $(this).attr('data-avatar');
+        let id = $(this).attr('data-user-application-id');
+        let url = (type == 'friend') ? friend_agree_apply : group_agree_apply;
+        if (type == 'friend') {
+          parent.layui.layim.setFriendGroup({
+            type: 'friend'
+            , username: name
+            , avatar: avatar
+            , group: parent.layui.layim.cache().friend
+            , submit: function (group, index) {
+              getRequest(url, {user_application_id: id, group_id: group}, function (res) {
+                addFriend(res);
+                parent.layer.close(index);
+              }, function (res) {
+                parent.layer.close(index);
+              })
+            }
+          });
         } else {
-          return false;
+
         }
-      },*/
-      /*agree: function (othis) {
-        parent.layui.im.receiveAddFriendGroup(othis, 2);//type 1添加好友 3添加群
       }
       //拒绝
       , refuse: function (othis) {
         layer.confirm('确定拒绝吗？', function (index) {
           parent.layui.im.receiveAddFriendGroup(othis, 3);//type 1添加好友 3添加群
         });
-      }, chat: function (othis) {//发起好友聊天
-        var uid = othis.data('uid'), avatar = "http://test.guoshanchina.com/uploads/person/" + uid + '.jpg';
-        parent.layui.layim.chat({
-          name: othis.data('name')
-          , type: othis.data('chattype')
-          , avatar: avatar
-          , id: uid
-        });
-      }*/
+      }
 
     };
     $('body').on('click', '.layui-btn', function () {
       var othis = $(this), type = othis.data('type');
       active[type] ? active[type].call(this, othis) : '';
     });
-    // layer.close(index);
 
   });
 </script>

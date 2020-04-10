@@ -33,8 +33,21 @@ class FriendRelationDao
 
     public function checkIsFriendRelation(int $userId, int $friendId)
     {
-        return $this->friendRelationEntity::where('user_id', '=', $userId)
+        return $this->friendRelationEntity::whereNull('deleted_at')
+            ->where('user_id', '=', $userId)
             ->where('friend_id', '=', $friendId)
             ->first();
+    }
+
+    public function createFriendRelation(array $data)
+    {
+        return $this->friendRelationEntity::insertGetId($data);
+    }
+
+    public function changeFriendRelationById(int $id, array $data)
+    {
+        return $this->friendRelationEntity::whereNull('deleted_at')
+            ->where('friend_relation_id', '=', $id)
+            ->update($data);
     }
 }

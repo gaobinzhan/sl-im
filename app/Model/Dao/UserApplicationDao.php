@@ -45,15 +45,30 @@ class UserApplicationDao
                 $builder->where('user_id', '=', $userId);
                 $builder->orWhere('receiver_id', '=', $userId);
             })
-            ->orderBy('created_at','desc')
+            ->orderBy('created_at', 'desc')
             ->paginate($page, $size);
     }
 
     public function changeApplicationReadStateByIdsAndReceiverId(array $ids, int $receiver_id, int $readState)
     {
         return $this->userApplicationEntity::whereNull('deleted_at')
-            ->where('receiver_id','=',$receiver_id)
+            ->where('receiver_id', '=', $receiver_id)
             ->whereIn('user_application_id', $ids)
             ->update(['read_state' => $readState]);
+    }
+
+    public function changeApplicationStatusById(int $id, int $applicationStatus)
+    {
+        return $this->userApplicationEntity::whereNull('deleted_at')
+            ->where('user_application_id', $id)
+            ->update([
+                'application_status' => $applicationStatus
+            ]);
+    }
+
+
+    public function findUserApplicationById(int $id)
+    {
+        return $this->userApplicationEntity::whereNull('deleted_at')->find($id);
     }
 }

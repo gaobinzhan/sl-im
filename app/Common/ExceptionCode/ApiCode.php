@@ -26,7 +26,11 @@ class ApiCode
         USER_PASSWORD_ERROR = 3004,
         USER_CREATE_APPLICATION_FAIL = 3005,
         USER_APPLICATION_SET_READ_FAIL = 3006,
-        USER_INFO_MODIFY_FAIL = 3007;
+        USER_INFO_MODIFY_FAIL = 3007,
+        USER_APPLICATION_NOT_FOUND = 3008,
+        USER_APPLICATION_PROCESSED = 3009,
+        USER_APPLICATION_TYPE_WRONG = 3010;
+
 
     const FRIEND_GROUP_CREATE_FAIL = 4001,
         FRIEND_GROUP_NOT_FOUND = 4002,
@@ -45,7 +49,8 @@ class ApiCode
     const
         JWT_PRIVATE_KEY_EMPTY = 9001,
         JWT_PUBLIC_KEY_EMPTY = 9002,
-        JWT_ALG_EMPTY = 9003;
+        JWT_ALG_EMPTY = 9003,
+        NO_PERMISSION_PROCESS = 9004;
 
     public static $errorMessages = [
 
@@ -60,6 +65,9 @@ class ApiCode
         self::USER_CREATE_APPLICATION_FAIL => 'Failed to create user application !',
         self::USER_APPLICATION_SET_READ_FAIL => 'application set to read failed',
         self::USER_INFO_MODIFY_FAIL => 'Failed to modify user information !',
+        self::USER_APPLICATION_NOT_FOUND => 'Application information does not exist !',
+        self::USER_APPLICATION_PROCESSED => 'Application information has been processed !',
+        self::USER_APPLICATION_TYPE_WRONG => 'Wrong application type !',
 
         self::FRIEND_GROUP_CREATE_FAIL => 'Friend group creation failed !',
         self::FRIEND_GROUP_NOT_FOUND => 'Friend group not found !',
@@ -75,5 +83,7 @@ class ApiCode
 
         self::JWT_PRIVATE_KEY_EMPTY => 'The private key is invalid !',
         self::JWT_PUBLIC_KEY_EMPTY => 'The public key is invalid !',
-        self::JWT_ALG_EMPTY => 'The alg is invalid !',];
+        self::JWT_ALG_EMPTY => 'The alg is invalid !',
+        self::NO_PERMISSION_PROCESS => 'No permission to process !'
+    ];
 }

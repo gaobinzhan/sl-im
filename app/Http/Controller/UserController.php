@@ -5,6 +5,7 @@ namespace App\Http\Controller;
 
 use App\Helper\AuthHelper;
 use App\Helper\JwtHelper;
+use App\Model\Entity\User;
 use App\Model\Logic\FriendLogic;
 use App\Model\Logic\GroupLogic;
 use App\Model\Logic\UserLogic;
@@ -56,8 +57,9 @@ class UserController
         try {
             $email = $request->parsedBody('email');
             $password = $request->parsedBody('password');
+            /** @var User $userInfo */
             $userInfo = $this->userLogic->login($email, $password);
-            $token = JwtHelper::encrypt($userInfo['userId']);
+            $token = JwtHelper::encrypt($userInfo->getUserId());
             return $response->withCookie('IM_TOKEN', [
                 'value' => $token,
                 'path' => '/',

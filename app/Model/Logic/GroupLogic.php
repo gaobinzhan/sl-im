@@ -137,7 +137,7 @@ class GroupLogic
     {
         /** @var GroupRelation $check */
         $check = $this->groupRelationDao->checkIsGroupRelation($userId, $groupId);
-        if ($check && $check->getDeletedAt() == NUll) throw new \Exception('', ApiCode::GROUP_RELATION_ALREADY);
+        if ($check) throw new \Exception('', ApiCode::GROUP_RELATION_ALREADY);
 
         /** @var Group $groupInfo */
         $groupInfo = $this->groupDao->findGroupById($groupId);

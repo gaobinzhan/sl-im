@@ -13,6 +13,7 @@ namespace App\Http\Controller;
 use App\Model\Logic\FriendLogic;
 use App\Model\Logic\UserLogic;
 use Swoft\Bean\Annotation\Mapping\Inject;
+use Swoft\Db\DB;
 use Swoft\Http\Message\Request;
 use Swoft\Http\Server\Annotation\Mapping\Controller;
 use Swoft\Http\Server\Annotation\Mapping\Middleware;
@@ -127,6 +128,43 @@ class FriendController
             $userId = $request->get('user_id');
             $userInfo = $this->userLogic->findUserInfoById(intval($userId));
             return apiSuccess($userInfo);
+        } catch (\Throwable $throwable) {
+            return apiError($throwable->getCode(), $throwable->getMessage());
+        }
+    }
+
+    /**
+     * @RequestMapping(route="agreeApply",method={RequestMethod::GET})
+     * @Validate(validator="FriendValidator",fields={"user_application_id","group_id"},type=ValidateType::GET)
+     * @Middleware(AuthMiddleware::class)
+     */
+    public function agreeApply(Request $request)
+    {
+        DB::beginTransaction();
+        try {
+            $userApplicationId = $request->get('user_application_id');
+            $groupId = $request->get('group_id');
+            $result = $this->friendLogic->agreeApply(intval($userApplicationId),intval($groupId));
+            DB::commit();
+            return apiSuccess($result);
+        } catch (\Throwable $throwable) {
+            DB::rollBack();
+            return apiError($throwable->getCode(), $throwable->getMessage());
+        }
+    }
+
+
+    /**
+     * @RequestMapping(route="refuseApply",method={RequestMethod::GET})
+     * @Validate(validator="FriendValidator",fields={"user_application_id"},type=ValidateType::GET)
+     * @Middleware(AuthMiddleware::class)
+     */
+    public function refuseApply(Request $request)
+    {
+        try {
+            $userApplicationId = $request->get('user_application_id');
+            $this->friendLogic->refuseApply(intval($userApplicationId));
+            return apiSuccess($userApplicationId);
         } catch (\Throwable $throwable) {
             return apiError($throwable->getCode(), $throwable->getMessage());
         }

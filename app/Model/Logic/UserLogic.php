@@ -86,7 +86,7 @@ class UserLogic
         }
         $this->createUserLoginLog($userInfo->getUserId());
 
-        return $userInfo->toArray();
+        return $userInfo;
     }
 
     public function createUserLoginLog(int $userId)
@@ -219,4 +219,29 @@ class UserLogic
         return $change;
     }
 
+    public function findUserApplicationById(int $id){
+        $userApplication = $this->userApplicationDao->findUserApplicationById($id);
+        if (!$userApplication) throw new \Exception('',ApiCode::USER_APPLICATION_NOT_FOUND);
+        return $userApplication;
+    }
+
+    public function checkApplicationProcessed(UserApplication $userApplication){
+        if ($userApplication->getApplicationStatus() != UserApplication::APPLICATION_STATUS_CREATE) {
+            throw new \Exception('',ApiCode::USER_APPLICATION_PROCESSED);
+        }
+
+        if ($userApplication->getReceiverId() != context()->getRequest()->user){
+            throw new \Exception('',ApiCode::NO_PERMISSION_PROCESS);
+        }
+    }
+
+    public function beforeApply(int $userApplicationId,string $userApplicationType){
+        /** @var UserApplication $userApplicationInfo */
+        $userApplicationInfo = $this->findUserApplicationById($userApplicationId);
+        $this->checkApplicationProcessed($userApplicationInfo);
+        if ($userApplicationInfo->getApplicationType() != $userApplicationType) {
+            throw new \Exception('',ApiCode::USER_APPLICATION_TYPE_WRONG);
+        }
+        return $userApplicationInfo;
+    }
 }

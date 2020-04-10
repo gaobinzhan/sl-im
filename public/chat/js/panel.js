@@ -17,7 +17,20 @@ function addGroup(data) {
   })
 };
 
+function addFriend(data) {
+  parent.layui.layim.addList({
+    type: 'friend'
+    , avatar: data.avatar
+    , username: data.username
+    , groupid: data.groupid
+    , id: data.id
+    , sign: data.sign
+    , status: data.status
+  })
+};
+
 export {
   addFriendGroup,
-  addGroup
+  addGroup,
+  addFriend
 };

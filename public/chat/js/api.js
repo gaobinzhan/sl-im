@@ -16,12 +16,16 @@ var friend_create_group = '/friend/createFriendGroup';
 var friend_get_recommended = '/friend/getRecommendedFriend';
 var friend_search = '/friend/search';
 var friend_apply = '/friend/apply';
+var friend_agree_apply = '/friend/agreeApply';
+var friend_refuse_apply = '/friend/refuseApply';
 var friend_info = '/friend/info';
 var group_info = '/group/info';
 var group_create = '/group/create';
 var group_get_recommended = '/group/getRecommendedGroup';
 var group_search = '/group/search';
 var group_apply = '/group/apply';
+var group_agree_apply = '/group/agreeApply';
+var group_refuse_apply = '/group/refuseApply';
 var group_get_relation = '/group/getGroupRelation';
 export {
   static_user_login,
@@ -42,11 +46,15 @@ export {
   friend_get_recommended,
   friend_search,
   friend_apply,
+  friend_agree_apply,
+  friend_refuse_apply,
   friend_info,
   group_info,
   group_create,
   group_get_recommended,
   group_search,
   group_apply,
+  group_agree_apply,
+  group_refuse_apply,
   group_get_relation
 };

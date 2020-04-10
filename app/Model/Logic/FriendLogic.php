@@ -9,9 +9,11 @@ namespace App\Model\Logic;
 use App\ExceptionCode\ApiCode;
 use App\Model\Dao\FriendGroupDao;
 use App\Model\Dao\FriendRelationDao;
+use App\Model\Dao\UserApplicationDao;
 use App\Model\Dao\UserDao;
 use App\Model\Entity\FriendGroup;
 use App\Model\Entity\FriendRelation;
+use App\Model\Entity\User;
 use App\Model\Entity\UserApplication;
 use Swoft\Bean\Annotation\Mapping\Bean;
 use Swoft\Bean\Annotation\Mapping\Inject;
@@ -47,6 +49,12 @@ class FriendLogic
      */
     protected $userDao;
 
+    /**
+     * @Inject()
+     * @var UserApplicationDao
+     */
+    protected $userApplicationDao;
+
     public function createFriendGroup(int $userId, string $friendGroupName)
     {
         $friendGroupId = $this->friendGroupDao->create(
@@ -58,14 +66,15 @@ class FriendLogic
         if (!$friendGroupId) throw new \Exception('', ApiCode::FRIEND_GROUP_CREATE_FAIL);
 
         $result = $this->findFriendGroupById($friendGroupId);
-        if (!$result) throw new \Exception('', ApiCode::FRIEND_GROUP_NOT_FOUND);
 
         return $result;
     }
 
     public function findFriendGroupById(int $friendGroupId)
     {
-        return $this->friendGroupDao->findFriendGroupById($friendGroupId);
+        $result = $this->friendGroupDao->findFriendGroupById($friendGroupId);
+        if (!$result) throw new \Exception('', ApiCode::FRIEND_GROUP_NOT_FOUND);
+        return $result;
     }
 
     public function getFriendGroupByUserId(int $userId)
@@ -133,16 +142,78 @@ class FriendLogic
 
         /** @var FriendRelation $check */
         $check = $this->friendRelationDao->checkIsFriendRelation($userId, $receiverId);
-        if ($check && $check->getDeletedAt() == NUll) throw new \Exception('', ApiCode::FRIEND_RELATION_ALREADY);
+        if ($check) throw new \Exception('', ApiCode::FRIEND_RELATION_ALREADY);
 
         $this->userLogic->findUserInfoById($receiverId);
 
         $friendGroupInfo = $this->friendGroupDao->findFriendGroupById($groupId);
         if (!$friendGroupInfo) throw new \Exception('', ApiCode::FRIEND_GROUP_NOT_FOUND);
 
-        $result = $this->userLogic->createUserApplication($userId, $receiverId, $groupId, UserApplication::APPLICATION_TYPE_FRIEND, $applicationReason, UserApplication::APPLICATION_STATUS_CREATE,UserApplication::UN_READ);
+        $result = $this->userLogic->createUserApplication($userId, $receiverId, $groupId, UserApplication::APPLICATION_TYPE_FRIEND, $applicationReason, UserApplication::APPLICATION_STATUS_CREATE, UserApplication::UN_READ);
         if (!$result) throw new \Exception('', ApiCode::USER_CREATE_APPLICATION_FAIL);
 
         return $result;
     }
+
+    public function agreeApply(int $userApplicationId, int $groupId)
+    {
+        /** @var UserApplication $userApplicationInfo */
+        $userApplicationInfo = $this->userLogic->beforeApply($userApplicationId, UserApplication::APPLICATION_TYPE_FRIEND);
+
+        $this->findFriendGroupById($userApplicationInfo->getGroupId());
+        $this->findFriendGroupById($groupId);
+
+        $this->userApplicationDao->changeApplicationStatusById($userApplicationId, UserApplication::APPLICATION_STATUS_ACCEPT);
+
+
+        /** @var FriendRelation $check */
+        $fromCheck = $this->friendRelationDao->checkIsFriendRelation($userApplicationInfo->getReceiverId(), $userApplicationInfo->getUserId());
+        $toCheck = $this->friendRelationDao->checkIsFriendRelation($userApplicationInfo->getUserId(), $userApplicationInfo->getReceiverId());
+
+
+        if (!$fromCheck) {
+            $this->createFriendRelation(
+                $userApplicationInfo->getReceiverId()
+                , $userApplicationInfo->getUserId()
+                , $groupId
+            );
+
+            $this->createFriendRelation(
+                $userApplicationInfo->getUserId()
+                , $userApplicationInfo->getReceiverId()
+                , $userApplicationInfo->getGroupId()
+            );
+        }
+
+        if ($fromCheck && $toCheck) throw new \Exception('', ApiCode::FRIEND_RELATION_ALREADY);
+
+        /** @var User $friendInfo */
+        $friendInfo = $this->userLogic->findUserInfoById($userApplicationInfo->getUserId());
+
+        return [
+            'type' => UserApplication::APPLICATION_TYPE_FRIEND,
+            'avatar' => $friendInfo->getAvatar(),
+            'username' => $friendInfo->getUsername(),
+            'id' => $friendInfo->getUserId(),
+            'sign' => $friendInfo->getSign(),
+            'groupid' => $groupId,
+            'status' => FriendRelation::STATUS_TEXT[$friendInfo->getStatus()]
+        ];
+    }
+
+    public function refuseApply(int $userApplicationId)
+    {
+
+    }
+
+    public function createFriendRelation(int $userId, int $friendId, int $groupId)
+    {
+        return $this->friendRelationDao->createFriendRelation([
+            'user_id' => $userId,
+            'friend_id' => $friendId,
+            'friend_group_id' => $groupId,
+        ]);
+    }
+
+
 }
