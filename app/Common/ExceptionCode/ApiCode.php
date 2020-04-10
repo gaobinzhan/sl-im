@@ -25,7 +25,8 @@ class ApiCode
         USER_EMAIL_ALREADY_USE = 3003,
         USER_PASSWORD_ERROR = 3004,
         USER_CREATE_APPLICATION_FAIL = 3005,
-        USER_APPLICATION_SET_READ_FAIL = 3006;
+        USER_APPLICATION_SET_READ_FAIL = 3006,
+        USER_INFO_MODIFY_FAIL = 3007;
 
     const FRIEND_GROUP_CREATE_FAIL = 4001,
         FRIEND_GROUP_NOT_FOUND = 4002,
@@ -58,7 +59,7 @@ class ApiCode
         self::USER_PASSWORD_ERROR => 'User password input error !',
         self::USER_CREATE_APPLICATION_FAIL => 'Failed to create user application !',
         self::USER_APPLICATION_SET_READ_FAIL => 'application set to read failed',
-
+        self::USER_INFO_MODIFY_FAIL => 'Failed to modify user information !',
 
         self::FRIEND_GROUP_CREATE_FAIL => 'Friend group creation failed !',
         self::FRIEND_GROUP_NOT_FOUND => 'Friend group not found !',

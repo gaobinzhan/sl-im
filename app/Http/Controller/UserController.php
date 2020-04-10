@@ -166,4 +166,21 @@ class UserController
         }
     }
 
+    /**
+     * @RequestMapping(route="changeUserNameAndAvatar",method={RequestMethod::POST})
+     * @Middleware(AuthMiddleware::class)
+     * @Validate(validator="UserValidator",fields={"username","avatar"})
+     */
+    public function changeUserNameAndAvatar(Request $request)
+    {
+        try {
+            $username = $request->parsedBody('username');
+            $avatar = $request->parsedBody('avatar');
+            $result = $this->userLogic->changeUserNameAndAvatar($request->user, $username, $avatar);
+            return apiSuccess($result);
+        } catch (\Throwable $throwable) {
+            return apiError($throwable->getCode(), $throwable->getMessage());
+        }
+    }
+
 }

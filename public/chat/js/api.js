@@ -11,6 +11,7 @@ var user_init = '/user/init';
 var user_info = '/user/info';
 var user_get_unread_application_count = '/user/getUnreadApplicationCount';
 var user_get_application = '/user/getApplication';
+var user_change_name_avatar = '/user/changeUserNameAndAvatar';
 var friend_create_group = '/friend/createFriendGroup';
 var friend_get_recommended = '/friend/getRecommendedFriend';
 var friend_search = '/friend/search';
@@ -34,6 +35,7 @@ export {
   user_home,
   user_init,
   user_info,
+  user_change_name_avatar,
   user_get_unread_application_count,
   user_get_application,
   friend_create_group,

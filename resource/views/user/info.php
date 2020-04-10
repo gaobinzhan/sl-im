@@ -168,8 +168,8 @@
 </script>
 </body>
 <script type="module">
-  import {user_info} from '/chat/js/api.js';
-  import {getRequest} from '/chat/js/request.js';
+  import {user_info, user_change_name_avatar} from '/chat/js/api.js';
+  import {getRequest, postRequest} from '/chat/js/request.js';
 
   layui.use(['form', 'laydate'], function () {
     var form = layui.form
@@ -180,6 +180,17 @@
         , laytpl = layui.laytpl
         , $ = layui.jquery;
 
+      form.on("submit(save)", function (data) {
+        postRequest(user_change_name_avatar, data.field, function (result) {
+          parent.layui.$(".layui-layim-user").html(data.field.username);
+          parent.layui.$(".layui-nav-img").attr('src',data.field.avatar);
+          setTimeout(function () {
+            let index = parent.layer.getFrameIndex(window.name);
+            parent.layer.close(index);
+          }, 1000);
+        });
+        return false;
+      });
       getRequest(user_info, {}, function (data) {
         var html = laytpl(LAY_tpl.innerHTML).render(data);
         $('#LAY_view').html(html);

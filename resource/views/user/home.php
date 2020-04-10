@@ -7,7 +7,8 @@
     <div class="layui-logo">IM</div>
     <ul class="layui-nav layui-layout-right">
       <li class="layui-nav-item">
-        <a href="javascript:;"><img src="<?= $userInfo['avatar'] ?>" class="layui-nav-img"><?= $userInfo['username'] ?>
+        <a href="javascript:;"><img src="<?= $userInfo['avatar'] ?>" class="layui-nav-img">
+          <span class="layui-layim-user"><?= $userInfo['username'] ?></span>
         </a>
         <dl class="layui-nav-child">
           <dd><a href="javascript:;" class="userInfo">个人资料</a></dd>

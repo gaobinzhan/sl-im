@@ -58,4 +58,10 @@ class UserDao
             })
             ->paginate($page,$size);
     }
+
+    public function changeUserInfoById(int $userId,array $data){
+        return $this->userEntity::whereNull('deleted_at')
+            ->where('user_id','=',$userId)
+            ->update($data);
+    }
 }

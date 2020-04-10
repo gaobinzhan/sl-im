@@ -7,8 +7,6 @@
 namespace App\Model\Logic;
 
 use App\ExceptionCode\ApiCode;
-use App\Model\Dao\FriendGroupDao;
-use App\Model\Dao\FriendRelationDao;
 use App\Model\Dao\GroupDao;
 use App\Model\Dao\UserApplicationDao;
 use App\Model\Dao\UserDao;
@@ -159,7 +157,7 @@ class UserLogic
         $applicationIds = [];
         /** @var UserApplication $application */
         foreach ($applications['list'] as $application) {
-            ($userId != $application['userId']) && array_push($applicationIds,$application['userApplicationId']);
+            ($userId != $application['userId']) && array_push($applicationIds, $application['userApplicationId']);
             $applicationRole = ($userId == $application['userId'])
                 ? (($application['applicationStatus'] != UserApplication::APPLICATION_STATUS_CREATE)
                     ? $applicationRole = UserApplication::APPLICATION_SYSTEM
@@ -204,6 +202,21 @@ class UserLogic
             if (!$change) throw new \Exception('', ApiCode::USER_APPLICATION_SET_READ_FAIL);
         }
         return $applications;
+    }
+
+    public function changeUserNameAndAvatar(int $userId, string $username, string $avatar)
+    {
+        return $this->changeUserInfoById($userId, [
+            'username' => $username,
+            'avatar' => $avatar
+        ]);
+    }
+
+    public function changeUserInfoById(int $userId, array $data)
+    {
+        $change = $this->userDao->changeUserInfoById($userId, $data);
+        if (!$change) throw new \Exception('', ApiCode::USER_INFO_MODIFY_FAIL);
+        return $change;
     }
 
 }
