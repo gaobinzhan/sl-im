@@ -85,6 +85,15 @@ class StaticController
         return view('friend/info');
     }
 
+
+    /**
+     * @RequestMapping(route="groupInfo",method={RequestMethod::GET})
+     */
+    public function groupInfo(Request $request, Response $response)
+    {
+        return view('group/info');
+    }
+
     /**
      * @RequestMapping(route="application",method={RequestMethod::GET})
      */

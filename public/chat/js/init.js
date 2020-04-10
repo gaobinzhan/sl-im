@@ -21,7 +21,7 @@ layui.use('layim', function (layim) {
 
     , members: {
       url: group_get_relation
-      , type: 'post'
+      , type: 'get'
       , data: {
         token: getCookie('IM_TOKEN')
       }

@@ -13,6 +13,7 @@ use App\Http\Middleware\AuthMiddleware;
 use Swoft\Validator\Annotation\Mapping\Validate;
 use Swoft\Http\Server\Annotation\Mapping\Controller;
 use App\Validator\GroupValidator;
+use Swoft\Validator\Annotation\Mapping\ValidateType;
 
 /**
  * Class GroupController
@@ -48,15 +49,15 @@ class GroupController
     }
 
     /**
-     * @RequestMapping(route="getGroupRelation",method={RequestMethod::POST})
+     * @RequestMapping(route="getGroupRelation",method={RequestMethod::GET})
      * @Middleware(AuthMiddleware::class)
-     * @Validate(validator="GroupValidator",fields={"id"})
+     * @Validate(validator="GroupValidator",fields={"id"},type=ValidateType::GET)
      */
     public function getGroupRelation(Request $request)
     {
         try {
-            $groupId = $request->parsedBody('id');
-            $result = $this->groupLogic->getGroupRelation($groupId);
+            $groupId = $request->get('id');
+            $result = $this->groupLogic->getGroupRelationById(intval($groupId));
             return apiSuccess($result);
         } catch (\Throwable $throwable) {
             return apiError($throwable->getCode(), $throwable->getMessage());
@@ -109,6 +110,20 @@ class GroupController
             $result = $this->groupLogic->apply($userId, $groupId, $applicationReason);
             $msg = empty($result) ? '等待管理员验证 !' : '你已成功加入此群 !';
             return apiSuccess($result, 0, $msg);
+        } catch (\Throwable $throwable) {
+            return apiError($throwable->getCode(), $throwable->getMessage());
+        }
+    }
+    /**
+     * @RequestMapping(route="info",method={RequestMethod::GET})
+     * @Middleware(AuthMiddleware::class)
+     * @Validate(validator="GroupValidator",fields={"group_id"},type=ValidateType::GET)
+     */
+    public function groupInfo(Request $request){
+        try {
+            $groupId = $request->get('group_id');
+            $groupInfo = $this->groupLogic->findGroupById(intval($groupId));
+            return apiSuccess($groupInfo);
         } catch (\Throwable $throwable) {
             return apiError($throwable->getCode(), $throwable->getMessage());
         }

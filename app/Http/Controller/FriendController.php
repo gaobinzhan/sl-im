@@ -121,7 +121,7 @@ class FriendController
      * @Validate(validator="UserValidator",fields={"user_id"},type=ValidateType::GET)
      * @Middleware(AuthMiddleware::class)
      */
-    public function userInfo(Request $request)
+    public function friendInfo(Request $request)
     {
         try {
             $userId = $request->get('user_id');

@@ -145,41 +145,38 @@
                class="layui-circle layim-msgbox-avatar">
         </a>
         <p class="layim-msgbox-user">
-          <span style="letter-spacing: 5px;">编 号</span> {{ d.userId }}
+          <span style="letter-spacing: 5px;">编 号</span> {{ d.groupId }}
         </p>
         <p class="layim-msgbox-user">
-          <span style="letter-spacing: 5px;">昵 称</span> {{ d.username }}
+          <span style="letter-spacing: 5px;">群 昵 称</span> {{ d.groupName }}
         </p>
-        <button class="layui-btn layui-btn layui-btn-primary chat" data-name="{{ d.username }}"
-                data-avatar="{{ d.avatar }}" data-type="chat" data-uid="{{d.userId}}">发送消息
-        </button>
       </li>
     </div>
 
   </div>
   <div class="layui-col-xs12 pt10">
-    <div class="layui-col-xs12 pt10">
-      <label class="label">注册时间</label>
-      <div class="block">
-        <div class="label_key">{{d.createdAt}}</div>
-      </div>
-    </div>
-    <label class="label">邮&nbsp;&nbsp;箱</label>
+    <label class="label">创建时间</label>
     <div class="block">
-      <div class="label_key">{{d.email}}</div>
+      <div class="label_key">{{d.createdAt}}</div>
     </div>
   </div>
   <div class="layui-col-xs12 pt10">
-    <label class="label">签&nbsp;&nbsp;名</label>
+    <label class="label">规 模</label>
     <div class="block">
-      <div class="label_key">{{d.sign}}</div>
+      <div class="label_key">{{d.size}}人</div>
+    </div>
+  </div>
+  <div class="layui-col-xs12 pt10">
+    <label class="label">介 绍</label>
+    <div class="block">
+      <div class="label_key">{{d.introduction}}</div>
     </div>
   </div>
 </script>
 </body>
 <script type="module">
   import {getQueryValue} from '/chat/js/util.js';
-  import {friend_info} from '/chat/js/api.js';
+  import {group_info} from '/chat/js/api.js';
   import {getRequest} from '/chat/js/request.js';
 
   layui.use(['laydate', 'form', 'laytpl', 'laydate'], function () {
@@ -191,7 +188,7 @@
       , $ = layui.jquery;
 
     let id = getQueryValue('id');
-    getRequest(friend_info, {user_id: id}, function (data) {
+    getRequest(group_info, {group_id: id}, function (data) {
       var html = laytpl(LAY_tpl.innerHTML).render(data);
       $('#LAY_view').html(html);
     }, function () {
@@ -199,17 +196,6 @@
         let index = parent.layer.getFrameIndex(window.name);
         parent.layer.close(index);
       }, 1000)
-    });
-
-    $('body').on('click', '.chat', function () {
-      let index = parent.layer.getFrameIndex(window.name);
-      parent.layer.close(index);
-      parent.layui.layim.chat({
-        name: $(this).data('name')
-        , type: 'friend'
-        , avatar: $(this).data('avatar')
-        , id: $(this).data('uid')
-      });
     });
   });
 

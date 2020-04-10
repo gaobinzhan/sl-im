@@ -61,14 +61,15 @@ class GroupLogic
         if (!$groupRelationId) throw new \Exception('', ApiCode::GROUP_RELATION_CREATE_FAIL);
 
         $result = $this->findGroupById($groupId);
-        if (!$result) throw new \Exception('', ApiCode::GROUP_NOT_FOUND);
 
         return $result;
     }
 
     public function findGroupById(int $groupId)
     {
-        return $this->groupDao->findGroupById($groupId);
+        $groupInfo = $this->groupDao->findGroupById($groupId);
+        if (!$groupInfo) throw new \Exception('', ApiCode::GROUP_NOT_FOUND);
+        return $groupInfo;
     }
 
     public function createGroupRelation(int $userId, int $groupId)
@@ -79,7 +80,7 @@ class GroupLogic
         ]);
     }
 
-    public function getGroupRelation($groupId)
+    public function getGroupRelationById($groupId)
     {
         $group = $this->groupDao->findGroupById($groupId);
         if (!$group) throw new \Exception('', ApiCode::GROUP_NOT_FOUND);
@@ -147,7 +148,7 @@ class GroupLogic
 
         $applicationStatus = ($groupInfo->getValidation() == Group::VALIDATION_NOT) ? UserApplication::APPLICATION_STATUS_ACCEPT : UserApplication::APPLICATION_STATUS_CREATE;
 
-        $result = $this->userLogic->createUserApplication($userId, $groupInfo->getUserId(), $groupId, UserApplication::APPLICATION_TYPE_GROUP, $applicationReason, $applicationStatus,UserApplication::UN_READ);
+        $result = $this->userLogic->createUserApplication($userId, $groupInfo->getUserId(), $groupId, UserApplication::APPLICATION_TYPE_GROUP, $applicationReason, $applicationStatus, UserApplication::UN_READ);
         if (!$result) throw new \Exception('', ApiCode::USER_CREATE_APPLICATION_FAIL);
 
         if ($groupInfo->getValidation() == Group::VALIDATION_NOT) {

@@ -226,7 +226,8 @@
                   {{#  } else { }}
 
                       <li class="layim-msgbox-system">
-                            <p><em>系统：</em> 管理员 {{ item.receiver_name }}
+                            <p><em>系统：</em> 管理员 <b data-chat="friend"
+                                                   data-id="{{ item.receiver_id }}" class="info">{{ item.receiver_name }}</b>
                             {{# if(item.application_status == 1){ }}
                             已同意你加入群 <b data-chat="group"
                                        data-id="{{ item.group_id }}" class="info">{{ item.group_name }}</b>

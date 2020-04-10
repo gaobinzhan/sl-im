@@ -51,7 +51,7 @@ class UserLogic
 
     public function findUserInfoById(int $userId)
     {
-        $userInfo =  $this->userDao->findUserInfoById($userId);
+        $userInfo = $this->userDao->findUserInfoById($userId);
 
         if (!$userInfo) throw new \Exception('', ApiCode::USER_NOT_FOUND);
 
@@ -156,17 +156,19 @@ class UserLogic
         $result = [];
         $userIds = [];
         $groupIds = [];
-        $applicationIds = array_column($applications['list'], 'userApplicationId');
+        $applicationIds = [];
         /** @var UserApplication $application */
         foreach ($applications['list'] as $application) {
-
+            ($userId != $application['userId']) && array_push($applicationIds,$application['userApplicationId']);
             $applicationRole = ($userId == $application['userId'])
                 ? (($application['applicationStatus'] != UserApplication::APPLICATION_STATUS_CREATE)
                     ? $applicationRole = UserApplication::APPLICATION_SYSTEM
                     : UserApplication::APPLICATION_CREATE_USER)
                 : UserApplication::APPLICATION_RECEIVER_USER;
 
-            ($application['applicationType'] == UserApplication::APPLICATION_TYPE_FRIEND) && array_push($userIds, $application['userId']) && array_push($userIds, $application['receiverId']);;
+            array_push($userIds, $application['userId']);
+            array_push($userIds, $application['receiverId']);
+
             ($application['applicationType'] == UserApplication::APPLICATION_TYPE_GROUP) && array_push($groupIds, $application['groupId']);
 
             $result[] = [
