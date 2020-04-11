@@ -50,4 +50,13 @@ class FriendRelationDao
             ->where('friend_relation_id', '=', $id)
             ->update($data);
     }
+
+
+    public function getFriendIdsByUserId(int $userId)
+    {
+        return $this->friendRelationEntity::whereNull('deleted_at')
+            ->where('user_id', '=', $userId)
+            ->select('friend_id')
+            ->get();
+    }
 }

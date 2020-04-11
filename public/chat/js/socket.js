@@ -1,28 +1,49 @@
-var webSocket = createSocketConnection();
-layui.use('layim', function(layim){
+import {output} from "./util.js";
+import {MessageActive} from './event.js';
 
-  //建立WebSocket通讯
-  //注意：如果你要兼容ie8+，建议你采用 socket.io 的版本。下面是以原生WS为例
-  //发送一个消息
-  //连接成功时触发
-  webSocket.onopen = function(){
+var Socket;
 
-  };
-
-  //监听收到的消息
-  webSocket.onmessage = function(res){
-    //res为接受到的值，如 {"emit": "messageName", "data": {}}
-    //emit即为发出的事件名，用于区分不同的消息
-  };
-
-
-  //基本上常用的就上面几个了，是不是非一般的简单？
-
-
-});
-function createSocketConnection() {
-  return new WebSocket('ws://localhost:8090');
+function createSocketConnection(url, protocols) {
+  output(url, 'createSocketConnection');
+  Socket = new WebSocket(url, protocols);
+  return Socket;
 }
-function sendMessage(msg = '') {
-  webSocket.send(msg);
+
+function wsOpen(event) {
+  output(event, 'onOpen');
+}
+
+function wsReceive(event) {
+  let result = eval('(' + event.data + ')');
+  output(result, 'onMessage');
+  if (layui.jquery.isEmptyObject(result)) {
+    return false;
+  }
+  if (result.code && result.code !== 0) {
+    layer.msg(result.code + ' : ' + result.msg);
+    return false;
+  }
+
+  if (result.type === 'event') {
+    let method = result.method;
+    MessageActive[method] ? MessageActive[method](result.data) : '';
+  }
+}
+
+function wsError(event) {
+  output(event, 'onError')
+
+}
+
+function wsClose(event) {
+  output(event, 'onClose')
+
+}
+
+export {
+  createSocketConnection,
+  wsOpen,
+  wsReceive,
+  wsError,
+  wsClose
 }

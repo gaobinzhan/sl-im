@@ -101,3 +101,17 @@ if (!function_exists('checkAuth')) {
         return $userId;
     }
 }
+if (!function_exists('wsSuccess')) {
+    function wsSuccess($type = \App\Common\WsMessage::WS_MESSAGE_TYPE_EVENT, $method = '', $data = [], $code = 0, $msg = 'Success')
+    {
+        $result = [
+            'code' => $code,
+            'type' => $type,
+            'method' => $method,
+            'msg' => $msg,
+            'data' => $data
+        ];
+
+        return json_encode($result);
+    }
+}

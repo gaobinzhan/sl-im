@@ -8,6 +8,7 @@ namespace App\Validator;
 
 use Swoft\Validator\Annotation\Mapping\AlphaDash;
 use Swoft\Validator\Annotation\Mapping\Email;
+use Swoft\Validator\Annotation\Mapping\Enum;
 use Swoft\Validator\Annotation\Mapping\IsInt;
 use Swoft\Validator\Annotation\Mapping\IsString;
 use Swoft\Validator\Annotation\Mapping\Length;
@@ -81,4 +82,12 @@ class UserValidator
      * @var string
      */
     protected $avatar = '';
+
+    /**
+     * @IsInt()
+     * @Required()
+     * @Enum(values={0,1})
+     * @var int
+     */
+    protected $status = 0;
 }

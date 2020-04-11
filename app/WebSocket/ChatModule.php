@@ -1,40 +1,88 @@
 <?php declare(strict_types=1);
-/**
- * This file is part of Swoft.
- *
- * @link     https://swoft.org
- * @document https://swoft.org/docs
- * @contact  group@swoft.org
- * @license  https://github.com/swoft-cloud/swoft/blob/master/LICENSE
- */
 
 namespace App\WebSocket;
 
-use App\WebSocket\Chat\HomeController;
+use App\Helper\JwtHelper;
+use App\Helper\MemoryTable;
+use App\Model\Dao\UserDao;
+use App\Model\Entity\User;
+use App\Model\Logic\UserLogic;
 use Swoft\Http\Message\Request;
-use Swoft\WebSocket\Server\Annotation\Mapping\OnOpen;
+use Swoft\Http\Message\Response;
+use Swoft\Task\Task;
+use Swoft\WebSocket\Server\Annotation\Mapping\OnMessage;
 use Swoft\WebSocket\Server\Annotation\Mapping\WsModule;
+use Swoft\WebSocket\Server\Annotation\Mapping\OnOpen;
+use Swoft\WebSocket\Server\Annotation\Mapping\OnClose;
+use Swoft\WebSocket\Server\Annotation\Mapping\OnHandshake;
 use Swoft\WebSocket\Server\MessageParser\JsonParser;
-use function server;
+use Swoole\WebSocket\Frame;
+use Swoole\WebSocket\Server;
 
 /**
- * Class ChatModule
+ * Class ChatModule - This is an module for handle websocket
  *
  * @WsModule(
- *     "/chat",
- *     messageParser=JsonParser::class,
- *     controllers={HomeController::class}
- * )
+ *    "chat",
+ *     controllers={}
+ *  )
  */
 class ChatModule
 {
+
+    /**
+     * @OnHandshake()
+     */
+    public function onHandshake(Request $request, Response $response)
+    {
+        $token = $request->getHeaderLine('sec-websocket-protocol');
+        $userId = JwtHelper::decrypt($token);
+        if (!$userId) return [false, $response];
+
+        /** @var UserDao $userDao */
+        $userDao = bean('App\Model\Dao\UserDao');
+        /** @var User $userInfo */
+        $userInfo = $userDao->findUserInfoById($userId);
+        if (!$userInfo) return [false, $response];
+
+        $request->user = $userInfo->getUserId();
+        $request->userInfo = $userInfo;
+
+        return [true, $response];
+    }
+
     /**
      * @OnOpen()
      * @param Request $request
-     * @param int     $fd
+     * @param int $fd
+     * @return mixed
      */
-    public function onOpen(Request $request, int $fd): void
+    public function onOpen(Request $request, int $fd)
     {
-        server()->push($request->getFd(), "Opened, welcome!(FD: $fd)");
+        /** @var MemoryTable $memoryTable */
+        $memoryTable = bean('App\Helper\MemoryTable');
+        $memoryTable->store(MemoryTable::FD_TO_USER, (string)$fd, ['userId' => $request->user]);
+        $memoryTable->store(MemoryTable::USER_TO_FD, (string)$request->user, ['fd' => $fd]);
+        /** @var UserLogic $userLogic */
+        $userLogic = bean('App\Model\Logic\UserLogic');
+        $userLogic->setUserStatus($request->user, User::STATUS_ONLINE);
+    }
+
+    /**
+     * @OnClose()
+     * @param Server $server
+     * @param int $fd
+     * @return mixed
+     */
+    public function onClose(Server $server, int $fd)
+    {
+        /** @var MemoryTable $memoryTable */
+        $memoryTable = bean('App\Helper\MemoryTable');
+        $userId = $memoryTable->get(MemoryTable::FD_TO_USER, (string)$fd, 'userId');
+        $memoryTable->forget(MemoryTable::FD_TO_USER, (string)$fd);
+        $memoryTable->forget(MemoryTable::USER_TO_FD, (string)$userId);
+        /** @var UserLogic $userLogic */
+        $userLogic = bean('App\Model\Logic\UserLogic');
+        $userLogic->setUserStatus($userId, User::STATUS_OFFLINE);
     }
 }

@@ -1,20 +1,20 @@
 <?php
-/**
- * @author gaobinzhan <gaobinzhan@gmail.com>
- */
-
 
 namespace App\Model\Logic;
 
 use App\ExceptionCode\ApiCode;
+use App\Helper\MemoryTable;
+use App\Model\Dao\FriendRelationDao;
 use App\Model\Dao\GroupDao;
 use App\Model\Dao\UserApplicationDao;
 use App\Model\Dao\UserDao;
 use App\Model\Dao\UserLoginLogDao;
+use App\Model\Entity\FriendRelation;
 use App\Model\Entity\User;
 use App\Model\Entity\UserApplication;
 use Swoft\Bean\Annotation\Mapping\Bean;
 use Swoft\Bean\Annotation\Mapping\Inject;
+use Swoft\Task\Task;
 
 /**
  * Class UserLogic
@@ -46,6 +46,13 @@ class UserLogic
      * @var UserApplicationDao
      */
     protected $userApplicationDao;
+
+    /**
+     * @Inject()
+     * @var FriendRelationDao
+     */
+    protected $friendRelationDao;
+
 
     public function findUserInfoById(int $userId)
     {
@@ -117,7 +124,7 @@ class UserLogic
         return [
             'username' => $userInfo->getUsername(),
             'id' => $userInfo->getUserId(),
-            'status' => User::STATUS_TEXT[$userInfo->getStatus()],
+            'status' => User::STATUS_TEXT[User::STATUS_ONLINE],
             'sign' => $userInfo->getSign(),
             'avatar' => $userInfo->getAvatar(),
         ];
@@ -246,5 +253,31 @@ class UserLogic
             throw new \Exception('', ApiCode::USER_APPLICATION_TYPE_WRONG);
         }
         return $userApplicationInfo;
+    }
+
+    public function setUserStatus(int $userId, int $status = User::STATUS_ONLINE)
+    {
+        $this->userDao->changeUserInfoById($userId, [
+            'status' => $status
+        ]);
+        $friendIds = $this->friendRelationDao->getFriendIdsByUserId($userId)->toArray();
+        $friendIds = array_column($friendIds, 'friendId');
+        /** @var MemoryTable $MemoryTable */
+        $MemoryTable = bean('App\Helper\MemoryTable');
+
+        $onlineFds = [];
+        foreach ($friendIds as $friendId) {
+            $fd = $MemoryTable->get(MemoryTable::USER_TO_FD, $friendId, 'fd');
+            $fd && array_push($onlineFds, $fd);
+        }
+
+        $result = [
+            'user_id' => $userId,
+            'status' => FriendRelation::STATUS_TEXT[$status]
+        ];
+        Task::co('User', 'setUserStatus', [$onlineFds, $result]);
+
+        return $result;
+
     }
 }

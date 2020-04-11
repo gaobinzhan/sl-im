@@ -9,6 +9,7 @@ var user_login = '/user/login';
 var user_home = '/user/home';
 var user_init = '/user/init';
 var user_info = '/user/info';
+var user_set_status = '/user/setStatus';
 var user_get_unread_application_count = '/user/getUnreadApplicationCount';
 var user_get_application = '/user/getApplication';
 var user_change_name_avatar = '/user/changeUserNameAndAvatar';
@@ -27,6 +28,7 @@ var group_apply = '/group/apply';
 var group_agree_apply = '/group/agreeApply';
 var group_refuse_apply = '/group/refuseApply';
 var group_get_relation = '/group/getGroupRelation';
+var ws_chat_url = 'ws://127.0.0.1:9091/chat';
 export {
   static_user_login,
   static_user_info,
@@ -42,6 +44,7 @@ export {
   user_change_name_avatar,
   user_get_unread_application_count,
   user_get_application,
+  user_set_status,
   friend_create_group,
   friend_get_recommended,
   friend_search,
@@ -56,5 +59,6 @@ export {
   group_apply,
   group_agree_apply,
   group_refuse_apply,
-  group_get_relation
+  group_get_relation,
+  ws_chat_url
 };

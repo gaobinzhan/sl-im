@@ -74,10 +74,10 @@ class GroupValidator
     /**
      * @IsInt()
      * @Required()
-     * @Enum(values={"0","1"})
+     * @Enum(values={0,1})
      * @var int
      */
-    protected $validation = '';
+    protected $validation = 0;
 
     /**
      * @IsInt()

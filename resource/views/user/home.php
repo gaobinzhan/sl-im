@@ -57,8 +57,6 @@ EOF;
   </div>
 </div>
 <script type="module" src="/chat/js/init.js"></script>
-<script type="module" src="/chat/js/event.js"></script>
-<script type="module" src="/chat/js/socket.js"></script>
 <script type="module">
   import {static_user_info} from '/chat/js/api.js';
 

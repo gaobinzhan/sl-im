@@ -21,7 +21,6 @@ use Swoft\Http\Server\Swoole\RequestListener;
 use Swoft\WebSocket\Server\WebSocketServer;
 use Swoft\Server\SwooleEvent;
 use Swoft\Db\Database;
-use Swoft\Redis\RedisDb;
 
 return [
     'noticeHandler'      => [
@@ -42,7 +41,7 @@ return [
         'listener' => [
             // 'rpc' => bean('rpcServer'),
             // 'tcp' => bean('tcpServer'),
-            // 'ws' => bean('wsServer')
+//             'ws' => bean('wsServer')
         ],
         'process'  => [
 //            'monitor' => bean(MonitorProcess::class)
@@ -97,16 +96,6 @@ return [
     'migrationManager'  => [
         'migrationPath' => '@database/Migration',
     ],
-    'redis'             => [
-        'class'    => RedisDb::class,
-        'host'     => '127.0.0.1',
-        'port'     => 6379,
-        'database' => 0
-    ],
-    'redis.pool' => [
-        'class' => \Swoft\Redis\Pool::class,
-        'database' => bean('redis')
-    ],
     'user'              => [
         'class'   => ServiceClient::class,
         'host'    => '127.0.0.1',
@@ -128,10 +117,9 @@ return [
     ],
     'wsServer'          => [
         'class'   => WebSocketServer::class,
-        'port'    => 18308,
+        'pidName'  => 'IM-ws',
+        'port'    => 9091,
         'listener' => [
-//            'rpc' => bean('rpcServer'),
-            // 'tcp' => bean('tcpServer'),
         ],
         'on'      => [
             // Enable http handle
@@ -140,13 +128,16 @@ return [
             SwooleEvent::TASK   => bean(TaskListener::class),
             SwooleEvent::FINISH => bean(FinishListener::class)
         ],
-        'debug'   => 1,
-        // 'debug'   => env('SWOFT_DEBUG', 0),
+         'debug'   => env('SWOFT_DEBUG', 0),
         /* @see WebSocketServer::$setting */
         'setting' => [
-            'task_worker_num'       => 6,
+            'task_worker_num'       => 12,
             'task_enable_coroutine' => true,
             'worker_num'            => 6,
+            // enable static handle
+            'enable_static_handler'    => true,
+            // swoole v4.4.0以下版本, 此处必须为绝对路径
+            'document_root'            => dirname(__DIR__) . '/public',
             'log_file' => alias('@runtime/swoole.log'),
         ],
     ],

@@ -185,4 +185,21 @@ class UserController
         }
     }
 
+
+    /**
+     * @RequestMapping(route="setStatus",method={RequestMethod::POST})
+     * @Middleware(AuthMiddleware::class)
+     * @Validate(validator="UserValidator",fields={"status"})
+     */
+    public function setStatus(Request $request)
+    {
+        try {
+            $status = $request->parsedBody('status');
+            $result = $this->userLogic->setUserStatus($request->user, $status);
+            return apiSuccess($result);
+        } catch (\Throwable $throwable) {
+            return apiError($throwable->getCode(), $throwable->getMessage());
+        }
+    }
+
 }
