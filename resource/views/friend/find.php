@@ -152,7 +152,8 @@
 
       })
     });
-    function rendering(data){
+
+    function rendering(data) {
       var html = laytpl(LAY_tpl.value).render({
         data: data,
         legend: '<a class="back"><i class="layui-icon">&#xe65c;</i>返回</a> 查找结果',
@@ -171,7 +172,7 @@
         , submit: function (group, remark, index) {
           postRequest(friend_apply, {
               receiver_id: receiver_id,
-              group_id: group,
+              friend_group_id: group,
               application_reason: remark
             }, function (data) {
               layer.close(index);

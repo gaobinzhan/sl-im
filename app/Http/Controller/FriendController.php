@@ -100,17 +100,16 @@ class FriendController
     /**
      * @RequestMapping(route="apply",method={RequestMethod::POST})
      * @Middleware(AuthMiddleware::class)
-     * @Validate(validator="FriendValidator",fields={"receiver_id","group_id","application_reason"})
+     * @Validate(validator="FriendValidator",fields={"receiver_id","friend_group_id","application_reason"})
      */
     public function apply(Request $request)
     {
         try {
             $userId = $request->user;
             $receiverId = $request->parsedBody('receiver_id');
-            $groupId = $request->parsedBody('group_id');
-            $applicationType = $request->parsedBody('application_type');
+            $friendGroupId = $request->parsedBody('friend_group_id');
             $applicationReason = $request->parsedBody('application_reason');
-            $this->friendLogic->apply($userId, $receiverId, $groupId, $applicationReason);
+            $this->friendLogic->apply($userId, $receiverId, $friendGroupId, $applicationReason);
             return apiSuccess();
         } catch (\Throwable $throwable) {
             return apiError($throwable->getCode(), $throwable->getMessage());
@@ -135,7 +134,7 @@ class FriendController
 
     /**
      * @RequestMapping(route="agreeApply",method={RequestMethod::GET})
-     * @Validate(validator="FriendValidator",fields={"user_application_id","group_id"},type=ValidateType::GET)
+     * @Validate(validator="FriendValidator",fields={"user_application_id","friend_group_id"},type=ValidateType::GET)
      * @Middleware(AuthMiddleware::class)
      */
     public function agreeApply(Request $request)
@@ -143,8 +142,8 @@ class FriendController
         DB::beginTransaction();
         try {
             $userApplicationId = $request->get('user_application_id');
-            $groupId = $request->get('group_id');
-            $result = $this->friendLogic->agreeApply(intval($userApplicationId), intval($groupId));
+            $friendGroupId = $request->get('friend_group_id');
+            $result = $this->friendLogic->agreeApply(intval($userApplicationId), intval($friendGroupId));
             DB::commit();
             return apiSuccess($result);
         } catch (\Throwable $throwable) {

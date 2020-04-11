@@ -5,6 +5,7 @@ namespace App\Http\Controller;
 
 use App\Model\Logic\GroupLogic;
 use Swoft\Bean\Annotation\Mapping\Inject;
+use Swoft\Db\DB;
 use Swoft\Http\Message\Request;
 use Swoft\Http\Server\Annotation\Mapping\Middleware;
 use Swoft\Http\Server\Annotation\Mapping\RequestMapping;
@@ -114,16 +115,54 @@ class GroupController
             return apiError($throwable->getCode(), $throwable->getMessage());
         }
     }
+
     /**
      * @RequestMapping(route="info",method={RequestMethod::GET})
      * @Middleware(AuthMiddleware::class)
      * @Validate(validator="GroupValidator",fields={"group_id"},type=ValidateType::GET)
      */
-    public function groupInfo(Request $request){
+    public function groupInfo(Request $request)
+    {
         try {
             $groupId = $request->get('group_id');
             $groupInfo = $this->groupLogic->findGroupById(intval($groupId));
             return apiSuccess($groupInfo);
+        } catch (\Throwable $throwable) {
+            return apiError($throwable->getCode(), $throwable->getMessage());
+        }
+    }
+
+    /**
+     * @RequestMapping(route="agreeApply",method={RequestMethod::GET})
+     * @Validate(validator="GroupValidator",fields={"user_application_id"},type=ValidateType::GET)
+     * @Middleware(AuthMiddleware::class)
+     */
+    public function agreeApply(Request $request)
+    {
+        DB::beginTransaction();
+        try {
+            $userApplicationId = $request->get('user_application_id');
+            $result = $this->groupLogic->agreeApply(intval($userApplicationId));
+            DB::commit();
+            return apiSuccess($result);
+        } catch (\Throwable $throwable) {
+            DB::rollBack();
+            return apiError($throwable->getCode(), $throwable->getMessage());
+        }
+    }
+
+
+    /**
+     * @RequestMapping(route="refuseApply",method={RequestMethod::GET})
+     * @Validate(validator="GroupValidator",fields={"user_application_id"},type=ValidateType::GET)
+     * @Middleware(AuthMiddleware::class)
+     */
+    public function refuseApply(Request $request)
+    {
+        try {
+            $userApplicationId = $request->get('user_application_id');
+            $this->groupLogic->refuseApply(intval($userApplicationId));
+            return apiSuccess($userApplicationId);
         } catch (\Throwable $throwable) {
             return apiError($throwable->getCode(), $throwable->getMessage());
         }

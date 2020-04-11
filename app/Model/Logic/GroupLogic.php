@@ -5,6 +5,7 @@ namespace App\Model\Logic;
 use App\ExceptionCode\ApiCode;
 use App\Model\Dao\GroupDao;
 use App\Model\Dao\GroupRelationDao;
+use App\Model\Dao\UserApplicationDao;
 use App\Model\Dao\UserDao;
 use App\Model\Entity\Group;
 use App\Model\Entity\GroupRelation;
@@ -45,6 +46,13 @@ class GroupLogic
      */
     protected $userDao;
 
+
+    /**
+     * @Inject()
+     * @var UserApplicationDao
+     */
+    protected $userApplicationDao;
+
     public function createGroup(int $userId, string $groupName, string $avatar, int $size, string $introduction, int $validation)
     {
         $groupId = $this->groupDao->create([
@@ -82,8 +90,7 @@ class GroupLogic
 
     public function getGroupRelationById($groupId)
     {
-        $group = $this->groupDao->findGroupById($groupId);
-        if (!$group) throw new \Exception('', ApiCode::GROUP_NOT_FOUND);
+        $this->findGroupById($groupId);
 
         $groupRelations = $this->groupRelationDao->findGroupRelationByGroupId($groupId);
         $userIds = array_column($groupRelations->toArray(), 'userId');
@@ -132,19 +139,29 @@ class GroupLogic
         return $this->groupDao->searchGroup($keyword, $page, $size);
     }
 
+    public function checkIsGroupRelation(int $userId, int $groupId)
+    {
+        $check = $this->groupRelationDao->checkIsGroupRelation($userId, $groupId);
+        if ($check) throw new \Exception('', ApiCode::GROUP_RELATION_ALREADY);
+        return $check;
+    }
+
+    public function checkGroupSize(int $groupId, int $size)
+    {
+        $count = $this->groupRelationDao->getGroupRelationCountByGroupId($groupId);
+        if ($count >= $size) throw new \Exception('', ApiCode::GROUP_FULL);
+        return $count;
+    }
 
     public function apply(int $userId, int $groupId, string $applicationReason)
     {
-        /** @var GroupRelation $check */
-        $check = $this->groupRelationDao->checkIsGroupRelation($userId, $groupId);
-        if ($check) throw new \Exception('', ApiCode::GROUP_RELATION_ALREADY);
+        $this->checkIsGroupRelation($userId, $groupId);
 
         /** @var Group $groupInfo */
-        $groupInfo = $this->groupDao->findGroupById($groupId);
-        if (!$groupInfo) throw new \Exception('', ApiCode::GROUP_NOT_FOUND);
+        $groupInfo = $this->findGroupById($groupId);
 
-        $count = $this->groupRelationDao->getGroupRelationCountByGroupId($groupId);
-        if ($count >= $groupInfo->getSize()) throw new \Exception('', ApiCode::GROUP_FULL);
+        $this->checkGroupSize($groupId, $groupInfo->getSize());
+
 
         $applicationStatus = ($groupInfo->getValidation() == Group::VALIDATION_NOT) ? UserApplication::APPLICATION_STATUS_ACCEPT : UserApplication::APPLICATION_STATUS_CREATE;
 
@@ -159,5 +176,35 @@ class GroupLogic
             return $groupInfo;
         }
         return '';
+    }
+
+    public function agreeApply(int $userApplicationId)
+    {
+        /** @var UserApplication $userApplicationInfo */
+        $userApplicationInfo = $this->userLogic->beforeApply($userApplicationId, UserApplication::APPLICATION_TYPE_GROUP);
+
+        $this->checkIsGroupRelation($userApplicationInfo->getUserId(), $userApplicationInfo->getGroupId());
+
+        $this->userApplicationDao->changeApplicationStatusById($userApplicationId, UserApplication::APPLICATION_STATUS_ACCEPT);
+
+        /** @var Group $groupInfo */
+        $groupInfo = $this->findGroupById($userApplicationInfo->getGroupId());
+
+        $this->checkGroupSize($groupInfo->getGroupId(), $groupInfo->getSize());
+
+
+        $result = $this->groupRelationDao->createGroupRelation([
+            'user_id' => $userApplicationInfo->getUserId(),
+            'group_id' => $groupInfo->getGroupId()
+        ]);
+        return $result;
+    }
+
+    public function refuseApply(int $userApplicationId)
+    {
+        /** @var UserApplication $userApplicationInfo */
+        $userApplicationInfo = $this->userLogic->beforeApply($userApplicationId, UserApplication::APPLICATION_TYPE_GROUP);
+        $this->userApplicationDao->changeApplicationStatusById($userApplicationId, UserApplication::APPLICATION_STATUS_REFUSE);
+        return $userApplicationInfo;
     }
 }

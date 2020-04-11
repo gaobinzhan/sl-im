@@ -69,7 +69,7 @@ class GroupValidator
      * @Length(max=255)
      * @var string
      */
-    protected  $introduction = '';
+    protected $introduction = '';
 
     /**
      * @IsInt()
@@ -104,4 +104,13 @@ class GroupValidator
      * @var
      */
     protected $application_reason = '';
+
+
+    /**
+     * @IsInt()
+     * @Required()
+     * @NotEmpty()
+     * @var int
+     */
+    protected $user_application_id = '';
 }

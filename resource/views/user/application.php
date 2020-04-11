@@ -327,7 +327,6 @@
         let name = $(this).attr('data-name');
         let avatar = $(this).attr('data-avatar');
         let id = $(this).attr('data-user-application-id');
-        let url = (type == 'friend') ? friend_agree_apply : group_agree_apply;
         if (type == 'friend') {
           parent.layui.layim.setFriendGroup({
             type: 'friend'
@@ -335,7 +334,7 @@
             , avatar: avatar
             , group: parent.layui.layim.cache().friend
             , submit: function (group, index) {
-              getRequest(url, {user_application_id: id, group_id: group}, function (res) {
+              getRequest(friend_agree_apply, {user_application_id: id, friend_group_id: group}, function (res) {
                 addFriend(res);
                 that.parents(".layim-msgbox-btn").html("已同意");
                 parent.layer.close(index);
@@ -345,7 +344,9 @@
             }
           });
         } else {
-
+          getRequest(group_agree_apply, {user_application_id: id}, function (res) {
+            that.parents(".layim-msgbox-btn").html("已同意");
+          });
         }
       }
       , refuse: function () {

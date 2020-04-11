@@ -136,7 +136,7 @@ class FriendLogic
         return $this->userDao->searchFriend($keyword, $page, $size);
     }
 
-    public function apply(int $userId, int $receiverId, int $groupId, string $applicationReason)
+    public function apply(int $userId, int $receiverId, int $friendGroupId, string $applicationReason)
     {
         if ($userId == $receiverId) throw new \Exception('', ApiCode::FRIEND_NOT_ADD_SELF);
 
@@ -146,22 +146,22 @@ class FriendLogic
 
         $this->userLogic->findUserInfoById($receiverId);
 
-        $friendGroupInfo = $this->friendGroupDao->findFriendGroupById($groupId);
+        $friendGroupInfo = $this->friendGroupDao->findFriendGroupById($friendGroupId);
         if (!$friendGroupInfo) throw new \Exception('', ApiCode::FRIEND_GROUP_NOT_FOUND);
 
-        $result = $this->userLogic->createUserApplication($userId, $receiverId, $groupId, UserApplication::APPLICATION_TYPE_FRIEND, $applicationReason, UserApplication::APPLICATION_STATUS_CREATE, UserApplication::UN_READ);
+        $result = $this->userLogic->createUserApplication($userId, $receiverId, $friendGroupId, UserApplication::APPLICATION_TYPE_FRIEND, $applicationReason, UserApplication::APPLICATION_STATUS_CREATE, UserApplication::UN_READ);
         if (!$result) throw new \Exception('', ApiCode::USER_CREATE_APPLICATION_FAIL);
 
         return $result;
     }
 
-    public function agreeApply(int $userApplicationId, int $groupId)
+    public function agreeApply(int $userApplicationId, int $friendGroupId)
     {
         /** @var UserApplication $userApplicationInfo */
         $userApplicationInfo = $this->userLogic->beforeApply($userApplicationId, UserApplication::APPLICATION_TYPE_FRIEND);
 
         $this->findFriendGroupById($userApplicationInfo->getGroupId());
-        $this->findFriendGroupById($groupId);
+        $this->findFriendGroupById($friendGroupId);
 
         $this->userApplicationDao->changeApplicationStatusById($userApplicationId, UserApplication::APPLICATION_STATUS_ACCEPT);
 
@@ -175,7 +175,7 @@ class FriendLogic
             $this->createFriendRelation(
                 $userApplicationInfo->getReceiverId()
                 , $userApplicationInfo->getUserId()
-                , $groupId
+                , $friendGroupId
             );
 
             $this->createFriendRelation(
@@ -196,7 +196,7 @@ class FriendLogic
             'username' => $friendInfo->getUsername(),
             'id' => $friendInfo->getUserId(),
             'sign' => $friendInfo->getSign(),
-            'groupid' => $groupId,
+            'groupid' => $friendGroupId,
             'status' => FriendRelation::STATUS_TEXT[$friendInfo->getStatus()]
         ];
     }

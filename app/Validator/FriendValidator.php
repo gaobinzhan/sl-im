@@ -52,7 +52,7 @@ class FriendValidator
      * @NotEmpty()
      * @var int
      */
-    protected $group_id = '';
+    protected $friend_group_id = '';
 
     /**
      * @IsString()
