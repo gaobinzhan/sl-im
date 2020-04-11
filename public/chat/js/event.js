@@ -4,7 +4,8 @@ import {
   ws_chat_url,
   user_set_status,
   friend_send_cmd,
-  group_send_cmd
+  group_send_cmd,
+  friend_read_msg
 } from "./api.js";
 import {createSocketConnection, createMessage, wsOpen, wsReceive, wsError, wsClose, wsSend} from "./socket.js";
 import {getCookie, output, messageId} from "./util.js";
@@ -74,6 +75,16 @@ var MessageActive = {
   setUserStatus: function (data) {
     output(data, 'setUserStatus');
     layui.layim.setFriendStatus(data.user_id, data.status)
+  },
+  getMessage: function (data) {
+    output(data, 'getMessage');
+    layui.layim.getMessage(data);
+    if (data.type === 'friend') {
+      let msg = createMessage(friend_read_msg, {
+        'message_id': data.cid
+      });
+      wsSend(msg)
+    }
   }
 };
 

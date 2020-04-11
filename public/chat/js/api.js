@@ -31,6 +31,7 @@ var group_get_relation = '/group/getGroupRelation';
 var ws_chat_url = 'ws://127.0.0.1:9091/chat';
 var friend_send_cmd = 'friend.send';
 var group_send_cmd = 'group.send';
+var friend_read_msg = 'friend.read';
 var user_ping = 'user.ping';
 var system_error = 'system.error';
 var system_event = 'system.event';
@@ -70,5 +71,6 @@ export {
   group_send_cmd,
   user_ping,
   system_error,
-  system_event
+  system_event,
+  friend_read_msg
 };

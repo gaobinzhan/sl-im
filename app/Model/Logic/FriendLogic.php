@@ -7,10 +7,12 @@
 namespace App\Model\Logic;
 
 use App\ExceptionCode\ApiCode;
+use App\Model\Dao\FriendChatHistoryDao;
 use App\Model\Dao\FriendGroupDao;
 use App\Model\Dao\FriendRelationDao;
 use App\Model\Dao\UserApplicationDao;
 use App\Model\Dao\UserDao;
+use App\Model\Entity\FriendChatHistory;
 use App\Model\Entity\FriendGroup;
 use App\Model\Entity\FriendRelation;
 use App\Model\Entity\User;
@@ -54,6 +56,13 @@ class FriendLogic
      * @var UserApplicationDao
      */
     protected $userApplicationDao;
+
+
+    /**
+     * @Inject()
+     * @var FriendChatHistoryDao
+     */
+    protected $friendChatHistoryDao;
 
     public function createFriendGroup(int $userId, string $friendGroupName)
     {
@@ -144,7 +153,8 @@ class FriendLogic
         $check = $this->friendRelationDao->checkIsFriendRelation($userId, $receiverId);
         if ($check) throw new \Exception('', ApiCode::FRIEND_RELATION_ALREADY);
 
-        $this->userLogic->findUserInfoById($receiverId);
+        $this->userDao->findUserInfoById($userId);
+        ($receiverId);
 
         $friendGroupInfo = $this->friendGroupDao->findFriendGroupById($friendGroupId);
         if (!$friendGroupInfo) throw new \Exception('', ApiCode::FRIEND_GROUP_NOT_FOUND);
@@ -219,8 +229,28 @@ class FriendLogic
     }
 
 
-    public function createFriendChatHistory(){
-        
+    public function createFriendChatHistory(
+        string $messageId,
+        int $fromUserId,
+        int $toUserId,
+        string $content,
+        int $receptionState = FriendChatHistory::NOT_RECEIVED)
+    {
+        $data = [
+            'message_id' => $messageId,
+            'from_user_id' => $fromUserId,
+            'to_user_id' => $toUserId,
+            'content' => $content,
+            'reception_state' => $receptionState
+        ];
+        $id = $this->friendChatHistoryDao->createFriendChatHistory($data);
+        return $this->friendChatHistoryDao->findFriendChatHistoryById($id);
     }
+
+    public function setFriendChatHistoryReceptionStateByMessageId(string $messageId, int $receptionState = FriendChatHistory::RECEIVED)
+    {
+        return $this->friendChatHistoryDao->setFriendChatHistoryReceptionStateByMessageId($messageId,$receptionState);
+    }
+
 
 }

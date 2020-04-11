@@ -1,4 +1,4 @@
-import {output} from "./util.js";
+import {output, isEmpty} from "./util.js";
 import {MessageActive} from './event.js';
 import {user_ping, system_error, system_event} from "./api.js";
 
@@ -30,24 +30,26 @@ function ack(msg) {
   messageList[message_id] = {
     msg: msg,
     timer: setTimeout(function () {
-      layui.layer.open({
-        title: '消息发送失败',
-        content: data.content
-        , btn: ['重试', '取消']
-        , yes: function (index, layero) {
-          ack(messageList[message_id].msg);
-          layui.layer.close(index);
-        }
-        , btn2: function (index, layero) {
-          delete messageList[message_id];
-          layui.layer.close(index);
-        }
-        , cancel: function () {
-          delete messageList[message_id];
-          layui.layer.close(index);
-        }
-      });
-    }, 3000)
+      if (!isEmpty(data.content)) {
+        layui.layer.open({
+          title: '消息发送失败',
+          content: data.content
+          , btn: ['重试', '取消']
+          , yes: function (index, layero) {
+            ack(messageList[message_id].msg);
+            layui.layer.close(index);
+          }
+          , btn2: function (index, layero) {
+            delete messageList[message_id];
+            layui.layer.close(index);
+          }
+          , cancel: function () {
+            delete messageList[message_id];
+            layui.layer.close(index);
+          }
+        });
+      }
+    }, 10000)
   };
   output(messageList);
 }

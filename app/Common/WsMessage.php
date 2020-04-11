@@ -12,4 +12,5 @@ class WsMessage
     const WS_MESSAGE_CMD_EVENT = 'system.event';
     const WS_MESSAGE_CMD_ERROR = 'system.error';
     const EVENT_USER_STATUS = 'setUserStatus';
+    const EVENT_GET_MESSAGE = 'getMessage';
 }

@@ -35,11 +35,20 @@ function messageId() {
   return Number(Math.random().toString().substr(3, 3) + Date.now()).toString(36)
 }
 
+function isEmpty(obj) {
+  if (typeof obj == "undefined" || obj == null || obj === "") {
+    return true;
+  } else {
+    return false;
+  }
+}
+
 export {
   output,
   getCookie,
   getQueryValue,
-  messageId
+  messageId,
+  isEmpty
 }
 
 
