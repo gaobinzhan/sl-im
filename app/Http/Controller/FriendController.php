@@ -144,7 +144,7 @@ class FriendController
         try {
             $userApplicationId = $request->get('user_application_id');
             $groupId = $request->get('group_id');
-            $result = $this->friendLogic->agreeApply(intval($userApplicationId),intval($groupId));
+            $result = $this->friendLogic->agreeApply(intval($userApplicationId), intval($groupId));
             DB::commit();
             return apiSuccess($result);
         } catch (\Throwable $throwable) {

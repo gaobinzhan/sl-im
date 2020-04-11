@@ -322,6 +322,7 @@
         });
       },
       agree: function () {
+        let that = $(this);
         let type = $(this).attr('data-chat');
         let name = $(this).attr('data-name');
         let avatar = $(this).attr('data-avatar');
@@ -336,6 +337,7 @@
             , submit: function (group, index) {
               getRequest(url, {user_application_id: id, group_id: group}, function (res) {
                 addFriend(res);
+                that.parents(".layim-msgbox-btn").html("已同意");
                 parent.layer.close(index);
               }, function (res) {
                 parent.layer.close(index);
@@ -346,10 +348,15 @@
 
         }
       }
-      //拒绝
-      , refuse: function (othis) {
+      , refuse: function () {
+        let that = $(this);
+        let type = $(this).attr('data-chat');
+        let url = (type == 'friend') ? friend_refuse_apply : group_refuse_apply;
+        let id = $(this).attr('data-user-application-id');
         layer.confirm('确定拒绝吗？', function (index) {
-          parent.layui.im.receiveAddFriendGroup(othis, 3);//type 1添加好友 3添加群
+          getRequest(url, {user_application_id: id}, function (res) {
+            that.parents(".layim-msgbox-btn").html("已拒绝");
+          })
         });
       }
 

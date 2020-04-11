@@ -203,7 +203,10 @@ class FriendLogic
 
     public function refuseApply(int $userApplicationId)
     {
-
+        /** @var UserApplication $userApplicationInfo */
+        $userApplicationInfo = $this->userLogic->beforeApply($userApplicationId, UserApplication::APPLICATION_TYPE_FRIEND);
+        $this->userApplicationDao->changeApplicationStatusById($userApplicationId, UserApplication::APPLICATION_STATUS_REFUSE);
+        return $userApplicationInfo;
     }
 
     public function createFriendRelation(int $userId, int $friendId, int $groupId)
