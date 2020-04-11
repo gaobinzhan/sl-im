@@ -31,10 +31,15 @@ function getQueryValue(queryName) {
   return null;
 }
 
+function messageId() {
+  return Number(Math.random().toString().substr(3, 3) + Date.now()).toString(36)
+}
+
 export {
   output,
   getCookie,
-  getQueryValue
+  getQueryValue,
+  messageId
 }
 
 

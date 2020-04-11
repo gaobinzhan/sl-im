@@ -7,6 +7,7 @@ use App\Helper\MemoryTable;
 use App\Model\Dao\UserDao;
 use App\Model\Entity\User;
 use App\Model\Logic\UserLogic;
+use App\WebSocket\Controller\UserController;
 use Swoft\Http\Message\Request;
 use Swoft\Http\Message\Response;
 use Swoft\Task\Task;
@@ -18,13 +19,15 @@ use Swoft\WebSocket\Server\Annotation\Mapping\OnHandshake;
 use Swoft\WebSocket\Server\MessageParser\JsonParser;
 use Swoole\WebSocket\Frame;
 use Swoole\WebSocket\Server;
+use App\WebSocket\Controller\FriendController;
 
 /**
  * Class ChatModule - This is an module for handle websocket
  *
  * @WsModule(
  *    "chat",
- *     controllers={}
+ *     messageParser=JsonParser::class,
+ *     controllers={FriendController::class,UserController::class}
  *  )
  */
 class ChatModule

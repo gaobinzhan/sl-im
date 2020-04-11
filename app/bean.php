@@ -90,8 +90,8 @@ return [
     'db.pool' => [
         'class'    => \Swoft\Db\Pool::class,
         'database' => bean('db'),
-        'minActive' => 10,
-        'maxActive' => 50
+        'minActive' => 50,
+        'maxActive' => 200
     ],
     'migrationManager'  => [
         'migrationPath' => '@database/Migration',

@@ -5,7 +5,7 @@ import {
   group_get_relation,
 } from "./api.js";
 import {getCookie} from "./util.js";
-import {toolCode, ready, userStatus} from "./event.js";
+import {toolCode, ready, userStatus,toMessage} from "./event.js";
 
 layui.use('layim', function (layim) {
   layim.config({
@@ -37,4 +37,5 @@ layui.use('layim', function (layim) {
   toolCode();
   ready();
   userStatus();
+  toMessage();
 });

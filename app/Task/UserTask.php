@@ -23,7 +23,7 @@ class UserTask
     public function setUserStatus(array $fds,array $data)
     {
         if (empty($fds)) return false;
-        $result = wsSuccess(WsMessage::WS_MESSAGE_TYPE_EVENT,WsMessage::EVENT_USER_STATUS,$data);
+        $result = wsSuccess(WsMessage::WS_MESSAGE_CMD_EVENT,WsMessage::EVENT_USER_STATUS,$data);
         server()->broadcast($result,$fds);
     }
 }

@@ -102,16 +102,26 @@ if (!function_exists('checkAuth')) {
     }
 }
 if (!function_exists('wsSuccess')) {
-    function wsSuccess($type = \App\Common\WsMessage::WS_MESSAGE_TYPE_EVENT, $method = '', $data = [], $code = 0, $msg = 'Success')
+    function wsSuccess($cmd = \App\Common\WsMessage::WS_MESSAGE_CMD_EVENT, $method = '', $data = [], $msg = 'Success')
     {
         $result = [
-            'code' => $code,
-            'type' => $type,
+            'cmd' => $cmd,
             'method' => $method,
             'msg' => $msg,
             'data' => $data
         ];
 
+        return json_encode($result);
+    }
+}
+
+if (!function_exists('wsError')) {
+    function wsError($msg = 'Error', $cmd = \App\Common\WsMessage::WS_MESSAGE_CMD_ERROR)
+    {
+        $result = [
+            'cmd' => $cmd,
+            'msg' => $msg,
+        ];
         return json_encode($result);
     }
 }

@@ -29,6 +29,11 @@ var group_agree_apply = '/group/agreeApply';
 var group_refuse_apply = '/group/refuseApply';
 var group_get_relation = '/group/getGroupRelation';
 var ws_chat_url = 'ws://127.0.0.1:9091/chat';
+var friend_send_cmd = 'friend.send';
+var group_send_cmd = 'group.send';
+var user_ping = 'user.ping';
+var system_error = 'system.error';
+var system_event = 'system.event';
 export {
   static_user_login,
   static_user_info,
@@ -60,5 +65,10 @@ export {
   group_agree_apply,
   group_refuse_apply,
   group_get_relation,
-  ws_chat_url
+  ws_chat_url,
+  friend_send_cmd,
+  group_send_cmd,
+  user_ping,
+  system_error,
+  system_event
 };

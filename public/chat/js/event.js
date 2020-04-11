@@ -1,7 +1,13 @@
 import {getRequest, postRequest} from "./request.js";
-import {user_get_unread_application_count, ws_chat_url, user_set_status} from "./api.js";
-import {createSocketConnection, wsOpen, wsReceive, wsError, wsClose} from "./socket.js";
-import {getCookie, output} from "./util.js";
+import {
+  user_get_unread_application_count,
+  ws_chat_url,
+  user_set_status,
+  friend_send_cmd,
+  group_send_cmd
+} from "./api.js";
+import {createSocketConnection, createMessage, wsOpen, wsReceive, wsError, wsClose, wsSend} from "./socket.js";
+import {getCookie, output, messageId} from "./util.js";
 
 function ready() {
   layui.layim.on('ready', function (options) {
@@ -49,6 +55,21 @@ function userStatus() {
   });
 }
 
+function toMessage() {
+  layui.layim.on('sendMessage', function (res) {
+    output(res, 'toMessage');
+    let cmd = (res.to.type === 'friend') ? friend_send_cmd : group_send_cmd;
+    let data = {
+      message_id: messageId(),
+      from_user_id: res.mine.id,
+      to_user_id: res.to.id,
+      content: res.mine.content
+    };
+    wsSend(createMessage(cmd, data));
+  });
+};
+
+
 var MessageActive = {
   setUserStatus: function (data) {
     output(data, 'setUserStatus');
@@ -61,4 +82,5 @@ export {
   toolCode,
   userStatus,
   MessageActive,
+  toMessage
 }

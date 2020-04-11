@@ -9,7 +9,7 @@ namespace App\Common;
 
 class WsMessage
 {
-    const WS_MESSAGE_TYPE_EVENT = 'event';
-    const WS_MESSAGE_TYPE_MESSAGE = 'message';
+    const WS_MESSAGE_CMD_EVENT = 'system.event';
+    const WS_MESSAGE_CMD_ERROR = 'system.error';
     const EVENT_USER_STATUS = 'setUserStatus';
 }

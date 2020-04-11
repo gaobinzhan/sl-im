@@ -10,6 +10,7 @@
 
 namespace App\Exception\Handler;
 
+use App\Common\WsMessage;
 use Swoft\Error\Annotation\Mapping\ExceptionHandler;
 use Swoft\Log\Helper\Log;
 use Swoft\WebSocket\Server\Exception\Handler\AbstractMessageErrorHandler;
@@ -37,12 +38,13 @@ class WsMessageExceptionHandler extends AbstractMessageErrorHandler
 
         Log::error('Ws server error(%s)', $message);
 
+
         // Debug is false
         if (!APP_DEBUG) {
-            server()->push($frame->fd, $e->getMessage());
-            return;
+            $message = $e->getMessage();
         }
 
-        server()->push($frame->fd, $message);
+        $result = wsError($message,WsMessage::WS_MESSAGE_CMD_ERROR);
+        server()->sendTo($frame->fd,$result);
     }
 }

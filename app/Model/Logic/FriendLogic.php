@@ -219,4 +219,8 @@ class FriendLogic
     }
 
 
+    public function createFriendChatHistory(){
+        
+    }
+
 }
