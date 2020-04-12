@@ -56,6 +56,7 @@ EOF;
     © layui.com - 底部固定区域
   </div>
 </div>
+<input type="hidden" class="wsUrl" value="<?php echo $wsUrl ?>">
 <script type="module" src="/chat/js/init.js"></script>
 <script type="module">
   import {static_user_info} from '/chat/js/api.js';

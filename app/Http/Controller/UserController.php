@@ -93,7 +93,7 @@ class UserController
         if (!$userId = checkAuth()) return $response->redirect('/static/login');
         $menus = config('menu');
         $userInfo = $request->userInfo;
-        return view('user/home', ['menus' => $menus, 'userInfo' => $userInfo]);
+        return view('user/home', ['menus' => $menus, 'userInfo' => $userInfo,'wsUrl' => env('WS_URL')]);
     }
 
 

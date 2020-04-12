@@ -1,7 +1,6 @@
 import {getRequest, postRequest} from "./request.js";
 import {
   user_get_unread_application_count,
-  ws_chat_url,
   user_set_status,
   friend_send_cmd,
   group_send_cmd,
@@ -19,7 +18,8 @@ function ready() {
       layui.layim.msgbox(count)
     });
 
-    var webSocket = createSocketConnection(ws_chat_url, getCookie('IM_TOKEN'));
+    var  wsUrl = layui.jquery(".wsUrl").val();
+    var webSocket = createSocketConnection(wsUrl, getCookie('IM_TOKEN'));
     webSocket.onopen = function (event) {
       wsOpen(event);
     };
