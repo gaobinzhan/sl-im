@@ -135,9 +135,9 @@ return [
             'task_enable_coroutine' => true,
             'worker_num'            => 6,
             // enable static handle
-            'enable_static_handler'    => true,
+            'enable_static_handler'    => env('ENABLE_STATIC_HANDLER',true),
             // swoole v4.4.0以下版本, 此处必须为绝对路径
-            'document_root'            => dirname(__DIR__) . '/public',
+            'document_root'            => env('DOCUMENT_ROOT',dirname(__DIR__) . '/public'),
             'log_file' => alias('@runtime/swoole.log'),
         ],
     ],
