@@ -20,6 +20,7 @@ use Swoft\WebSocket\Server\MessageParser\JsonParser;
 use Swoole\WebSocket\Frame;
 use Swoole\WebSocket\Server;
 use App\WebSocket\Controller\FriendController;
+use App\WebSocket\Controller\GroupController;
 
 /**
  * Class ChatModule - This is an module for handle websocket
@@ -27,7 +28,7 @@ use App\WebSocket\Controller\FriendController;
  * @WsModule(
  *    "chat",
  *     messageParser=JsonParser::class,
- *     controllers={FriendController::class,UserController::class}
+ *     controllers={FriendController::class,UserController::class,GroupController::class}
  *  )
  */
 class ChatModule

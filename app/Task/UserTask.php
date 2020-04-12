@@ -3,9 +3,6 @@
 namespace App\Task;
 
 use App\Common\WsMessage;
-use App\Model\Dao\UserDao;
-use App\Model\Entity\User;
-use Swoft\Bean\Annotation\Mapping\Inject;
 use Swoft\Task\Annotation\Mapping\Task;
 use Swoft\Task\Annotation\Mapping\TaskMapping;
 

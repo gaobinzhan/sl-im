@@ -63,10 +63,10 @@ function toMessage() {
     let data = {
       message_id: messageId(),
       from_user_id: res.mine.id,
-      to_user_id: res.to.id,
+      to_id: parseInt(res.to.id),
       content: res.mine.content
     };
-    wsSend(createMessage(cmd, data));
+    createMessage(cmd, data);
   });
 };
 

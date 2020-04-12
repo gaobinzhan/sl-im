@@ -42,7 +42,8 @@ class ApiCode
         GROUP_NOT_FOUND = 5002,
         GROUP_RELATION_CREATE_FAIL = 5010,
         GROUP_RELATION_ALREADY = 5011,
-        GROUP_FULL = 5012;
+        GROUP_FULL = 5012,
+        GROUP_NOT_MEMBER = 5013;
 
 
     // ext 9000~9999
@@ -80,6 +81,7 @@ class ApiCode
         self::GROUP_RELATION_CREATE_FAIL => 'Group relation creation failed !',
         self::GROUP_RELATION_ALREADY => 'You\'re already a member of the group !',
         self::GROUP_FULL => 'Group full !',
+        self::GROUP_NOT_MEMBER => 'You are not a member of this group !',
 
         self::JWT_PRIVATE_KEY_EMPTY => 'The private key is invalid !',
         self::JWT_PUBLIC_KEY_EMPTY => 'The public key is invalid !',

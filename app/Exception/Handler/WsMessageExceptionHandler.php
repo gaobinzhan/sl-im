@@ -11,6 +11,7 @@
 namespace App\Exception\Handler;
 
 use App\Common\WsMessage;
+use App\ExceptionCode\ApiCode;
 use Swoft\Error\Annotation\Mapping\ExceptionHandler;
 use Swoft\Log\Helper\Log;
 use Swoft\WebSocket\Server\Exception\Handler\AbstractMessageErrorHandler;
@@ -30,7 +31,7 @@ class WsMessageExceptionHandler extends AbstractMessageErrorHandler
 {
     /**
      * @param Throwable $e
-     * @param Frame     $frame
+     * @param Frame $frame
      */
     public function handle(Throwable $e, Frame $frame): void
     {
@@ -44,7 +45,11 @@ class WsMessageExceptionHandler extends AbstractMessageErrorHandler
             $message = $e->getMessage();
         }
 
-        $result = wsError($message,WsMessage::WS_MESSAGE_CMD_ERROR);
-        server()->sendTo($frame->fd,$result);
+        if (ApiCode::$errorMessages[$e->getCode()]) {
+            $message = ApiCode::$errorMessages[$e->getCode()];
+        }
+
+        $result = wsError($message, WsMessage::WS_MESSAGE_CMD_ERROR,['message_id' => $e->getMessage()]);
+        server()->sendTo($frame->fd, $result);
     }
 }

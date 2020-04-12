@@ -31,6 +31,14 @@ class GroupRelationDao
             ->get();
     }
 
+    public function getGroupRelationUserIdsById(int $groupId)
+    {
+        return $this->groupRelationEntity::whereNull('deleted_at')
+            ->where('group_id', '=', $groupId)
+            ->select('user_id')
+            ->get();
+    }
+
     public function checkIsGroupRelation(int $userId, int $groupId)
     {
         return $this->groupRelationEntity::whereNull('deleted_at')

@@ -41,12 +41,13 @@ class FriendController
         $data = $message->getData();
 
         /** @var FriendChatHistory $friendChatHistoryInfo */
-        $friendChatHistoryInfo = $this->friendLogic->createFriendChatHistory($data['message_id'], $data['from_user_id'], $data['to_user_id'], $data['content']);
+        $friendChatHistoryInfo = $this->friendLogic->createFriendChatHistory($data['message_id'], $data['from_user_id'], $data['to_id'], $data['content']);
 
         $userInfo = $this->userLogic->findUserInfoById($data['from_user_id']);
         /** @var MemoryTable $MemoryTable */
         $MemoryTable = bean('App\Helper\MemoryTable');
-        $fd = $MemoryTable->get(MemoryTable::USER_TO_FD, (string)$data['to_user_id'], 'fd') ?? '';
+        $fd = $MemoryTable->get(MemoryTable::USER_TO_FD, (string)$data['to_id'], 'fd') ?? '';
+
         Task::co('Friend', 'sendMessage', [
             $fd,
             $userInfo->getUsername(),

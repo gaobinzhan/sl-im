@@ -3,10 +3,12 @@
 namespace App\Model\Logic;
 
 use App\ExceptionCode\ApiCode;
+use App\Model\Dao\GroupChatHistoryDao;
 use App\Model\Dao\GroupDao;
 use App\Model\Dao\GroupRelationDao;
 use App\Model\Dao\UserApplicationDao;
 use App\Model\Dao\UserDao;
+use App\Model\Entity\FriendChatHistory;
 use App\Model\Entity\Group;
 use App\Model\Entity\GroupRelation;
 use App\Model\Entity\User;
@@ -53,6 +55,12 @@ class GroupLogic
      */
     protected $userApplicationDao;
 
+    /**
+     * @Inject()
+     * @var GroupChatHistoryDao
+     */
+    protected $groupChatHistoryDao;
+
     public function createGroup(int $userId, string $groupName, string $avatar, int $size, string $introduction, int $validation)
     {
         $groupId = $this->groupDao->create([
@@ -88,7 +96,12 @@ class GroupLogic
         ]);
     }
 
-    public function getGroupRelationById($groupId)
+    public function getGroupRelationUserIdsById(int $groupId)
+    {
+        return $this->groupRelationDao->getGroupRelationUserIdsById($groupId);
+    }
+
+    public function getGroupRelationById(int $groupId)
     {
         $this->findGroupById($groupId);
 
@@ -143,6 +156,11 @@ class GroupLogic
     {
         $check = $this->groupRelationDao->checkIsGroupRelation($userId, $groupId);
         if ($check) throw new \Exception('', ApiCode::GROUP_RELATION_ALREADY);
+        return $check;
+    }
+
+    public function checkNotGroupRelation(int $userId, int $groupId){
+        $check = $this->groupRelationDao->checkIsGroupRelation($userId, $groupId);
         return $check;
     }
 
@@ -206,5 +224,22 @@ class GroupLogic
         $userApplicationInfo = $this->userLogic->beforeApply($userApplicationId, UserApplication::APPLICATION_TYPE_GROUP);
         $this->userApplicationDao->changeApplicationStatusById($userApplicationId, UserApplication::APPLICATION_STATUS_REFUSE);
         return $userApplicationInfo;
+    }
+
+    public function createGroupChatHistory(
+        string $messageId,
+        int $fromUserId,
+        int $toGroupId,
+        string $content
+    )
+    {
+        $data = [
+            'message_id' => $messageId,
+            'from_user_id' => $fromUserId,
+            'to_group_id' => $toGroupId,
+            'content' => $content,
+        ];
+        $id = $this->groupChatHistoryDao->createGroupChatHistory($data);
+        return $this->groupChatHistoryDao->findGroupChatHistoryById($id);
     }
 }

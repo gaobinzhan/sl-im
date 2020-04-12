@@ -116,11 +116,12 @@ if (!function_exists('wsSuccess')) {
 }
 
 if (!function_exists('wsError')) {
-    function wsError($msg = 'Error', $cmd = \App\Common\WsMessage::WS_MESSAGE_CMD_ERROR)
+    function wsError($msg = 'Error', $cmd = \App\Common\WsMessage::WS_MESSAGE_CMD_ERROR, $data = [])
     {
         $result = [
             'cmd' => $cmd,
             'msg' => $msg,
+            'data' => $data
         ];
         return json_encode($result);
     }

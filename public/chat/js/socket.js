@@ -18,32 +18,29 @@ function createMessage(cmd, data = {}, ext = {}) {
     data: data,
     ext: ext
   };
+  output(msg);
   if (cmd !== user_ping) {
     ack(msg);
   }
-  return JSON.stringify(msg)
+  return JSON.stringify(msg);
 }
 
 function ack(msg) {
   let data = msg.data;
   let message_id = data.message_id;
+  wsSend(JSON.stringify(msg));
   messageList[message_id] = {
     msg: msg,
     timer: setTimeout(function () {
       if (!isEmpty(data.content)) {
-        layui.layer.open({
-          title: '消息发送失败',
-          content: data.content
+        layui.layer.msg('消息发送失败：' + data.content, {
+          time: 0
           , btn: ['重试', '取消']
-          , yes: function (index, layero) {
+          , yes: function (index) {
             ack(messageList[message_id].msg);
             layui.layer.close(index);
-          }
-          , btn2: function (index, layero) {
-            delete messageList[message_id];
-            layui.layer.close(index);
-          }
-          , cancel: function () {
+          },
+          btn2: function (index) {
             delete messageList[message_id];
             layui.layer.close(index);
           }
@@ -57,7 +54,7 @@ function ack(msg) {
 function wsOpen(event) {
   output(event, 'onOpen');
   heartbeat = setInterval(function () {
-    Socket.send(createMessage(user_ping));
+    wsSend(createMessage(user_ping));
   }, 10000)
 }
 
@@ -69,6 +66,7 @@ function wsReceive(event) {
   }
   if (result.cmd && result.cmd === system_error) {
     layer.msg(result.cmd + ' : ' + result.msg);
+    clearMessageListTimer(result);
     return false;
   }
 
@@ -83,7 +81,13 @@ function wsReceive(event) {
     return false;
   }
 
-  let message_id = result.data.message_id;
+  clearMessageListTimer(result);
+
+}
+
+function clearMessageListTimer(result) {
+  let message_id = result.data.message_id ?? '';
+  if (message_id === '') return false;
   clearInterval(messageList[message_id].timer);
   delete messageList[message_id];
 }
