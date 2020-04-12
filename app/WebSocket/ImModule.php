@@ -23,15 +23,15 @@ use App\WebSocket\Controller\FriendController;
 use App\WebSocket\Controller\GroupController;
 
 /**
- * Class ChatModule - This is an module for handle websocket
+ * Class ImModule - This is an module for handle websocket
  *
  * @WsModule(
- *    "chat",
+ *    "im",
  *     messageParser=JsonParser::class,
  *     controllers={FriendController::class,UserController::class,GroupController::class}
  *  )
  */
-class ChatModule
+class ImModule
 {
 
     /**
