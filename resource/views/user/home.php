@@ -4,7 +4,7 @@
 <body class="layui-layout-body">
 <div class="layui-layout layui-layout-admin">
   <div class="layui-header">
-    <div class="layui-logo">IM</div>
+    <div class="layui-logo">SL-IM</div>
     <ul class="layui-nav layui-layout-right">
       <li class="layui-nav-item">
         <a href="javascript:;"><img src="<?= $userInfo['avatar'] ?>" class="layui-nav-img">
@@ -47,14 +47,72 @@ EOF;
   <div class="layui-body">
     <!-- 内容主体区域 -->
     <div style="padding: 15px;">
-
+      <fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;">
+        <legend>sl-im信息</legend>
+      </fieldset>
+      <div class="layui-collapse" lay-filter="test">
+        <div class="layui-colla-item">
+          <h2 class="layui-colla-title">Github</h2>
+          <div class="layui-colla-content">
+            <a href="https://github.com/gaobinzhan/sl-im" target="_blank">https://github.com/gaobinzhan/sl-im</a>
+          </div>
+        </div>
+      </div>
+      <div class="layui-collapse" lay-filter="test">
+        <div class="layui-colla-item">
+          <h2 class="layui-colla-title">介绍</h2>
+          <div class="layui-colla-content">
+            <p><a href="https://im.gaobinzhan.com" target="_blank">sl-im</a> 是基于 <a href="https://www.swoft.org"
+                                                                                    target="_blank">Swoft</a> 微服务协程框架和
+              <a href="https://www.layui.com/layim/" target="_blank">Layim</a> 网页聊天系统 所开发出来的聊天室。</p>
+          </div>
+        </div>
+      </div>
+      <div class="layui-collapse" lay-filter="test">
+        <div class="layui-colla-item">
+          <h2 class="layui-colla-title">联系方式</h2>
+          <div class="layui-colla-content">
+            <p>WeChat：<b>gaobinzhan</b></p>
+            <p>Email：<b>gaobinzhan@gmail.com</b></p>
+            <p>QQ：<b>975975398</b></p>
+          </div>
+        </div>
+      </div>
     </div>
+
+    <div style="padding: 20px; background-color: #F2F2F2;">
+      <div class="layui-row layui-col-space15">
+        <div class="layui-col-md6">
+          <div class="layui-card">
+            <div class="layui-card-header">公众号</div>
+            <div class="layui-card-body">
+              <p align="center">
+                <img src="https://qiniu.gaobinzhan.com/2020/04/13/1aba16c932df2.jpg" alt="">
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="layui-col-md6">
+          <div class="layui-card">
+            <div class="layui-card-header">小程序</div>
+            <div class="layui-card-body">
+              <p align="center">
+                <img src="https://qiniu.gaobinzhan.com/2020/04/13/0a23783b1ec47.jpg" alt="">
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 
   <div class="layui-footer">
     <!-- 底部固定区域 -->
-    © layui.com - 底部固定区域
+    <span style="font-size:16px;">© </span>2020 ICP证：<a class="record" href="http://www.miitbeian.gov.cn/"
+                                                        target="_block">鲁ICP备18054315号-1</a>
     <span id="onlineNumber"></span>
+    <script type="text/javascript">document.write(unescape("%3Cspan id='cnzz_stat_icon_1278808980'%3E%3C/span%3E%3Cscript src='https://s9.cnzz.com/z_stat.php%3Fid%3D1278808980%26online%3D1%26show%3Dline' type='text/javascript'%3E%3C/script%3E"));</script>
   </div>
 </div>
 <input type="hidden" class="wsUrl" value="<?php echo $wsUrl ?>">
@@ -62,11 +120,11 @@ EOF;
 <script type="module">
   import {static_user_info} from '/chat/js/api.js';
 
-  layui.use(['layer', 'jquery', 'element'], function () {
+  layui.use(['layer', 'jquery', 'element', 'code'], function () {
     var layer = layui.layer;
     var $ = layui.jquery;
     var element = layui.element;
-
+    layui.code(); //引用code方法
     $(".userInfo").click(function () {
       layer.open({
         title: '用户资料',
@@ -97,11 +155,9 @@ EOF;
         area: [width, height],
         id: id,
         maxmin: true,
-        zIndex: layer.zIndex,
         shade: 0,
         content: url,
         success: function (layero) {
-          layer.setTop(layero);
         }
       });
 

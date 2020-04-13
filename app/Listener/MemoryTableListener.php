@@ -20,7 +20,7 @@ class MemoryTableListener implements EventHandlerInterface
      */
     public function handle(EventInterface $event): void
     {
-        $memoryTable = bean('App\Helper\MemoryTable');
+        bean('App\Helper\MemoryTable');
         CLog::info('MemoryTable Create Success !');
     }
 }

@@ -20,7 +20,7 @@ class AtomicListener implements EventHandlerInterface
      */
     public function handle(EventInterface $event): void
     {
-        $memoryTable = bean('App\Helper\MemoryTable');
+        bean('App\Helper\Atomic');
         CLog::info('Atomic Create Success !');
     }
 }

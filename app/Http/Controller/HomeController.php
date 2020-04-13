@@ -38,24 +38,4 @@ class HomeController
         return context()->getResponse()->withContentType(ContentType::HTML)->withContent($content);
     }
 
-    /**
-     * @RequestMapping("/hi")
-     *
-     * @return Response
-     */
-    public function hi(): Response
-    {
-        return context()->getResponse()->withContent('hi');
-    }
-
-    /**
-     * @RequestMapping("/hello[/{name}]")
-     * @param string $name
-     *
-     * @return Response
-     */
-    public function hello(string $name): Response
-    {
-        return context()->getResponse()->withContent('Hello' . ($name === '' ? '' : ", {$name}"));
-    }
 }

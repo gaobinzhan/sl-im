@@ -40,5 +40,24 @@ return [
                 'height' => '520px',
             ]
         ]
+    ],
+    [
+        'title' => '其它',
+        'child' => [
+            [
+                'title' => '作者博客',
+                'id' => 'blog',
+                'url' => 'https://blog.gaobinzhan.com/',
+                'width' => '1000px',
+                'height' => '520px',
+            ],
+            [
+                'title' => '关于',
+                'id' => 'about',
+                'url' => '/static/about',
+                'width' => '1000px',
+                'height' => '520px',
+            ]
+        ]
     ]
 ];

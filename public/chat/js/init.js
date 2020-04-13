@@ -30,10 +30,24 @@ layui.use('layim', function (layim) {
       , title: '代码'
       , icon: '&#xe64e;'
     }]
-
+    , brief: false
+    , title: '我的IM'
+    , min: false
+    , right: "0px"
+    , minRight: ''
+    , initSkin: ''
+    , isAudio: true
+    , isVideo: true
+    , notice: true
+    , voice: 'default.mp3'
+    , isfriend: true
+    , isgroup: true
+    , maxLength: true
+    , copyright: true
     , msgbox: static_user_application
     , chatLog: static_user_chat_history
-  });
+  })
+  ;
   toolCode();
   ready();
   userStatus();

@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace App\Task;
+namespace App\Task\Task;
 
 use App\Common\WsMessage;
 use App\Helper\Atomic;
@@ -13,7 +13,7 @@ use Swoole\Table;
  * Class UserTask - define some tasks
  *
  * @Task("User")
- * @package App\Task
+ * @package App\Task\Task
  */
 class UserTask
 {

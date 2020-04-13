@@ -109,4 +109,11 @@ class StaticController
     {
         return view('user/history');
     }
+
+    /**
+     * @RequestMapping(route="about",method={RequestMethod::GET})
+     */
+    public function about(){
+        return view('chat/about');
+    }
 }

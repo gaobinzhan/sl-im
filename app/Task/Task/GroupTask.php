@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace App\Task;
+namespace App\Task\Task;
 
 
 use App\Common\WsMessage;
@@ -8,22 +8,21 @@ use Swoft\Task\Annotation\Mapping\Task;
 use Swoft\Task\Annotation\Mapping\TaskMapping;
 
 /**
- * Class FriendTask - define some tasks
+ * Class GroupTask - define some tasks
  *
- * @Task("Friend")
- * @package App\Task
+ * @Task("Group")
+ * @package App\Task\Task
  */
-class FriendTask
+class GroupTask
 {
-
     /**
      * @TaskMapping(name="sendMessage")
      */
     public function sendMessage(
-        $fd,
+        $fds,
         $username,
         $avatar,
-        $userId,
+        $groupId,
         $type,
         $content,
         $cid,
@@ -32,11 +31,11 @@ class FriendTask
         $timestamp
     )
     {
-        if (!$fd) return false;
+        if (!$fds) return false;
         $data = [
             'username' => $username,
             'avatar' => $avatar,
-            'id' => $userId,
+            'id' => $groupId,
             'type' => $type,
             'content' => $content,
             'cid' => $cid,
@@ -46,7 +45,7 @@ class FriendTask
         ];
         $result = wsSuccess(WsMessage::WS_MESSAGE_CMD_EVENT, WsMessage::EVENT_GET_MESSAGE, $data);
 
-        server()->sendTo($fd, $result);
+        server()->broadcast($result, $fds);
     }
 
     /**
@@ -54,7 +53,7 @@ class FriendTask
      */
     public function agreeApply(int $fd, array $data)
     {
-        $result = wsSuccess(WsMessage::WS_MESSAGE_CMD_EVENT, WsMessage::EVENT_FRIEND_AGREE_APPLY, $data);
+        $result = wsSuccess(WsMessage::WS_MESSAGE_CMD_EVENT, WsMessage::EVENT_GROUP_AGREE_APPLY, $data);
         server()->sendTo($fd, $result);
     }
 }

@@ -5,7 +5,8 @@
   <meta name="viewport"
         content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Swoft Framework 2.0 - PHP microservices coroutine framework</title>
+  <title>sl-im 是基于Swoft微服务协程框架和Layim网页聊天系统所开发出来的聊天室。</title>
+  <meta name="keywords" content="sl-im,chat,layim,swoft,im,即时通讯,聊天室,gaobinzhan"/>
   <style type="text/css">
     *,
     *::before,
@@ -253,24 +254,23 @@
 <div class="container">
   <nav class="top-nav ">
     <ul class="clearfix">
-      <li><a target="_blank"  href="https://github.com/swoft-cloud/swoft">Github</a></li>
-      <li><a target="_blank"  href="https://swoft.org/docs">Document</a></li>
-      <li><a target="_blank"  href="https://swoft.org/docs">Swoft.org</a></li>
-      <li><a target="_blank"  href="https://gitter.im/swoft-cloud/community">Gitter.im</a></li>
+      <li><a target="_blank"  href="https://github.com/gaobinzhan/sl-im">Github</a></li>
+      <li><a target="_blank"  href="/static/register">Register</a></li>
+      <li><a target="_blank"  href="/static/login">Login</a></li>
+      <li><a target="_blank"  href="/user/home">聊天室</a></li>
     </ul>
   </nav>
   <div class="main">
-    <h1 class="swoft-title">Swoft <span class="framework">Framework</span>
-      <small>2.x</small>
+    <h1 class="swoft-title">sl <span class="framework">im</span>
     </h1>
   </div>
 </div>
 <nav class="foot-nav">
   <ul class="clearfix">
-    <li><a target="_blank"  href="https://github.com/swoft-cloud/swoft">Github</a></li>
-    <li><a target="_blank"  href="https://swoft.org/docs">Document</a></li>
-    <li><a target="_blank"  href="https://swoft.org/docs">Swoft.org</a></li>
-    <li><a target="_blank"  href="https://gitter.im/swoft-cloud/community">Gitter.im</a></li>
+    <li><a target="_blank"  href="https://github.com/gaobinzhan/sl-im">Github</a></li>
+    <li><a target="_blank"  href="/static/register">Register</a></li>
+    <li><a target="_blank"  href="/static/login">Login</a></li>
+    <li><a target="_blank"  href="/user/home">聊天室</a></li>
   </ul>
 </nav>
 </body>
