@@ -1,4 +1,4 @@
-import {output, isEmpty} from "./util.js";
+import {output, isEmpty, getCookie} from "./util.js";
 import {MessageActive} from './event.js';
 import {user_ping, system_error, system_event} from "./api.js";
 
@@ -28,7 +28,6 @@ function createMessage(cmd, data = {}, ext = {}) {
 function ack(msg) {
   let data = msg.data;
   let message_id = data.message_id;
-  wsSend(JSON.stringify(msg));
   messageList[message_id] = {
     msg: msg,
     timer: setTimeout(function () {
@@ -37,6 +36,7 @@ function ack(msg) {
           time: 0
           , btn: ['重试', '取消']
           , yes: function (index) {
+            Socket.send(JSON.stringify(msg));
             ack(messageList[message_id].msg);
             layui.layer.close(index);
           },
@@ -46,10 +46,11 @@ function ack(msg) {
           }
         });
       }
-    }, 10000)
+    }, 5000)
   };
   output(messageList);
 }
+
 
 function wsOpen(event) {
   output(event, 'onOpen');
@@ -94,20 +95,55 @@ function clearMessageListTimer(result) {
 
 function wsError(event) {
   output(event, 'onError');
-  clearInterval(heartbeat)
+  clearInterval(heartbeat);
+  reloadSocket();
 }
 
 function wsClose(event) {
   output(event, 'onClose');
-  clearInterval(heartbeat)
+  clearInterval(heartbeat);
+  reloadSocket()
+}
+
+function reloadSocket() {
+  layui.layer.msg(event.reason, {
+    time: 0
+    ,title:'连接异常关闭'
+    , btn: ['重试', '取消']
+    , yes: function (index) {
+      var wsUrl = layui.jquery(".wsUrl").val();
+      Socket = createSocketConnection(wsUrl, getCookie('IM_TOKEN'));
+      socketEvent(Socket);
+      layui.layer.close(index);
+    },
+    btn2: function (index) {
+      layui.layer.close(index);
+    }
+  });
 }
 
 function wsSend(data) {
   Socket.send(data)
 }
 
+function socketEvent(webSocket) {
+  webSocket.onopen = function (event) {
+    wsOpen(event);
+  };
+  webSocket.onmessage = function (event) {
+    wsReceive(event);
+  };
+  webSocket.onerror = function (event) {
+    wsError(event)
+  };
+  webSocket.onclose = function (event) {
+    wsClose(event)
+  };
+}
+
 export {
   createSocketConnection,
+  socketEvent,
   wsOpen,
   wsReceive,
   wsError,

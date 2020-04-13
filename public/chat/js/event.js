@@ -6,7 +6,7 @@ import {
   group_send_cmd,
   friend_read_msg
 } from "./api.js";
-import {createSocketConnection, createMessage, wsOpen, wsReceive, wsError, wsClose, wsSend} from "./socket.js";
+import {createSocketConnection, createMessage, socketEvent,wsOpen, wsReceive, wsError, wsClose, wsSend} from "./socket.js";
 import {getCookie, output, messageId} from "./util.js";
 
 function ready() {
@@ -20,18 +20,7 @@ function ready() {
 
     var  wsUrl = layui.jquery(".wsUrl").val();
     var webSocket = createSocketConnection(wsUrl, getCookie('IM_TOKEN'));
-    webSocket.onopen = function (event) {
-      wsOpen(event);
-    };
-    webSocket.onmessage = function (event) {
-      wsReceive(event);
-    };
-    webSocket.onerror = function (event) {
-      wsError(event)
-    };
-    webSocket.onclose = function (event) {
-      wsClose(event)
-    };
+    socketEvent(webSocket);
   });
 };
 
@@ -66,7 +55,8 @@ function toMessage() {
       to_id: parseInt(res.to.id),
       content: res.mine.content
     };
-    createMessage(cmd, data);
+    let msg = createMessage(cmd, data);
+    wsSend(msg);
   });
 };
 
