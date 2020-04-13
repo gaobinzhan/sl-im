@@ -80,8 +80,8 @@ composer update
 
 ```bash
 # basic
-APP_DEBUG=1
-SWOFT_DEBUG=1
+APP_DEBUG=0
+SWOFT_DEBUG=0
 
 # more ...
 APP_HOST=https://im.gaobinzhan.com/
@@ -114,9 +114,7 @@ server{
     ssl_protocols TLSv1.1 TLSv1.2 TLSv1.3;
     ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:HIGH:!aNULL:!MD5:!RC4:!DHE;
     location / {
-        if (!-e $request_filename){
-            proxy_pass http://127.0.0.1:9091;
-        }
+        proxy_pass http://127.0.0.1:9091;
         proxy_set_header Host $host:$server_port;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Real-PORT $remote_port;
@@ -128,6 +126,9 @@ server{
         proxy_read_timeout   3600s;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection "upgrade";
+    }
+    location ~ .*\.(js|ico|css|ttf|woff|woff2|png|jpg|jpeg|svg|gif|htm)$ {
+        root /data/wwwroot/IM/public;
     }
 }
 ```
