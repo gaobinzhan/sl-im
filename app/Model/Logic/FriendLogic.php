@@ -225,6 +225,13 @@ class FriendLogic
         /** @var UserApplication $userApplicationInfo */
         $userApplicationInfo = $this->userLogic->beforeApply($userApplicationId, UserApplication::APPLICATION_TYPE_FRIEND);
         $this->userApplicationDao->changeApplicationStatusById($userApplicationId, UserApplication::APPLICATION_STATUS_REFUSE);
+
+        /** @var MemoryTable $MemoryTable */
+        $MemoryTable = bean('App\Helper\MemoryTable');
+        $fd = $MemoryTable->get(MemoryTable::USER_TO_FD, (string)$userApplicationInfo->getUserId(), 'fd') ?? '';
+        if ($fd) {
+            Task::co('User', 'unReadApplicationCount', [$fd, '新']);
+        }
         return $userApplicationInfo;
     }
 
