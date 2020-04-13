@@ -6,7 +6,7 @@
 
 [![Php Version](https://img.shields.io/badge/php-%3E=7.1-brightgreen.svg?maxAge=2592000)](https://secure.php.net/)
 [![Swoole Version](https://img.shields.io/badge/swoole-%3E=4.3.3-brightgreen.svg?maxAge=2592000)](https://github.com/swoole/swoole-src)
-[![Swoft License](https://img.shields.io/hexpm/l/plug.svg?maxAge=2592000)](https://github.com/swoft-cloud/swoft/blob/master/LICENSE)
+[![sl-im License](https://img.shields.io/hexpm/l/plug.svg?maxAge=2592000)](https://github.com/gaobinzhan/sl-im/blob/master/LICENSE)
 
 
 ## 简介
@@ -16,6 +16,9 @@
 ## 体验地址
 
 [sl-im](https://im.gaobinzhan.com) https://im.gaobinzhan.com
+
+## 演示图
+![sl-im](https://qiniu.gaobinzhan.com/2020/04/13/a96b031c660ca.jpg)
 
 ## 功能
 
