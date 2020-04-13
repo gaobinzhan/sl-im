@@ -6,7 +6,16 @@ import {
   group_send_cmd,
   friend_read_msg
 } from "./api.js";
-import {createSocketConnection, createMessage, socketEvent,wsOpen, wsReceive, wsError, wsClose, wsSend} from "./socket.js";
+import {
+  createSocketConnection,
+  createMessage,
+  socketEvent,
+  wsOpen,
+  wsReceive,
+  wsError,
+  wsClose,
+  wsSend
+} from "./socket.js";
 import {getCookie, output, messageId} from "./util.js";
 
 function ready() {
@@ -18,7 +27,7 @@ function ready() {
       layui.layim.msgbox(count)
     });
 
-    var  wsUrl = layui.jquery(".wsUrl").val();
+    var wsUrl = layui.jquery(".wsUrl").val();
     var webSocket = createSocketConnection(wsUrl, getCookie('IM_TOKEN'));
     socketEvent(webSocket);
   });
@@ -75,6 +84,9 @@ var MessageActive = {
       });
       wsSend(msg)
     }
+  },
+  onlineNumber: function (data) {
+    layui.jquery("#onlineNumber").html(data)
   }
 };
 

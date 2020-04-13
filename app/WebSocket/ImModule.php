@@ -2,6 +2,7 @@
 
 namespace App\WebSocket;
 
+use App\Helper\Atomic;
 use App\Helper\JwtHelper;
 use App\Helper\MemoryTable;
 use App\Model\Dao\UserDao;
@@ -57,9 +58,6 @@ class ImModule
 
     /**
      * @OnOpen()
-     * @param Request $request
-     * @param int $fd
-     * @return mixed
      */
     public function onOpen(Request $request, int $fd)
     {
@@ -73,17 +71,22 @@ class ImModule
 
         $memoryTable->store(MemoryTable::FD_TO_USER, (string)$fd, ['userId' => $request->user]);
         $memoryTable->store(MemoryTable::USER_TO_FD, (string)$request->user, ['fd' => $fd]);
+
         /** @var UserLogic $userLogic */
         $userLogic = bean('App\Model\Logic\UserLogic');
         $userLogic->setUserStatus($request->user, User::STATUS_ONLINE);
+
+        /** @var Atomic $atomic */
+        $atomic = Bean('App\Helper\Atomic');
+        $atomic->add(1);
+
+        Task::co('User','onlineNumber');
+
 
     }
 
     /**
      * @OnClose()
-     * @param Server $server
-     * @param int $fd
-     * @return mixed
      */
     public function onClose(Server $server, int $fd)
     {
@@ -93,8 +96,15 @@ class ImModule
         $selfFd = $memoryTable->get(MemoryTable::FD_TO_USER, (string)$userId, 'fd');
         if ($fd == $selfFd) $memoryTable->forget(MemoryTable::USER_TO_FD, (string)$userId);
         $memoryTable->forget(MemoryTable::FD_TO_USER, (string)$fd);
+
         /** @var UserLogic $userLogic */
         $userLogic = bean('App\Model\Logic\UserLogic');
         $userLogic->setUserStatus($userId, User::STATUS_OFFLINE);
+
+        /** @var Atomic $atomic */
+        $atomic = Bean('App\Helper\Atomic');
+        $atomic->sub(1);
+
+        Task::co('User','onlineNumber');
     }
 }

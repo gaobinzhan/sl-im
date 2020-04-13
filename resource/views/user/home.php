@@ -54,6 +54,7 @@ EOF;
   <div class="layui-footer">
     <!-- 底部固定区域 -->
     © layui.com - 底部固定区域
+    <span id="onlineNumber"></span>
   </div>
 </div>
 <input type="hidden" class="wsUrl" value="<?php echo $wsUrl ?>">
