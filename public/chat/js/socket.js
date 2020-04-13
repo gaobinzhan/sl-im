@@ -23,27 +23,35 @@ function createMessage(cmd, data = {}, ext = {}) {
   return JSON.stringify(msg);
 }
 
-function ack(msg) {
+function ack(msg, num = 1) {
   let data = msg.data;
   let message_id = data.message_id;
   if (isEmpty(message_id)) return false;
   messageList[message_id] = {
     msg: msg,
+    num: num,
     timer: setTimeout(function () {
-      if (!isEmpty(data.content)) {
-        layui.layer.msg('消息发送失败：' + data.content, {
-          time: 0
-          , btn: ['重试', '取消']
-          , yes: function (index) {
-            Socket.send(JSON.stringify(msg));
-            ack(messageList[message_id].msg);
-            layui.layer.close(index);
-          },
-          btn2: function (index) {
-            delete messageList[message_id];
-            layui.layer.close(index);
-          }
-        });
+      output(num, message_id + '的发送次数');
+      if (num > 3) {
+        if (!isEmpty(data.content)) {
+          output(num, '重试次数大于3进行提示');
+          layui.layer.msg('消息发送失败：' + data.content, {
+            time: 0
+            , btn: ['重试', '取消']
+            , yes: function (index) {
+              Socket.send(JSON.stringify(msg));
+              ack(messageList[message_id].msg, messageList[message_id]['num'] + 1);
+              layui.layer.close(index);
+            },
+            btn2: function (index) {
+              delete messageList[message_id];
+              layui.layer.close(index);
+            }
+          });
+        }
+      } else {
+        Socket.send(JSON.stringify(msg));
+        ack(messageList[message_id].msg, messageList[message_id]['num'] + 1);
       }
     }, 5000)
   };
