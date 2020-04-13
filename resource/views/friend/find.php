@@ -176,6 +176,8 @@
               application_reason: remark
             }, function (data) {
               layer.close(index);
+            }, function (data) {
+              layer.close(index);
             }
           );
         }

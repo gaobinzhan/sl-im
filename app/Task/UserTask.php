@@ -54,4 +54,13 @@ class UserTask
 
         server()->broadcast($data, $fds);
     }
+
+    /**
+     * @TaskMapping(name="unReadApplicationCount")
+     */
+    public function unReadApplicationCount(int $fd, $data)
+    {
+        $result = wsSuccess(WsMessage::WS_MESSAGE_CMD_EVENT, WsMessage::EVENT_GET_UNREAD_APPLICATION_COUNT, $data);
+        server()->sendTo($fd, $result);
+    }
 }

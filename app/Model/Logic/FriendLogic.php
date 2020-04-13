@@ -7,6 +7,7 @@
 namespace App\Model\Logic;
 
 use App\ExceptionCode\ApiCode;
+use App\Helper\MemoryTable;
 use App\Model\Dao\FriendChatHistoryDao;
 use App\Model\Dao\FriendGroupDao;
 use App\Model\Dao\FriendRelationDao;
@@ -19,6 +20,7 @@ use App\Model\Entity\User;
 use App\Model\Entity\UserApplication;
 use Swoft\Bean\Annotation\Mapping\Bean;
 use Swoft\Bean\Annotation\Mapping\Inject;
+use Swoft\Task\Task;
 
 /**
  * Class FriendLogic
@@ -161,6 +163,13 @@ class FriendLogic
 
         $result = $this->userLogic->createUserApplication($userId, $receiverId, $friendGroupId, UserApplication::APPLICATION_TYPE_FRIEND, $applicationReason, UserApplication::APPLICATION_STATUS_CREATE, UserApplication::UN_READ);
         if (!$result) throw new \Exception('', ApiCode::USER_CREATE_APPLICATION_FAIL);
+
+        /** @var MemoryTable $MemoryTable */
+        $MemoryTable = bean('App\Helper\MemoryTable');
+        $fd = $MemoryTable->get(MemoryTable::USER_TO_FD, (string)$receiverId, 'fd') ?? '';
+        if ($fd) {
+            Task::co('User', 'unReadApplicationCount', [$fd, '新']);
+        }
 
         return $result;
     }

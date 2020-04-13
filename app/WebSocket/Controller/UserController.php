@@ -6,6 +6,7 @@ use App\Common\WsMessage;
 use App\Helper\MemoryTable;
 use App\Model\Logic\UserLogic;
 use Swoft\Bean\Annotation\Mapping\Inject;
+use Swoft\Task\Task;
 use Swoft\WebSocket\Server\Annotation\Mapping\WsController;
 use Swoft\WebSocket\Server\Annotation\Mapping\MessageMapping;
 
@@ -41,7 +42,7 @@ class UserController
         $MemoryTable = bean('App\Helper\MemoryTable');
         $userId = $MemoryTable->get(MemoryTable::FD_TO_USER, (string)$fd, 'userId') ?? '';
         $count = $this->userLogic->getUnreadApplicationCount(intval($userId));
-        $result =  wsSuccess(WsMessage::WS_MESSAGE_CMD_EVENT, WsMessage::EVENT_GET_UNREAD_APPLICATION_COUNT, $count);
-        server()->sendTo($fd,$result);
+
+        Task::co('User', 'unReadApplicationCount', [$fd, $count]);
     }
 }

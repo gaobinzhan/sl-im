@@ -100,6 +100,7 @@
   import {group_get_recommended, group_search, group_apply} from '/chat/js/api.js';
   import {getRequest, postRequest} from '/chat/js/request.js';
   import {addGroup} from '/chat/js/panel.js';
+
   layui.use(['layim', 'laypage', 'form', 'flow'], function () {
     var layim = layui.layim
       , layer = layui.layer
@@ -175,6 +176,8 @@
               if (param_type == "object") {
                 addGroup(data)
               }
+              layer.close(index);
+            }, function (data) {
               layer.close(index);
             }
           );
