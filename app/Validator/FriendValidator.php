@@ -55,6 +55,23 @@ class FriendValidator
     protected $friend_group_id = '';
 
     /**
+     * @IsInt()
+     * @Required()
+     * @NotEmpty()
+     * @var int
+     */
+    protected $to_user_id = '';
+
+    /**
+     * @IsInt()
+     * @Required()
+     * @NotEmpty()
+     * @var int
+     */
+    protected $from_user_id = '';
+
+
+    /**
      * @IsString()
      * @Required()
      * @NotEmpty()

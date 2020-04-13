@@ -24,11 +24,20 @@ class GroupChatHistoryDao
      */
     protected $groupChatHistoryEntity;
 
-    public function createGroupChatHistory(array $data){
+    public function createGroupChatHistory(array $data)
+    {
         return $this->groupChatHistoryEntity::insertGetId($data);
     }
 
-    public function findGroupChatHistoryById(int $id){
+    public function findGroupChatHistoryById(int $id)
+    {
         return $this->groupChatHistoryEntity::whereNull('deleted_at')->find($id);
+    }
+
+    public function getChatHistory(int $toGroupId, int $page, int $size)
+    {
+        return $this->groupChatHistoryEntity::whereNull('deleted_at')
+            ->where('to_group_id','=',$toGroupId)
+            ->paginate($page, $size);
     }
 }

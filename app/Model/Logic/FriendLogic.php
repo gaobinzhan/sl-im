@@ -268,7 +268,7 @@ class FriendLogic
 
         /** @var User $userInfos */
         $userInfos = array_column($this->userDao->getUserByIds($userIds)->toArray(), null, 'userId');
-        
+
         $result = [];
 
 
@@ -287,6 +287,36 @@ class FriendLogic
 
 
         return $result;
+    }
+
+
+    public function getChatHistory(int $fromUserId, int $userId, int $page, int $size)
+    {
+        /** @var FriendChatHistory $historyInfos */
+        $historyInfos = $this->friendChatHistoryDao->getChatHistory($fromUserId, $userId, $page, $size);
+
+        /** @var User $userInfos */
+        $userInfos = array_column($this->userDao->getUserByIds([$fromUserId, $userId])->toArray(), null, 'userId');
+
+        $result = [
+            'count' => $historyInfos['count'],
+            'page' => $historyInfos['page'],
+            'perPage' => $historyInfos['perPage'],
+            'pageCount' => $historyInfos['pageCount'],
+        ];
+        foreach ($historyInfos['list'] as $historyInfo) {
+            $id = $historyInfo['fromUserId'];
+            $result['list'][] = [
+                'id' => $id,
+                'username' => $userInfos[$id]['username'],
+                'avatar' => $userInfos[$id]['avatar'],
+                'content' => $historyInfo['content'],
+                'timestamp' => strtotime($historyInfo['createdAt']) * 1000
+            ];
+        }
+
+        return $result;
+
     }
 
 

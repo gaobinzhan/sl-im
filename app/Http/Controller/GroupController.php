@@ -167,4 +167,23 @@ class GroupController
             return apiError($throwable->getCode(), $throwable->getMessage());
         }
     }
+
+    /**
+     * @RequestMapping(route="getChatHistory",method={RequestMethod::POST})
+     * @Validate(validator="GroupValidator",fields={"to_group_id"})
+     * @Validate(validator="SearchValidator",fields={"page","size"})
+     * @Middleware(AuthMiddleware::class)
+     */
+    public function getChatHistory(Request $request)
+    {
+        try {
+            $toGroupId = $request->parsedBody('to_group_id');
+            $page = $request->parsedBody('page');
+            $size = $request->parsedBody('size');
+            $result = $this->groupLogic->getChatHistory($toGroupId, $page, $size);
+            return apiSuccess($result);
+        } catch (\Throwable $throwable) {
+            return apiError($throwable->getCode(), $throwable->getMessage());
+        }
+    }
 }

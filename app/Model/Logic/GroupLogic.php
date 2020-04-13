@@ -8,9 +8,8 @@ use App\Model\Dao\GroupDao;
 use App\Model\Dao\GroupRelationDao;
 use App\Model\Dao\UserApplicationDao;
 use App\Model\Dao\UserDao;
-use App\Model\Entity\FriendChatHistory;
 use App\Model\Entity\Group;
-use App\Model\Entity\GroupRelation;
+use App\Model\Entity\GroupChatHistory;
 use App\Model\Entity\User;
 use App\Model\Entity\UserApplication;
 use Swoft\Bean\Annotation\Mapping\Bean;
@@ -159,7 +158,8 @@ class GroupLogic
         return $check;
     }
 
-    public function checkNotGroupRelation(int $userId, int $groupId){
+    public function checkNotGroupRelation(int $userId, int $groupId)
+    {
         $check = $this->groupRelationDao->checkIsGroupRelation($userId, $groupId);
         return $check;
     }
@@ -241,5 +241,40 @@ class GroupLogic
         ];
         $id = $this->groupChatHistoryDao->createGroupChatHistory($data);
         return $this->groupChatHistoryDao->findGroupChatHistoryById($id);
+    }
+
+    public function getChatHistory(int $toGroupId, int $page, int $size)
+    {
+        /** @var GroupChatHistory $historyInfos */
+        $historyInfos = $this->groupChatHistoryDao->getChatHistory($toGroupId, $page, $size);
+
+        $userIds = [];
+
+        foreach ($historyInfos['list'] as $historyInfo){
+            array_push($userIds,$historyInfo['fromUserId']);
+        }
+
+        /** @var User $userInfos */
+        $userInfos = array_column($this->userDao->getUserByIds($userIds)->toArray(), null, 'userId');
+
+        $result = [
+            'count' => $historyInfos['count'],
+            'page' => $historyInfos['page'],
+            'perPage' => $historyInfos['perPage'],
+            'pageCount' => $historyInfos['pageCount'],
+        ];
+        foreach ($historyInfos['list'] as $historyInfo) {
+            $id = $historyInfo['fromUserId'];
+            $result['list'][] = [
+                'id' => $id,
+                'username' => $userInfos[$id]['username'],
+                'avatar' => $userInfos[$id]['avatar'],
+                'content' => $historyInfo['content'],
+                'timestamp' => strtotime($historyInfo['createdAt']) * 1000
+            ];
+        }
+
+        return $result;
+
     }
 }

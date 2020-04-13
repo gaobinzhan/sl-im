@@ -168,4 +168,23 @@ class FriendController
             return apiError($throwable->getCode(), $throwable->getMessage());
         }
     }
+
+    /**
+     * @RequestMapping(route="getChatHistory",method={RequestMethod::POST})
+     * @Validate(validator="FriendValidator",fields={"from_user_id"})
+     * @Validate(validator="SearchValidator",fields={"page","size"})
+     * @Middleware(AuthMiddleware::class)
+     */
+    public function getChatHistory(Request $request)
+    {
+        try {
+            $fromUserId = $request->parsedBody('from_user_id');
+            $page = $request->parsedBody('page');
+            $size = $request->parsedBody('size');
+            $result = $this->friendLogic->getChatHistory($fromUserId, $request->user, $page, $size);
+            return apiSuccess($result);
+        } catch (\Throwable $throwable) {
+            return apiError($throwable->getCode(), $throwable->getMessage());
+        }
+    }
 }

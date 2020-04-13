@@ -20,6 +20,7 @@ var friend_apply = '/friend/apply';
 var friend_agree_apply = '/friend/agreeApply';
 var friend_refuse_apply = '/friend/refuseApply';
 var friend_info = '/friend/info';
+var friend_get_chat_history = '/friend/getChatHistory';
 var group_info = '/group/info';
 var group_create = '/group/create';
 var group_get_recommended = '/group/getRecommendedGroup';
@@ -27,6 +28,7 @@ var group_search = '/group/search';
 var group_apply = '/group/apply';
 var group_agree_apply = '/group/agreeApply';
 var group_refuse_apply = '/group/refuseApply';
+var group_get_chat_history = '/group/getChatHistory';
 var group_get_relation = '/group/getGroupRelation';
 var friend_send_cmd = 'friend.send';
 var group_send_cmd = 'group.send';
@@ -58,6 +60,7 @@ export {
   friend_agree_apply,
   friend_refuse_apply,
   friend_info,
+  friend_get_chat_history,
   group_info,
   group_create,
   group_get_recommended,
@@ -66,6 +69,7 @@ export {
   group_agree_apply,
   group_refuse_apply,
   group_get_relation,
+  group_get_chat_history,
   friend_send_cmd,
   group_send_cmd,
   user_ping,

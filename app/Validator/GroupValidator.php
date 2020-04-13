@@ -88,6 +88,14 @@ class GroupValidator
     protected $group_id = '';
 
     /**
+     * @IsInt()
+     * @Required()
+     * @NotEmpty()
+     * @var int
+     */
+    protected $to_group_id = '';
+
+    /**
      * @IsString()
      * @Required()
      * @NotEmpty()

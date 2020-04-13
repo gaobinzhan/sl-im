@@ -9,6 +9,7 @@ namespace App\Model\Dao;
 use App\Model\Entity\FriendChatHistory;
 use Swoft\Bean\Annotation\Mapping\Bean;
 use Swoft\Bean\Annotation\Mapping\Inject;
+use Swoft\Db\Eloquent\Builder;
 
 /**
  * Class FriendChatHistoryDao
@@ -46,5 +47,21 @@ class FriendChatHistoryDao
             ->where('to_user_id', '=', $userId)
             ->where('reception_state', '=', FriendChatHistory::NOT_RECEIVED)
             ->get();
+    }
+
+    public function getChatHistory(int $fromUserId, int $userId, int $page, int $size)
+    {
+        return $this->friendChatHistoryEntity::whereNull('deleted_at')
+            ->where(function (Builder $builder) use ($fromUserId, $userId) {
+                $builder->orWhere(function (Builder $builder) use ($fromUserId, $userId) {
+                    $builder->where('from_user_id', '=', $fromUserId);
+                    $builder->where('to_user_id', $userId);
+                });
+                $builder->orWhere(function (Builder $builder) use ($fromUserId, $userId) {
+                    $builder->where('from_user_id', '=', $userId);
+                    $builder->where('to_user_id', $fromUserId);
+                });
+            })
+            ->paginate($page, $size);
     }
 }
