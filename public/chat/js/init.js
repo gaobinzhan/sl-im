@@ -42,7 +42,7 @@ layui.use('layim', function (layim) {
     , voice: 'default.mp3'
     , isfriend: true
     , isgroup: true
-    , maxLength: true
+    , maxLength: '3000'
     , copyright: true
     , msgbox: static_user_application
     , chatLog: static_user_chat_history
