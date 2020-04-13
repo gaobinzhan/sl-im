@@ -113,10 +113,4 @@ return [
             'log_file' => alias('@runtime/swoole.log'),
         ],
     ],
-    /** @see \Swoft\WebSocket\Server\WsMessageDispatcher */
-    'wsMsgDispatcher' => [
-        'middlewares' => [
-            \App\WebSocket\Middleware\GlobalWsMiddleware::class
-        ],
-    ]
 ];
