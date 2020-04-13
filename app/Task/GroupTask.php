@@ -47,4 +47,13 @@ class GroupTask
 
         server()->broadcast($result, $fds);
     }
+
+    /**
+     * @TaskMapping(name="agreeApply")
+     */
+    public function agreeApply(int $fd, array $data)
+    {
+        $result = wsSuccess(WsMessage::WS_MESSAGE_CMD_EVENT, WsMessage::EVENT_GROUP_AGREE_APPLY, $data);
+        server()->sendTo($fd, $result);
+    }
 }

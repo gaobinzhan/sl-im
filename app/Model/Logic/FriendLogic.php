@@ -209,6 +209,28 @@ class FriendLogic
         /** @var User $friendInfo */
         $friendInfo = $this->userLogic->findUserInfoById($userApplicationInfo->getUserId());
 
+        /** @var User $selfInfo */
+        $selfInfo = $this->userLogic->findUserInfoById($userApplicationInfo->getReceiverId());
+
+        $pushUserInfo = [
+            'type' => UserApplication::APPLICATION_TYPE_FRIEND,
+            'avatar' => $selfInfo->getAvatar(),
+            'username' => $selfInfo->getUsername(),
+            'groupid' => $userApplicationInfo->getGroupId(),
+            'id' => $selfInfo->getUserId(),
+            'sign' => $selfInfo->getSign(),
+            'status' => $selfInfo->getStatus()
+        ];
+
+        /** @var MemoryTable $MemoryTable */
+        $MemoryTable = bean('App\Helper\MemoryTable');
+        $fd = $MemoryTable->get(MemoryTable::USER_TO_FD, (string)$friendInfo->getUserId(), 'fd') ?? '';
+        if ($fd) {
+            Task::co('Friend', 'agreeApply', [$fd, $pushUserInfo]);
+            Task::co('User', 'unReadApplicationCount', [$fd, '新']);
+
+        }
+
         return [
             'type' => UserApplication::APPLICATION_TYPE_FRIEND,
             'avatar' => $friendInfo->getAvatar(),

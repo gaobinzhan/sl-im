@@ -188,19 +188,19 @@ class GroupLogic
         $result = $this->userLogic->createUserApplication($userId, $groupInfo->getUserId(), $groupId, UserApplication::APPLICATION_TYPE_GROUP, $applicationReason, $applicationStatus, UserApplication::UN_READ);
         if (!$result) throw new \Exception('', ApiCode::USER_CREATE_APPLICATION_FAIL);
 
+        /** @var MemoryTable $MemoryTable */
+        $MemoryTable = bean('App\Helper\MemoryTable');
+        $fd = $MemoryTable->get(MemoryTable::USER_TO_FD, (string)$groupInfo->getUserId(), 'fd') ?? '';
+        if ($fd) {
+            Task::co('User', 'unReadApplicationCount', [$fd, '新']);
+        }
+
         if ($groupInfo->getValidation() == Group::VALIDATION_NOT) {
             $this->groupRelationDao->createGroupRelation([
                 'user_id' => $userId,
                 'group_id' => $groupId
             ]);
             return $groupInfo;
-        }
-
-        /** @var MemoryTable $MemoryTable */
-        $MemoryTable = bean('App\Helper\MemoryTable');
-        $fd = $MemoryTable->get(MemoryTable::USER_TO_FD, (string)$groupInfo->getUserId(), 'fd') ?? '';
-        if ($fd) {
-            Task::co('User', 'unReadApplicationCount', [$fd, '新']);
         }
 
         return '';
@@ -220,6 +220,23 @@ class GroupLogic
 
         $this->checkGroupSize($groupInfo->getGroupId(), $groupInfo->getSize());
 
+
+
+        $pushGroupInfo = [
+            'type' => UserApplication::APPLICATION_TYPE_GROUP,
+            'avatar' => $groupInfo->getAvatar(),
+            'groupName' => $groupInfo->getGroupName(),
+            'groupId' => $groupInfo->getGroupId(),
+        ];
+
+        /** @var MemoryTable $MemoryTable */
+        $MemoryTable = bean('App\Helper\MemoryTable');
+        $fd = $MemoryTable->get(MemoryTable::USER_TO_FD, (string)$userApplicationInfo->getUserId(), 'fd') ?? '';
+        if ($fd) {
+            Task::co('Group', 'agreeApply', [$fd, $pushGroupInfo]);
+            Task::co('User', 'unReadApplicationCount', [$fd, '新']);
+
+        }
 
         $result = $this->groupRelationDao->createGroupRelation([
             'user_id' => $userApplicationInfo->getUserId(),

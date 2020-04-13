@@ -13,6 +13,7 @@ import {
   wsSend
 } from "./socket.js";
 import {getCookie, output, messageId} from "./util.js";
+import {addFriend, addGroup} from "./panel.js";
 
 function ready() {
   layui.layim.on('ready', function (options) {
@@ -45,8 +46,8 @@ function userStatus() {
 
 
 function userSign() {
-  layui.layim.on('sign', function(value){
-    postRequest(user_set_sign,{sign:value});
+  layui.layim.on('sign', function (value) {
+    postRequest(user_set_sign, {sign: value});
   });
 }
 
@@ -87,6 +88,12 @@ var MessageActive = {
   getUnreadApplicationCount: function (data) {
     if (data === 0) return false;
     layui.layim.msgbox(data)
+  },
+  friendAgreeApply: function (data) {
+    addFriend(data);
+  },
+  groupAgreeApply: function (data) {
+    addGroup(data);
   }
 };
 
