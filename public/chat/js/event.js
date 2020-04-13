@@ -4,7 +4,7 @@ import {
   user_set_status,
   friend_send_cmd,
   group_send_cmd,
-  friend_read_msg
+  friend_read_msg_cmd
 } from "./api.js";
 import {
   createSocketConnection,
@@ -20,13 +20,6 @@ import {getCookie, output, messageId} from "./util.js";
 
 function ready() {
   layui.layim.on('ready', function (options) {
-    getRequest(user_get_unread_application_count, {}, function (count) {
-      if (count == 0) {
-        return false;
-      }
-      layui.layim.msgbox(count)
-    });
-
     var wsUrl = layui.jquery(".wsUrl").val();
     var webSocket = createSocketConnection(wsUrl, getCookie('IM_TOKEN'));
     socketEvent(webSocket);
@@ -79,7 +72,7 @@ var MessageActive = {
     output(data, 'getMessage');
     layui.layim.getMessage(data);
     if (data.type === 'friend') {
-      let msg = createMessage(friend_read_msg, {
+      let msg = createMessage(friend_read_msg_cmd, {
         'message_id': data.cid
       });
       wsSend(msg)
@@ -87,6 +80,10 @@ var MessageActive = {
   },
   onlineNumber: function (data) {
     layui.jquery("#onlineNumber").html(data)
+  },
+  getUnreadApplicationCount: function (data) {
+    if (data === 0) return false;
+    layui.layim.msgbox(data)
   }
 };
 

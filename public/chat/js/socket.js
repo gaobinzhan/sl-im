@@ -1,6 +1,13 @@
 import {output, isEmpty, getCookie} from "./util.js";
 import {MessageActive} from './event.js';
-import {user_ping, system_error, system_event, friend_get_unread_message} from "./api.js";
+import {
+  user_ping_cmd,
+  system_error_cmd,
+  system_event_cmd,
+  friend_get_unread_message_cmd,
+  user_get_unread_application_count_cmd
+} from "./api.js";
+
 
 var Socket;
 var heartbeat;
@@ -62,9 +69,14 @@ function ack(msg, num = 1) {
 function wsOpen(event) {
   output(event, 'onOpen');
   heartbeat = setInterval(function () {
-    wsSend(createMessage(user_ping));
-  }, 10000)
-  wsSend(createMessage(friend_get_unread_message, {}))
+    wsSend(createMessage(user_ping_cmd));
+  }, 10000);
+  infoInit();
+}
+
+function infoInit() {
+  wsSend(createMessage(friend_get_unread_message_cmd, {}));
+  wsSend(createMessage(user_get_unread_application_count_cmd, {}))
 }
 
 function wsReceive(event) {
@@ -73,20 +85,20 @@ function wsReceive(event) {
   if (layui.jquery.isEmptyObject(result)) {
     return false;
   }
-  if (result.cmd && result.cmd === system_error) {
+  if (result.cmd && result.cmd === system_error_cmd) {
     layer.msg(result.cmd + ' : ' + result.msg);
     clearMessageListTimer(result);
     return false;
   }
 
-  if (result.cmd && result.cmd === system_event) {
+  if (result.cmd && result.cmd === system_event_cmd) {
     let method = result.method;
     MessageActive[method] ? MessageActive[method](result.data) : '';
     return false;
   }
 
 
-  if (result.cmd && result.cmd === user_ping) {
+  if (result.cmd && result.cmd === user_ping_cmd) {
     return false;
   }
 

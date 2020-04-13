@@ -32,11 +32,12 @@ var group_get_chat_history = '/group/getChatHistory';
 var group_get_relation = '/group/getGroupRelation';
 var friend_send_cmd = 'friend.send';
 var group_send_cmd = 'group.send';
-var friend_read_msg = 'friend.read';
-var user_ping = 'user.ping';
-var system_error = 'system.error';
-var system_event = 'system.event';
-var friend_get_unread_message = 'friend.getUnreadMessage';
+var friend_read_msg_cmd = 'friend.read';
+var user_ping_cmd = 'user.ping';
+var system_error_cmd = 'system.error';
+var system_event_cmd = 'system.event';
+var friend_get_unread_message_cmd = 'friend.getUnreadMessage';
+var user_get_unread_application_count_cmd = 'user.getUnreadApplicationCount';
 export {
   static_user_login,
   static_user_info,
@@ -72,9 +73,10 @@ export {
   group_get_chat_history,
   friend_send_cmd,
   group_send_cmd,
-  user_ping,
-  system_error,
-  system_event,
-  friend_read_msg,
-  friend_get_unread_message
+  user_ping_cmd,
+  system_error_cmd,
+  system_event_cmd,
+  friend_read_msg_cmd,
+  friend_get_unread_message_cmd,
+  user_get_unread_application_count_cmd
 };
