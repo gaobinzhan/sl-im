@@ -1,6 +1,6 @@
 import {output, isEmpty, getCookie} from "./util.js";
 import {MessageActive} from './event.js';
-import {user_ping, system_error, system_event} from "./api.js";
+import {user_ping, system_error, system_event, friend_get_unread_message} from "./api.js";
 
 var Socket;
 var heartbeat;
@@ -19,15 +19,14 @@ function createMessage(cmd, data = {}, ext = {}) {
     ext: ext
   };
   output(msg);
-  if (cmd !== user_ping) {
-    ack(msg);
-  }
+  ack(msg);
   return JSON.stringify(msg);
 }
 
 function ack(msg) {
   let data = msg.data;
   let message_id = data.message_id;
+  if (isEmpty(message_id)) return false;
   messageList[message_id] = {
     msg: msg,
     timer: setTimeout(function () {
@@ -57,6 +56,7 @@ function wsOpen(event) {
   heartbeat = setInterval(function () {
     wsSend(createMessage(user_ping));
   }, 10000)
+  wsSend(createMessage(friend_get_unread_message, {}))
 }
 
 function wsReceive(event) {
@@ -96,19 +96,19 @@ function clearMessageListTimer(result) {
 function wsError(event) {
   output(event, 'onError');
   clearInterval(heartbeat);
-  reloadSocket();
+  reloadSocket(event);
 }
 
 function wsClose(event) {
   output(event, 'onClose');
   clearInterval(heartbeat);
-  reloadSocket()
+  reloadSocket(event)
 }
 
-function reloadSocket() {
+function reloadSocket(event) {
   layui.layer.msg(event.reason, {
     time: 0
-    ,title:'连接异常关闭'
+    , title: '连接异常关闭'
     , btn: ['重试', '取消']
     , yes: function (index) {
       var wsUrl = layui.jquery(".wsUrl").val();

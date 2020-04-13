@@ -77,4 +77,36 @@ class FriendController
         return ['message_id' => $message->getData()['message_id'] ?? ''];
     }
 
+    /**
+     * @MessageMapping("getUnreadMessage")
+     */
+    public function getUnreadMessage(Message $message)
+    {
+
+        $fd = context()->getRequest()->getFd();
+
+        /** @var MemoryTable $MemoryTable */
+        $MemoryTable = bean('App\Helper\MemoryTable');
+        $userId = $MemoryTable->get(MemoryTable::FD_TO_USER, (string)$fd, 'userId') ?? '';
+
+        $messages = $this->friendLogic->getUnreadMessageByToUserId(intval($userId));
+
+        foreach ($messages as $message) {
+
+            Task::co('Friend', 'sendMessage', [
+                $fd,
+                $message['username'],
+                $message['avatar'],
+                $message['from_user_id'],
+                UserApplication::APPLICATION_TYPE_FRIEND,
+                $message['content'],
+                $message['message_id'],
+                false,
+                $message['from_user_id'],
+                $message['timestamp']
+            ]);
+
+        }
+    }
+
 }

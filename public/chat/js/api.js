@@ -34,6 +34,7 @@ var friend_read_msg = 'friend.read';
 var user_ping = 'user.ping';
 var system_error = 'system.error';
 var system_event = 'system.event';
+var friend_get_unread_message = 'friend.getUnreadMessage';
 export {
   static_user_login,
   static_user_info,
@@ -70,5 +71,6 @@ export {
   user_ping,
   system_error,
   system_event,
-  friend_read_msg
+  friend_read_msg,
+  friend_get_unread_message
 };

@@ -39,4 +39,12 @@ class FriendChatHistoryDao
             ->where('message_id', '=', $messageId)
             ->update(['reception_state' => $receptionState]);
     }
+
+    public function getUnreadMessageByToUserId(int $userId)
+    {
+        return $this->friendChatHistoryEntity::whereNull('deleted_at')
+            ->where('to_user_id', '=', $userId)
+            ->where('reception_state', '=', FriendChatHistory::NOT_RECEIVED)
+            ->get();
+    }
 }

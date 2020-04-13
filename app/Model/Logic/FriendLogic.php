@@ -249,7 +249,44 @@ class FriendLogic
 
     public function setFriendChatHistoryReceptionStateByMessageId(string $messageId, int $receptionState = FriendChatHistory::RECEIVED)
     {
-        return $this->friendChatHistoryDao->setFriendChatHistoryReceptionStateByMessageId($messageId,$receptionState);
+        return $this->friendChatHistoryDao->setFriendChatHistoryReceptionStateByMessageId($messageId, $receptionState);
+    }
+
+
+    public function getUnreadMessageByToUserId(int $userId)
+    {
+
+        /** @var FriendChatHistory $historyInfos */
+        $historyInfos = $this->friendChatHistoryDao->getUnreadMessageByToUserId($userId);
+
+        $userIds = [$userId];
+        /** @var FriendChatHistory $historyInfo */
+        foreach ($historyInfos as $historyInfo) {
+            array_push($userIds, $historyInfo->getFromUserId());
+        }
+
+
+        /** @var User $userInfos */
+        $userInfos = array_column($this->userDao->getUserByIds($userIds)->toArray(), null, 'userId');
+        
+        $result = [];
+
+
+        /** @var FriendChatHistory $historyInfo */
+        foreach ($historyInfos as $historyInfo) {
+            $fromUserId = $historyInfo->getFromUserId();
+            $result[] = [
+                'username' => $userInfos[$fromUserId]['username'],
+                'avatar' => $userInfos[$fromUserId]['avatar'],
+                'from_user_id' => $fromUserId,
+                'content' => $historyInfo->getContent(),
+                'message_id' => $historyInfo->getMessageId(),
+                'timestamp' => strtotime($historyInfo->getCreatedAt()) * 1000
+            ];
+        }
+
+
+        return $result;
     }
 
 
