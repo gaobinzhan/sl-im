@@ -9,6 +9,7 @@ var user_login = '/user/login';
 var user_home = '/user/home';
 var user_init = '/user/init';
 var user_info = '/user/info';
+var user_set_sign = '/user/setSign';
 var user_set_status = '/user/setStatus';
 var user_get_unread_application_count = '/user/getUnreadApplicationCount';
 var user_get_application = '/user/getApplication';
@@ -50,6 +51,7 @@ export {
   user_home,
   user_init,
   user_info,
+  user_set_sign,
   user_change_name_avatar,
   user_get_unread_application_count,
   user_get_application,

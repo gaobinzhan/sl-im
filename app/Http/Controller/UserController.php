@@ -202,4 +202,19 @@ class UserController
         }
     }
 
+    /**
+     * @RequestMapping(route="setSign",method={RequestMethod::POST})
+     * @Middleware(AuthMiddleware::class)
+     * @Validate(validator="UserValidator",fields={"sign"})
+     */
+    public function setSign(Request $request){
+        try {
+            $sign = $request->parsedBody('sign');
+            $result = $this->userLogic->setSign($request->user,$sign);
+            return apiSuccess($result);
+        } catch (\Throwable $throwable) {
+            return apiError($throwable->getCode(), $throwable->getMessage());
+        }
+    }
+
 }

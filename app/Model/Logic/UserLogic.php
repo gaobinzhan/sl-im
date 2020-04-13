@@ -280,4 +280,11 @@ class UserLogic
         return $result;
 
     }
+
+    public function setSign(int $userId, string $sign)
+    {
+        return $this->changeUserInfoById($userId, [
+            'sign' => $sign
+        ]);
+    }
 }

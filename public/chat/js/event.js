@@ -1,19 +1,15 @@
 import {getRequest, postRequest} from "./request.js";
 import {
-  user_get_unread_application_count,
   user_set_status,
   friend_send_cmd,
   group_send_cmd,
-  friend_read_msg_cmd
+  friend_read_msg_cmd,
+  user_set_sign
 } from "./api.js";
 import {
   createSocketConnection,
   createMessage,
   socketEvent,
-  wsOpen,
-  wsReceive,
-  wsError,
-  wsClose,
   wsSend
 } from "./socket.js";
 import {getCookie, output, messageId} from "./util.js";
@@ -44,6 +40,13 @@ function userStatus() {
     output(status, 'userStatus');
     let data = (status === 'hide') ? 0 : 1;
     postRequest(user_set_status, {status: data})
+  });
+}
+
+
+function userSign() {
+  layui.layim.on('sign', function(value){
+    postRequest(user_set_sign,{sign:value});
   });
 }
 
@@ -91,6 +94,7 @@ export {
   ready,
   toolCode,
   userStatus,
+  userSign,
   MessageActive,
   toMessage
 }
