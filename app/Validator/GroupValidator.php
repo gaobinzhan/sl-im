@@ -21,7 +21,7 @@ class GroupValidator
     /**
      * @IsInt()
      * @Required()
-     * @NotEmpty()
+     * @NotEmpty(message="群编号不能为空")
      * @var int
      */
     protected $id = '';
@@ -29,7 +29,7 @@ class GroupValidator
     /**
      * @IsInt()
      * @Required()
-     * @NotEmpty()
+     * @NotEmpty(message="用户编号不能为空")
      * @var int
      */
     protected $user_id = '';
@@ -37,7 +37,7 @@ class GroupValidator
     /**
      * @IsString()
      * @Required()
-     * @NotEmpty()
+     * @NotEmpty(message="群昵称不能为空")
      * @Length(max=30)
      * @var string
      */
@@ -46,8 +46,8 @@ class GroupValidator
     /**
      * @IsString()
      * @Required()
-     * @NotEmpty()
-     * @Url()
+     * @NotEmpty(message="头像url不能为空")
+     * @Url(message="url不合法")
      * @Length(max=255)
      * @var string
      */
@@ -56,7 +56,7 @@ class GroupValidator
     /**
      * @IsInt()
      * @Required()
-     * @NotEmpty()
+     * @NotEmpty(message="群规模不能为空")
      * @Enum(values={"200","500","1000"})
      * @var string
      */
@@ -65,7 +65,7 @@ class GroupValidator
     /**
      * @IsString()
      * @Required()
-     * @NotEmpty()
+     * @NotEmpty(message="群介绍不能为空")
      * @Length(max=255)
      * @var string
      */
@@ -82,7 +82,7 @@ class GroupValidator
     /**
      * @IsInt()
      * @Required()
-     * @NotEmpty()
+     * @NotEmpty(message="群编号不能为空")
      * @var int
      */
     protected $group_id = '';
@@ -90,7 +90,7 @@ class GroupValidator
     /**
      * @IsInt()
      * @Required()
-     * @NotEmpty()
+     * @NotEmpty(message="群编号不能为空")
      * @var int
      */
     protected $to_group_id = '';
@@ -98,7 +98,7 @@ class GroupValidator
     /**
      * @IsString()
      * @Required()
-     * @NotEmpty()
+     * @NotEmpty(message="申请类型不能为空")
      * @Enum(values={"friend","group"})
      * @var string
      */
@@ -107,7 +107,7 @@ class GroupValidator
     /**
      * @IsString()
      * @Required()
-     * @NotEmpty()
+     * @NotEmpty(message="申请理由不能为空")
      * @Length(max=255)
      * @var
      */
@@ -117,7 +117,7 @@ class GroupValidator
     /**
      * @IsInt()
      * @Required()
-     * @NotEmpty()
+     * @NotEmpty(message="申请编号不能为空")
      * @var int
      */
     protected $user_application_id = '';

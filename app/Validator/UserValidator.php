@@ -28,7 +28,7 @@ class UserValidator
     /**
      * @IsInt()
      * @Required()
-     * @NotEmpty()
+     * @NotEmpty(message="用户编号不能为空")
      * @var int
      */
     protected $user_id = '';
@@ -37,8 +37,8 @@ class UserValidator
     /**
      * @IsString()
      * @Required()
-     * @NotEmpty()
-     * @Email()
+     * @NotEmpty(message="邮箱不能为空")
+     * @Email(message="邮箱格式不正确")
      * @Length(min=8,max=50)
      * @var string
      */
@@ -48,7 +48,7 @@ class UserValidator
     /**
      * @IsString()
      * @Required()
-     * @NotEmpty()
+     * @NotEmpty(message="用户昵称不能为空")
      * @Length(max=30)
      * @var string
      */
@@ -56,9 +56,9 @@ class UserValidator
 
     /**
      * @IsString()
-     * @AlphaDash()
+     * @AlphaDash(message="必须是大小写字母、数字、短横 -、下划线 _")
      * @Required()
-     * @NotEmpty()
+     * @NotEmpty(message="密码不能为空")
      * @Length(min=8,max=20)
      * @var string
      */
@@ -67,7 +67,7 @@ class UserValidator
     /**
      * @IsString()
      * @Required()
-     * @NotEmpty()
+     * @NotEmpty(message="签名不能为空")
      * @Length(max=50)
      * @var string
      */
@@ -76,8 +76,8 @@ class UserValidator
     /**
      * @IsString()
      * @Required()
-     * @NotEmpty()
-     * @Url()
+     * @NotEmpty(message="头像url不能为空")
+     * @Url(message="url不合法")
      * @Length(max=255)
      * @var string
      */

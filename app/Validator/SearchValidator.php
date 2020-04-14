@@ -23,7 +23,7 @@ class SearchValidator
     /**
      * @IsString()
      * @Required()
-     * @NotEmpty()
+     * @NotEmpty(message="搜索关键字不能为空")
      * @Length(max=30)
      * @var string
      */
@@ -32,7 +32,7 @@ class SearchValidator
     /**
      * @IsInt()
      * @Required()
-     * @NotEmpty()
+     * @NotEmpty(message="页码不能为空")
      * @var int
      */
     protected $page = 1;
@@ -40,7 +40,7 @@ class SearchValidator
     /**
      * @IsInt()
      * @Required()
-     * @NotEmpty()
+     * @NotEmpty(message="每页数量不能为空")
      * @Max(value=20)
      * @var int
      */

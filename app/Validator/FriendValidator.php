@@ -24,7 +24,7 @@ class FriendValidator
     /**
      * @IsString()
      * @Required()
-     * @NotEmpty()
+     * @NotEmpty(message="分组名称不能为空")
      * @Length(max=30)
      * @var string
      */
@@ -33,7 +33,7 @@ class FriendValidator
     /**
      * @IsInt()
      * @Required()
-     * @NotEmpty()
+     * @NotEmpty(message="用户编号不能为空")
      * @var int
      */
     protected $user_id = '';
@@ -41,15 +41,15 @@ class FriendValidator
     /**
      * @IsInt()
      * @Required()
-     * @NotEmpty()
+     * @NotEmpty(message="接收者编号不能为空")
      * @var int
      */
     protected $receiver_id = '';
 
     /**
-     * @IsInt()
+     * @IsInt(message="请先创建好友分组")
      * @Required()
-     * @NotEmpty()
+     * @NotEmpty(message="请先创建好友分组")
      * @var int
      */
     protected $friend_group_id = '';
@@ -57,7 +57,7 @@ class FriendValidator
     /**
      * @IsInt()
      * @Required()
-     * @NotEmpty()
+     * @NotEmpty(message="接收者编号不能为空")
      * @var int
      */
     protected $to_user_id = '';
@@ -65,7 +65,7 @@ class FriendValidator
     /**
      * @IsInt()
      * @Required()
-     * @NotEmpty()
+     * @NotEmpty(message="发送者编号不能为空")
      * @var int
      */
     protected $from_user_id = '';
@@ -74,7 +74,7 @@ class FriendValidator
     /**
      * @IsString()
      * @Required()
-     * @NotEmpty()
+     * @NotEmpty(message="申请类型不能为空")
      * @Enum(values={"friend","group"})
      * @var string
      */
@@ -83,7 +83,7 @@ class FriendValidator
     /**
      * @IsString()
      * @Required()
-     * @NotEmpty()
+     * @NotEmpty(message="申请理由不能为空")
      * @Length(max=255)
      * @var
      */
@@ -92,7 +92,7 @@ class FriendValidator
     /**
      * @IsInt()
      * @Required()
-     * @NotEmpty()
+     * @NotEmpty(message="申请编号不能为空")
      * @var int
      */
     protected $user_application_id = '';
