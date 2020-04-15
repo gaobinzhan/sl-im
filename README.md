@@ -124,6 +124,9 @@ server{
         proxy_set_header X-Real-PORT $remote_port;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
     }
+    location /upload {
+        root /data/wwwroot/IM/public;
+    }
     location /im {
         proxy_pass http://127.0.0.1:9091;
         proxy_http_version 1.1;
