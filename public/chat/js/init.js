@@ -3,6 +3,8 @@ import {
   static_user_application,
   static_user_chat_history,
   group_get_relation,
+  util_upload_img,
+  util_upload_file
 } from "./api.js";
 import {getCookie} from "./util.js";
 import {toolCode, ready, userStatus, userSign, toMessage} from "./event.js";
@@ -24,7 +26,12 @@ layui.use('layim', function (layim) {
         token: getCookie('IM_TOKEN')
       }
     }
-
+    , uploadImage: {
+      url: util_upload_img + '?token=' + getCookie('IM_TOKEN')
+    }
+    , uploadFile: {
+      url: util_upload_file + '?token=' + getCookie('IM_TOKEN')
+    }
     , tool: [{
       alias: 'code'
       , title: '代码'

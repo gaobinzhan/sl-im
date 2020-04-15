@@ -51,7 +51,9 @@ class ApiCode
         JWT_PRIVATE_KEY_EMPTY = 9001,
         JWT_PUBLIC_KEY_EMPTY = 9002,
         JWT_ALG_EMPTY = 9003,
-        NO_PERMISSION_PROCESS = 9004;
+        NO_PERMISSION_PROCESS = 9004,
+        CONFIG_NOT_FOUND = 9005,
+        FILE_DOES_NOT_EXIST = 9006;
 
     public static $errorMessages = [
 
@@ -86,6 +88,8 @@ class ApiCode
         self::JWT_PRIVATE_KEY_EMPTY => 'The private key is invalid !',
         self::JWT_PUBLIC_KEY_EMPTY => 'The public key is invalid !',
         self::JWT_ALG_EMPTY => 'The alg is invalid !',
-        self::NO_PERMISSION_PROCESS => 'No permission to process !'
+        self::NO_PERMISSION_PROCESS => 'No permission to process !',
+        self::CONFIG_NOT_FOUND => 'Configuration not found !',
+        self::FILE_DOES_NOT_EXIST => 'File does not exist !'
     ];
 }

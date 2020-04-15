@@ -31,6 +31,8 @@ var group_agree_apply = '/group/agreeApply';
 var group_refuse_apply = '/group/refuseApply';
 var group_get_chat_history = '/group/getChatHistory';
 var group_get_relation = '/group/getGroupRelation';
+var util_upload_img = '/util/uploadImg';
+var util_upload_file = '/util/uploadFile';
 var friend_send_cmd = 'friend.send';
 var group_send_cmd = 'group.send';
 var friend_read_msg_cmd = 'friend.read';
@@ -73,6 +75,8 @@ export {
   group_refuse_apply,
   group_get_relation,
   group_get_chat_history,
+  util_upload_img,
+  util_upload_file,
   friend_send_cmd,
   group_send_cmd,
   user_ping_cmd,
