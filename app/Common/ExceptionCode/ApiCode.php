@@ -29,14 +29,17 @@ class ApiCode
         USER_INFO_MODIFY_FAIL = 3007,
         USER_APPLICATION_NOT_FOUND = 3008,
         USER_APPLICATION_PROCESSED = 3009,
-        USER_APPLICATION_TYPE_WRONG = 3010;
+        USER_APPLICATION_TYPE_WRONG = 3010,
+        USER_IN_VIDEO_CALL = 3011;
 
 
     const FRIEND_GROUP_CREATE_FAIL = 4001,
         FRIEND_GROUP_NOT_FOUND = 4002,
         FRIEND_NOT_FOUND = 4003,
         FRIEND_NOT_ADD_SELF = 4004,
-        FRIEND_RELATION_ALREADY = 4005;
+        FRIEND_RELATION_ALREADY = 4005,
+        FRIEND_CALL_IN_PROGRESS = 4006;
+
 
     const GROUP_CREATE_FAIL = 5001,
         GROUP_NOT_FOUND = 5002,
@@ -71,12 +74,15 @@ class ApiCode
         self::USER_APPLICATION_NOT_FOUND => 'Application information does not exist !',
         self::USER_APPLICATION_PROCESSED => 'Application information has been processed !',
         self::USER_APPLICATION_TYPE_WRONG => 'Wrong application type !',
+        self::USER_IN_VIDEO_CALL => '您正在视频通话中！', // You are in a video call
+
 
         self::FRIEND_GROUP_CREATE_FAIL => 'Friend group creation failed !',
         self::FRIEND_GROUP_NOT_FOUND => 'Friend group not found !',
         self::FRIEND_NOT_FOUND => 'Friend not found!',
         self::FRIEND_NOT_ADD_SELF => 'You can\'t add yourself as a friend !',
         self::FRIEND_RELATION_ALREADY => 'You\'re already friends !',
+        self::FRIEND_CALL_IN_PROGRESS => '对方正在视频通话中', // Video call in progress
 
         self::GROUP_CREATE_FAIL => 'Group creation failed !',
         self::GROUP_NOT_FOUND => 'Group not found !',

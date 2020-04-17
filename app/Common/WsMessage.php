@@ -16,4 +16,5 @@ class WsMessage
     const EVENT_GET_UNREAD_APPLICATION_COUNT = 'getUnreadApplicationCount';
     const EVENT_FRIEND_AGREE_APPLY = 'friendAgreeApply';
     const EVENT_GROUP_AGREE_APPLY = 'groupAgreeApply';
+    const EVENT_FRIEND_VIDEO_ROOM = 'friendVideoRoom';
 }

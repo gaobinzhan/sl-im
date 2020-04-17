@@ -7,7 +7,7 @@ import {
   util_upload_file
 } from "./api.js";
 import {getCookie} from "./util.js";
-import {toolCode, ready, userStatus, userSign, toMessage} from "./event.js";
+import {toolCode, ready,videoRoom, userStatus, userSign, toMessage} from "./event.js";
 
 layui.use('layim', function (layim) {
   layim.config({
@@ -32,11 +32,18 @@ layui.use('layim', function (layim) {
     , uploadFile: {
       url: util_upload_file + '?token=' + getCookie('IM_TOKEN')
     }
-    , tool: [{
-      alias: 'code'
-      , title: '代码'
-      , icon: '&#xe64e;'
-    }]
+    , tool: [
+      {
+        alias: 'code'
+        , title: '代码'
+        , icon: '&#xe64e;'
+      }
+      , {
+        alias: 'video'
+        , title: '视频通话'
+        , icon: '&#xe643;'
+      }
+    ]
     , brief: false
     , title: '我的IM'
     , min: false
@@ -56,6 +63,7 @@ layui.use('layim', function (layim) {
   })
   ;
   toolCode();
+  videoRoom();
   ready();
   userStatus();
   userSign();

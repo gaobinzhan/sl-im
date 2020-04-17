@@ -1,17 +1,19 @@
-import {getRequest, postRequest} from "./request.js";
+import {postRequest} from "./request.js";
 import {
   user_set_status,
   friend_send_cmd,
   group_send_cmd,
   friend_read_msg_cmd,
-  user_set_sign
+  user_set_sign,
+  static_friend_room,
+  friend_video_busy
 } from "./api.js";
 import {
   createSocketConnection,
   createMessage,
   socketEvent,
   wsSend
-} from "./socket.js";
+} from "./im.js";
 import {getCookie, output, messageId} from "./util.js";
 import {addFriend, addGroup} from "./panel.js";
 
@@ -35,6 +37,17 @@ function toolCode() {
     });
   });
 };
+
+function videoRoom() {
+  layui.layim.on('tool(video)', function (insert, send, obj) {
+    output(obj, '视频聊天触发');
+    if (obj.data.type === 'group') {
+      layui.layer.msg('当前不支持群视频！');
+      return false;
+    }
+    wsSend(createMessage(friend_video_busy, {to_user_id: obj.data.id}));
+  });
+}
 
 function userStatus() {
   layui.layim.on('online', function (status) {
@@ -94,6 +107,17 @@ var MessageActive = {
   },
   groupAgreeApply: function (data) {
     addGroup(data);
+  },
+  friendVideoRoom: function (data) {
+    let title = '与 ' + ((data.userId === layui.layim.cache().mine.id) ? data.toUserName : data.fromUserName) + ' 视频聊天';
+    layui.layer.open({
+      type: 2,
+      title: title,
+      area: ['1000px', '600px'],
+      maxmin: true,
+      shade: 0,
+      content: static_friend_room + '?room_id=' + data.roomId,
+    });
   }
 };
 
@@ -103,5 +127,6 @@ export {
   userStatus,
   userSign,
   MessageActive,
-  toMessage
+  toMessage,
+  videoRoom
 }

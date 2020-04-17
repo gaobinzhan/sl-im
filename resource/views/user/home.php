@@ -116,6 +116,8 @@ EOF;
   </div>
 </div>
 <input type="hidden" class="wsUrl" value="<?php echo $wsUrl ?>">
+<input type="hidden" class="webRtcUrl" value="<?php echo $webRtcUrl ?>">
+<input type="hidden" class="stunServer" value="<?php echo $stunServer ?>">
 <script type="module" src="/chat/js/init.js"></script>
 <script type="module">
   import {static_user_info} from '/chat/js/api.js';

@@ -2,7 +2,6 @@
 
 namespace App\WebSocket\Controller;
 
-use App\Common\WsMessage;
 use App\Helper\MemoryTable;
 use App\Model\Logic\UserLogic;
 use Swoft\Bean\Annotation\Mapping\Inject;
