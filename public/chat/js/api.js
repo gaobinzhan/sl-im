@@ -92,5 +92,5 @@ export {
   user_get_unread_application_count_cmd,
   friend_video_busy,
   friend_video_subscribe,
-  friend_video_publish
+  friend_video_publish,
 };

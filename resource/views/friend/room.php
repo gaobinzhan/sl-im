@@ -10,7 +10,8 @@
   <meta name="mobile-web-app-capable" content="yes">
   <title>视频</title>
   <link rel="stylesheet" href="/chat/css/bootstrap.min.css">
-  <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+  <link rel="stylesheet" href="/layim/css/layui.css" type="text/css">
+  <script src="/layim/layui.js" type="text/javascript"></script>
   <style>
     .videos {
       font-size: 0;
@@ -56,12 +57,19 @@
 </div>
 <script src="/chat/js/adapter.js"></script>
 <script type="module">
-  import {createVideoSocket, socketEvent} from '/chat/js/video.js';
+  import {createVideoSocket, socketEvent,setLoadingIndex} from '/chat/js/video.js';
   import {getCookie} from '/chat/js/util.js';
 
-  let webRtcUrl = parent.layui.jquery(".webRtcUrl").val();
-  let videoSocket = createVideoSocket(webRtcUrl, getCookie('IM_TOKEN'));
-  socketEvent(videoSocket)
+  layui.use(['layer'], function () {
+    var layer = layui.layer;
+    var loadingIndex = layer.load(2);
+    setLoadingIndex(loadingIndex);
+    let webRtcUrl = parent.layui.jquery(".webRtcUrl").val();
+    let videoSocket = createVideoSocket(webRtcUrl, getCookie('IM_TOKEN'));
+    socketEvent(videoSocket);
+  });
+
+
 
 
 </script>

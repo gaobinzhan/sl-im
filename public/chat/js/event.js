@@ -79,6 +79,16 @@ function toMessage() {
   });
 };
 
+function alertVideoRoom(url, title, roomId) {
+  layui.layer.open({
+    type: 2,
+    title: title,
+    area: ['1000px', '600px'],
+    maxmin: true,
+    shade: 0,
+    content: url + '?room_id=' + roomId,
+  });
+}
 
 var MessageActive = {
   setUserStatus: function (data) {
@@ -109,15 +119,22 @@ var MessageActive = {
     addGroup(data);
   },
   friendVideoRoom: function (data) {
-    let title = '与 ' + ((data.userId === layui.layim.cache().mine.id) ? data.toUserName : data.fromUserName) + ' 视频聊天';
-    layui.layer.open({
-      type: 2,
-      title: title,
-      area: ['1000px', '600px'],
-      maxmin: true,
-      shade: 0,
-      content: static_friend_room + '?room_id=' + data.roomId,
-    });
+    let mineId = layui.layim.cache().mine.id;
+    let title = '与 ' + ((data.userId === mineId) ? data.toUserName : data.fromUserName) + ' 视频聊天';
+    let roomId = data.roomId;
+    if (data.userId === mineId) {
+      alertVideoRoom(static_friend_room, title, data.roomId);
+    }
+    if (data.userId !== mineId) {
+      layui.layer.msg(data.fromUserName + ' 向您发起了视频聊天', {
+        time: 10000
+        , btn: ['接受', '拒绝']
+        , yes: function (index) {
+          layui.layer.close(index);
+          alertVideoRoom(static_friend_room, title, roomId);
+        }
+      });
+    }
   }
 };
 

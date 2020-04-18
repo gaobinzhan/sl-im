@@ -4,7 +4,6 @@
 namespace App\WebSocket\Controller;
 
 
-use App\Common\WsMessage;
 use App\ExceptionCode\ApiCode;
 use App\Helper\MemoryTable;
 use App\Model\Entity\User;
@@ -82,9 +81,20 @@ class VideoController
         } else {
             $userIds = [$userId];
         }
-
         $MemoryTable->store(MemoryTable::USER_TO_SUBJECT, (string)$userId, ['subject' => $subject]);
         $MemoryTable->store(MemoryTable::SUBJECT_TO_USER, (string)$subject, ['userId' => implode(',', $userIds)]);
+
+        if (count($userIds) == 2) {
+            foreach ($userIds as $userId){
+                $toFd = $MemoryTable->get(MemoryTable::SUBJECT_USER_TO_FD, (string)$userId, 'fd');
+                server()->sendTo((int)$toFd,
+                    json_encode([
+                            'event' => 'accept',
+                        ]
+                    )
+                );
+            }
+        }
     }
 
     /**

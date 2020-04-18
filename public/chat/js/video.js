@@ -1,4 +1,4 @@
-import {output,getQueryValue} from "./util.js";
+import {output, getQueryValue} from "./util.js";
 import {friend_video_subscribe, friend_video_publish} from "./api.js";
 
 const stunServer = parent.layui.jquery(".stunServer").val();
@@ -10,6 +10,7 @@ const configuration = {
   }]
 };
 var Video;
+var loadingIndex;
 let subject = getQueryValue('room_id');
 let answer = 0;
 let pc, localStream;
@@ -29,6 +30,10 @@ function createMessage(cmd, data = {}, ext = {}) {
   return JSON.stringify(msg);
 }
 
+function setLoadingIndex(index) {
+  loadingIndex = index;
+}
+
 function socketEvent(webSocket) {
   webSocket.onopen = function (event) {
     wsOpen(event);
@@ -46,6 +51,9 @@ function wsReceive(e) {
   let result = JSON.parse(e.data);
   let data = result.data;
   switch (result.event) {
+    case 'accept':
+      layui.layer.close(loadingIndex);
+      break;
     case 'call':
       icecandidate(localStream);
       pc.createOffer({
@@ -57,21 +65,16 @@ function wsReceive(e) {
             wsSend(createMessage(friend_video_publish, {subject: subject, event: 'offer', data: pc.localDescription}));
           }
         ).catch(function (e) {
-          output(e);
-          // alert(e);
+          alert(e);
         });
       }).catch(function (e) {
-        output(e);
-
-        // alert(e);
+        alert(e);
       });
       break;
     case 'answer':
       pc.setRemoteDescription(new RTCSessionDescription(data), function () {
       }, function (e) {
-        output(e);
-
-        // alert(e);
+        alert(e);
       });
       break;
     case 'offer':
@@ -86,30 +89,22 @@ function wsReceive(e) {
                   data: pc.localDescription
                 }))
               }, function (e) {
-                output(e);
-
-                // alert(e);
+                alert(e);
               });
             }
             , function (e) {
-              output(e);
-
-              // alert(e);
+              alert(e);
             });
           answer = 1;
         }
       }, function (e) {
-        output(e);
-
-        // alert(e);
+        alert(e);
       });
       break;
     case 'candidate':
       pc.addIceCandidate(new RTCIceCandidate(data), function () {
       }, function (e) {
-        output(e);
-
-        // alert(e);
+        alert(e);
       });
       break;
   }
@@ -142,7 +137,7 @@ function wsOpen() {
 }
 
 function createVideoSocket(webRtcUrl, protocols) {
-  output(webRtcUrl, 'WebRtc')
+  output(webRtcUrl, 'WebRtc');
   Video = new WebSocket(webRtcUrl, protocols);
   return Video;
 };
@@ -175,5 +170,6 @@ function icecandidate(localStream) {
 
 export {
   createVideoSocket,
-  socketEvent
+  socketEvent,
+  setLoadingIndex
 }
