@@ -93,7 +93,13 @@ class UserController
         if (!$userId = checkAuth()) return $response->redirect('/static/login');
         $menus = config('menu');
         $userInfo = $request->userInfo;
-        return view('user/home', ['menus' => $menus, 'userInfo' => $userInfo,'wsUrl' => env('WS_URL')]);
+        return view('user/home', [
+            'menus' => $menus,
+            'userInfo' => $userInfo,
+            'wsUrl' => env('WS_URL'),
+            'webRtcUrl' => env('WEB_RTC_URL'),
+            'stunServer' => 'stun:stun.xten.com'
+        ]);
     }
 
 
@@ -207,10 +213,11 @@ class UserController
      * @Middleware(AuthMiddleware::class)
      * @Validate(validator="UserValidator",fields={"sign"})
      */
-    public function setSign(Request $request){
+    public function setSign(Request $request)
+    {
         try {
             $sign = $request->parsedBody('sign');
-            $result = $this->userLogic->setSign($request->user,$sign);
+            $result = $this->userLogic->setSign($request->user, $sign);
             return apiSuccess($result);
         } catch (\Throwable $throwable) {
             return apiError($throwable->getCode(), $throwable->getMessage());

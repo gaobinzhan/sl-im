@@ -31,6 +31,7 @@
 - 好友在线状态（Websocket）
 - 好友 查找 添加 同意 拒绝（Http+Websocket）
 - 群 创建 查找 添加 同意 拒绝（Http+Websocket）
+- 点对点视频聊天（WebRtc+Websocket）
 - 聊天记录存储
 - 心跳检测
 - 消息重发
@@ -89,7 +90,8 @@ SWOFT_DEBUG=0
 
 # more ...
 APP_HOST=https://im.gaobinzhan.com/
-WS_URL=ws://im.gaobinzhan.com/im
+WS_URL=wss://im.gaobinzhan.com/im
+WEB_RTC_URL=wss://im.gaobinzhan.com/video
 # 是否开启静态处理 这里我关了 让nginx去处理
 ENABLE_STATIC_HANDLER=false 
 # swoole v4.4.0以下版本, 此处必须为绝对路径
@@ -128,6 +130,13 @@ server{
         root /data/wwwroot/IM/public;
     }
     location /im {
+        proxy_pass http://127.0.0.1:9091;
+        proxy_http_version 1.1;
+        proxy_read_timeout   3600s;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+    }
+    location /video {
         proxy_pass http://127.0.0.1:9091;
         proxy_http_version 1.1;
         proxy_read_timeout   3600s;

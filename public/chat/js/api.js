@@ -33,6 +33,7 @@ var group_get_chat_history = '/group/getChatHistory';
 var group_get_relation = '/group/getGroupRelation';
 var util_upload_img = '/util/uploadImg';
 var util_upload_file = '/util/uploadFile';
+var static_friend_room = '/static/friendRoom'
 var friend_send_cmd = 'friend.send';
 var group_send_cmd = 'group.send';
 var friend_read_msg_cmd = 'friend.read';
@@ -41,7 +42,11 @@ var system_error_cmd = 'system.error';
 var system_event_cmd = 'system.event';
 var friend_get_unread_message_cmd = 'friend.getUnreadMessage';
 var user_get_unread_application_count_cmd = 'user.getUnreadApplicationCount';
+var friend_video_busy = 'video.friendBusy';
+var friend_video_subscribe = 'video.friendSubscribe';
+var friend_video_publish = 'video.friendPublish';
 export {
+  static_friend_room,
   static_user_login,
   static_user_info,
   static_friend_info,
@@ -84,5 +89,8 @@ export {
   system_event_cmd,
   friend_read_msg_cmd,
   friend_get_unread_message_cmd,
-  user_get_unread_application_count_cmd
+  user_get_unread_application_count_cmd,
+  friend_video_busy,
+  friend_video_subscribe,
+  friend_video_publish,
 };

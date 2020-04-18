@@ -12,26 +12,28 @@ use App\WebSocket\Controller\UserController;
 use Swoft\Http\Message\Request;
 use Swoft\Http\Message\Response;
 use Swoft\Task\Task;
+use Swoft\WebSocket\Server\Annotation\Mapping\OnMessage;
 use Swoft\WebSocket\Server\Annotation\Mapping\WsModule;
 use Swoft\WebSocket\Server\Annotation\Mapping\OnOpen;
 use Swoft\WebSocket\Server\Annotation\Mapping\OnClose;
 use Swoft\WebSocket\Server\Annotation\Mapping\OnHandshake;
 use Swoft\WebSocket\Server\MessageParser\JsonParser;
+use Swoole\WebSocket\Frame;
 use Swoole\WebSocket\Server;
 use App\WebSocket\Controller\FriendController;
 use App\WebSocket\Controller\GroupController;
 use App\WebSocket\Controller\VideoController;
 
 /**
- * Class ImModule - This is an module for handle websocket
+ * Class VideoModule - This is an module for handle websocket
  *
  * @WsModule(
- *    "im",
+ *    "video",
  *     messageParser=JsonParser::class,
- *     controllers={FriendController::class,UserController::class,GroupController::class,VideoController::class}
+ *     controllers={VideoController::class}
  *  )
  */
-class ImModule
+class VideoModule
 {
 
     /**
@@ -62,26 +64,8 @@ class ImModule
     {
         /** @var MemoryTable $memoryTable */
         $memoryTable = bean('App\Helper\MemoryTable');
-
-        $checkOnline = $memoryTable->get(MemoryTable::USER_TO_FD, (string)$request->user, 'fd');
-        if ($checkOnline) {
-            \server()->disconnect($checkOnline, 0, '你的帐号在别的地方登录！');
-        }
-
-        $memoryTable->store(MemoryTable::FD_TO_USER, (string)$fd, ['userId' => $request->user]);
-        $memoryTable->store(MemoryTable::USER_TO_FD, (string)$request->user, ['fd' => $fd]);
-
-        /** @var UserLogic $userLogic */
-        $userLogic = bean('App\Model\Logic\UserLogic');
-        $userLogic->setUserStatus($request->user, User::STATUS_ONLINE);
-
-        /** @var Atomic $atomic */
-        $atomic = Bean('App\Helper\Atomic');
-        $atomic->add(1);
-
-        Task::co('User', 'onlineNumber');
-
-
+        $memoryTable->store(MemoryTable::SUBJECT_FD_TO_USER, (string)$fd, ['userId' => $request->user]);
+        $memoryTable->store(MemoryTable::SUBJECT_USER_TO_FD, (string)$request->user, ['fd' => $fd]);
     }
 
     /**
@@ -91,19 +75,14 @@ class ImModule
     {
         /** @var MemoryTable $memoryTable */
         $memoryTable = bean('App\Helper\MemoryTable');
-        $userId = $memoryTable->get(MemoryTable::FD_TO_USER, (string)$fd, 'userId');
-        $selfFd = $memoryTable->get(MemoryTable::USER_TO_FD, (string)$userId, 'fd');
-        if ($fd == $selfFd) $memoryTable->forget(MemoryTable::USER_TO_FD, (string)$userId);
-        $memoryTable->forget(MemoryTable::FD_TO_USER, (string)$fd);
-
-        /** @var UserLogic $userLogic */
-        $userLogic = bean('App\Model\Logic\UserLogic');
-        $userLogic->setUserStatus($userId, User::STATUS_OFFLINE);
-
-        /** @var Atomic $atomic */
-        $atomic = Bean('App\Helper\Atomic');
-        $atomic->sub(1);
-
-        Task::co('User', 'onlineNumber');
+        $userId = $memoryTable->get(MemoryTable::SUBJECT_FD_TO_USER, (string)$fd, 'userId');
+        $selfFd = $memoryTable->get(MemoryTable::SUBJECT_USER_TO_FD, (string)$userId, 'fd');
+        $subject = $memoryTable->get(MemoryTable::USER_TO_SUBJECT,(string)$userId,'subject');
+        if ($fd == $selfFd) $memoryTable->forget(MemoryTable::SUBJECT_USER_TO_FD, (string)$userId);
+        $memoryTable->forget(MemoryTable::SUBJECT_FD_TO_USER, (string)$fd);
+        $memoryTable->forget(MemoryTable::USER_TO_SUBJECT, (string)$userId);
+        $memoryTable->forget(MemoryTable::SUBJECT_TO_USER,(string)$subject);
     }
+
+
 }

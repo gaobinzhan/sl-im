@@ -9,14 +9,14 @@ import {
 } from "./api.js";
 
 
-var Socket;
+var Im;
 var heartbeat;
 var messageList = {};
 
 function createSocketConnection(url, protocols) {
   output(url, 'createSocketConnection');
-  Socket = new WebSocket(url, protocols);
-  return Socket;
+  Im = new WebSocket(url, protocols);
+  return Im;
 }
 
 function createMessage(cmd, data = {}, ext = {}) {
@@ -46,7 +46,7 @@ function ack(msg, num = 1) {
             time: 0
             , btn: ['重试', '取消']
             , yes: function (index) {
-              Socket.send(JSON.stringify(msg));
+              Im.send(JSON.stringify(msg));
               ack(messageList[message_id].msg, messageList[message_id]['num'] + 1);
               layui.layer.close(index);
             },
@@ -57,7 +57,7 @@ function ack(msg, num = 1) {
           });
         }
       } else {
-        Socket.send(JSON.stringify(msg));
+        Im.send(JSON.stringify(msg));
         ack(messageList[message_id].msg, messageList[message_id]['num'] + 1);
       }
     }, 5000)
@@ -132,8 +132,8 @@ function reloadSocket(event) {
     , btn: ['重试', '取消']
     , yes: function (index) {
       var wsUrl = layui.jquery(".wsUrl").val();
-      Socket = createSocketConnection(wsUrl, getCookie('IM_TOKEN'));
-      socketEvent(Socket);
+      Im = createSocketConnection(wsUrl, getCookie('IM_TOKEN'));
+      socketEvent(Im);
       layui.layer.close(index);
     },
     btn2: function (index) {
@@ -143,7 +143,7 @@ function reloadSocket(event) {
 }
 
 function wsSend(data) {
-  Socket.send(data)
+  Im.send(data)
 }
 
 function socketEvent(webSocket) {

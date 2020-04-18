@@ -1,17 +1,19 @@
-import {getRequest, postRequest} from "./request.js";
+import {postRequest} from "./request.js";
 import {
   user_set_status,
   friend_send_cmd,
   group_send_cmd,
   friend_read_msg_cmd,
-  user_set_sign
+  user_set_sign,
+  static_friend_room,
+  friend_video_busy
 } from "./api.js";
 import {
   createSocketConnection,
   createMessage,
   socketEvent,
   wsSend
-} from "./socket.js";
+} from "./im.js";
 import {getCookie, output, messageId} from "./util.js";
 import {addFriend, addGroup} from "./panel.js";
 
@@ -35,6 +37,17 @@ function toolCode() {
     });
   });
 };
+
+function videoRoom() {
+  layui.layim.on('tool(video)', function (insert, send, obj) {
+    output(obj, '视频聊天触发');
+    if (obj.data.type === 'group') {
+      layui.layer.msg('当前不支持群视频！');
+      return false;
+    }
+    wsSend(createMessage(friend_video_busy, {to_user_id: obj.data.id}));
+  });
+}
 
 function userStatus() {
   layui.layim.on('online', function (status) {
@@ -66,6 +79,16 @@ function toMessage() {
   });
 };
 
+function alertVideoRoom(url, title, roomId) {
+  layui.layer.open({
+    type: 2,
+    title: title,
+    area: ['1000px', '600px'],
+    maxmin: true,
+    shade: 0,
+    content: url + '?room_id=' + roomId,
+  });
+}
 
 var MessageActive = {
   setUserStatus: function (data) {
@@ -94,6 +117,24 @@ var MessageActive = {
   },
   groupAgreeApply: function (data) {
     addGroup(data);
+  },
+  friendVideoRoom: function (data) {
+    let mineId = layui.layim.cache().mine.id;
+    let title = '与 ' + ((data.userId === mineId) ? data.toUserName : data.fromUserName) + ' 视频聊天';
+    let roomId = data.roomId;
+    if (data.userId === mineId) {
+      alertVideoRoom(static_friend_room, title, data.roomId);
+    }
+    if (data.userId !== mineId) {
+      layui.layer.msg(data.fromUserName + ' 向您发起了视频聊天', {
+        time: 10000
+        , btn: ['接受', '拒绝']
+        , yes: function (index) {
+          layui.layer.close(index);
+          alertVideoRoom(static_friend_room, title, roomId);
+        }
+      });
+    }
   }
 };
 
@@ -103,5 +144,6 @@ export {
   userStatus,
   userSign,
   MessageActive,
-  toMessage
+  toMessage,
+  videoRoom
 }

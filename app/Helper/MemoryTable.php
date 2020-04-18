@@ -18,6 +18,10 @@ class MemoryTable
 {
     const FD_TO_USER = 'fdToUser';
     const USER_TO_FD = 'userToFd';
+    const SUBJECT_USER_TO_FD = 'subjectUserToFd';
+    const SUBJECT_FD_TO_USER = 'subjectFdToUser';
+    const SUBJECT_TO_USER = 'subjectToUser';
+    const USER_TO_SUBJECT = 'userToSubject';
     private $table;
 
     public function __construct()

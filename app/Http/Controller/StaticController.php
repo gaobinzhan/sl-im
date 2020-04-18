@@ -116,4 +116,11 @@ class StaticController
     public function about(){
         return view('chat/about');
     }
+
+    /**
+     * @RequestMapping(route="friendRoom",method={RequestMethod::GET})
+     */
+    public function friendRoom(){
+        return view('friend/room');
+    }
 }

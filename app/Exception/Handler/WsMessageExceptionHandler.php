@@ -45,7 +45,7 @@ class WsMessageExceptionHandler extends AbstractMessageErrorHandler
             $message = $e->getMessage();
         }
 
-        if (ApiCode::$errorMessages[$e->getCode()]) {
+        if (isset(ApiCode::$errorMessages[$e->getCode()])) {
             $message = ApiCode::$errorMessages[$e->getCode()];
         }
 
