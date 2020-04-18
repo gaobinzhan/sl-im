@@ -15,6 +15,13 @@
   <li class="layui-timeline-item">
     <i class="layui-icon layui-timeline-axis"></i>
     <div class="layui-timeline-content layui-text">
+      <div class="layui-timeline-title">2020-04-18 v1.1.0</div>
+      <p>点对点视频聊天（WebRtc+Websocket）</p>
+    </div>
+  </li>
+  <li class="layui-timeline-item">
+    <i class="layui-icon layui-timeline-axis"></i>
+    <div class="layui-timeline-content layui-text">
       <div class="layui-timeline-title">2020-04-13 v1.0.0</div>
       <p> 登录注册（Http）</p>
       <p> 单点登录（Websocket）</p>
