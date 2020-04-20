@@ -62,6 +62,7 @@ class FriendChatHistoryDao
                     $builder->where('to_user_id', $fromUserId);
                 });
             })
+            ->orderBy('timestamp','desc')
             ->paginate($page, $size);
     }
 }
