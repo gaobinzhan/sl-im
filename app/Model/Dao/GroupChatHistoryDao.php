@@ -38,6 +38,7 @@ class GroupChatHistoryDao
     {
         return $this->groupChatHistoryEntity::whereNull('deleted_at')
             ->where('to_group_id','=',$toGroupId)
+            ->orderBy('created_at','desc')
             ->paginate($page, $size);
     }
 }
