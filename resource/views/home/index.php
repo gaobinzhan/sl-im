@@ -261,7 +261,7 @@
     </ul>
   </nav>
   <div class="main">
-    <h1 class="swoft-title">sl <span class="framework">im</span>
+    <h1 class="swoft-title">sl-im</span>
     </h1>
   </div>
 </div>
