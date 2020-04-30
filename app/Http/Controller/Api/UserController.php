@@ -72,16 +72,17 @@ class UserController
 
     /**
      * @RequestMapping(route="register",method={RequestMethod::POST})
-     * @Validate(validator="UserValidator",fields={"email","password","code"})
+     * @Validate(validator="UserValidator",fields={"username","email","password","code"})
      */
     public function register(Request $request)
     {
         DB::beginTransaction();
         try {
+            $username = $request->parsedBody('username');
             $email = $request->parsedBody('email');
             $password = $request->parsedBody('password');
             $code = $request->parsedBody('code');
-            $this->userLogic->register($email, $password,$code);
+            $this->userLogic->register($username,$email, $password,$code);
             DB::commit();
             return apiSuccess();
         } catch (\Throwable $throwable) {

@@ -63,7 +63,7 @@ class UserLogic
         return $userInfo;
     }
 
-    public function register(string $email, string $password, string $code)
+    public function register(string $username, string $email, string $password, string $code)
     {
         $userInfo = $this->findUserInfoByEmail($email);
         if ($userInfo) {
@@ -75,7 +75,7 @@ class UserLogic
         return $this->createUser(
             [
                 'email' => $email,
-                'username' => $email,
+                'username' => $username,
                 'password' => password_hash($password, CRYPT_BLOWFISH),
                 'sign' => '',
                 'status' => User::STATUS_OFFLINE,
