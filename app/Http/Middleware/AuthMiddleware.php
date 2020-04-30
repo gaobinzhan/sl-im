@@ -51,13 +51,13 @@ class AuthMiddleware implements MiddlewareInterface
         }
 
         if (empty($authorization) || !is_string($authorization) || strpos($authorization, $prefix) !== 0) {
-            throw new ApiException('', ApiCode::AUTH_ERROR);
+            throw new ApiException('', ApiCode::USER_NOT_FOUND);
         }
 
         $jwt = substr($authorization, strlen($prefix));
 
         if (strlen(trim($jwt)) <= 0) {
-            throw new ApiException('', ApiCode::AUTH_ERROR);
+            throw new ApiException('', ApiCode::USER_NOT_FOUND);
         }
 
         $payload = JWT::decode($jwt, $publicKey, [config('jwt.alg')]);
