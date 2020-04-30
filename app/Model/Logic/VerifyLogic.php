@@ -52,6 +52,23 @@ class VerifyLogic
         return $result;
     }
 
+    public function enterVerify(string $object, string $code)
+    {
+        /** @var Verify $verifyInfo */
+        $verifyInfo = $this->verifyDao->findVerifyByObjectDesc($object);
+
+        if (!$verifyInfo) throw new \Exception(null, ApiCode::VERIFY_CODE_ERROR);
+
+        if ($verifyInfo->getStatus() == Verify::USED_STATUS) throw new \Exception(null, ApiCode::VERiFY_CODE_USED);
+
+        if ($verifyInfo->getCode() !== $code) throw new \Exception(null, ApiCode::VERIFY_CODE_ERROR);
+
+
+        if ((time() - strtotime($verifyInfo->getCreatedAt())) >= 600) throw new \Exception(null, ApiCode::VERIFY_CODE_IS_INVALID);
+
+        return $this->verifyDao->setVerifyCodeForUsedById($verifyInfo->getVerifyId());
+    }
+
     public function createVerify(string $object, string $code, string $ip)
     {
         return $this->verifyDao->createVerify([

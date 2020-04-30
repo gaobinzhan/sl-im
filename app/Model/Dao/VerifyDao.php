@@ -42,13 +42,22 @@ class VerifyDao
     public function findVerifyByObjectDesc(string $object)
     {
         return $this->verifyEntity::whereNull('deleted_at')
-            ->where('object', 'eq', $object)
+            ->where('object', $object)
             ->orderBy('created_at', 'desc')
-            ->find();
+            ->first();
     }
 
     public function createVerify(array $data)
     {
         return $this->verifyEntity::insertGetId($data);
+    }
+
+    public function setVerifyCodeForUsedById(int $id)
+    {
+        return $this->verifyEntity::whereNull('deleted_at')
+            ->where('verify_id', $id)
+            ->update([
+            'status' => Verify::USED_STATUS
+        ]);
     }
 }

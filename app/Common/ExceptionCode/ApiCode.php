@@ -59,7 +59,10 @@ class ApiCode
         FILE_DOES_NOT_EXIST = 9006,
         ERR_ALI_MAIL_CONFIG = 9007,
         MAIL_SENDING_LIMIT = 9008,
-        MAIL_SEND_FAIL = 9009;
+        MAIL_SEND_FAIL = 9009,
+        VERIFY_CODE_ERROR = 9010,
+        VERIFY_CODE_IS_INVALID = 9011,
+        VERiFY_CODE_USED = 9012;
 
     public static $errorMessages = [
 
@@ -102,6 +105,9 @@ class ApiCode
         self::FILE_DOES_NOT_EXIST => 'File does not exist !',
         self::ERR_ALI_MAIL_CONFIG => 'AliYun mail config not found !',
         self::MAIL_SENDING_LIMIT => 'Mail sending limit !',
-        self::MAIL_SEND_FAIL => 'Mail send fail !'
+        self::MAIL_SEND_FAIL => 'Mail send fail !',
+        self::VERIFY_CODE_ERROR => 'Verification code error !',
+        self::VERIFY_CODE_IS_INVALID => 'Verification code is invalid !',
+        self::VERiFY_CODE_USED => 'Verification code used !'
     ];
 }

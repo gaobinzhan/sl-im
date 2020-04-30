@@ -90,4 +90,12 @@ class UserValidator
      * @var int
      */
     protected $status = 0;
+
+    /**
+     * @IsString()
+     * @Required()
+     * @NotEmpty()
+     * @var string
+     */
+    protected $code = '';
 }

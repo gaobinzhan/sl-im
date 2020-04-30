@@ -10,6 +10,7 @@ use App\Model\Logic\FriendLogic;
 use App\Model\Logic\GroupLogic;
 use App\Model\Logic\UserLogic;
 use Swoft\Bean\Annotation\Mapping\Inject;
+use Swoft\Db\DB;
 use Swoft\Http\Message\Request;
 use Swoft\Http\Message\Response;
 use Swoft\Http\Server\Annotation\Mapping\Controller;
@@ -71,16 +72,20 @@ class UserController
 
     /**
      * @RequestMapping(route="register",method={RequestMethod::POST})
-     * @Validate(validator="UserValidator",fields={"email","password"})
+     * @Validate(validator="UserValidator",fields={"email","password","code"})
      */
     public function register(Request $request)
     {
+        DB::beginTransaction();
         try {
             $email = $request->parsedBody('email');
             $password = $request->parsedBody('password');
-            $this->userLogic->register($email, $password);
+            $code = $request->parsedBody('code');
+            $this->userLogic->register($email, $password,$code);
+            DB::commit();
             return apiSuccess();
         } catch (\Throwable $throwable) {
+            DB::rollBack();
             return apiError($throwable->getCode(), $throwable->getMessage());
         }
     }

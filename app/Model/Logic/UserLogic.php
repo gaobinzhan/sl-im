@@ -63,12 +63,15 @@ class UserLogic
         return $userInfo;
     }
 
-    public function register(string $email, string $password)
+    public function register(string $email, string $password, string $code)
     {
         $userInfo = $this->findUserInfoByEmail($email);
         if ($userInfo) {
             throw new \Exception('', ApiCode::USER_EMAIL_ALREADY_USE);
         }
+
+        \bean(VerifyLogic::class)->enterVerify($email, $code);
+
         return $this->createUser(
             [
                 'email' => $email,
