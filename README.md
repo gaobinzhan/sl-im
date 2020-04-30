@@ -167,6 +167,11 @@ php bin/swoft ws:start -d
 
 怎么访问还用写吗？？？点个star吧 ✌️
 
+## 后续
+
+准备采用前后端分离重构该项目！
+
+
 ## 联系方式
 
 - WeChat：gaobinzhan
