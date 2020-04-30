@@ -56,7 +56,10 @@ class ApiCode
         JWT_ALG_EMPTY = 9003,
         NO_PERMISSION_PROCESS = 9004,
         CONFIG_NOT_FOUND = 9005,
-        FILE_DOES_NOT_EXIST = 9006;
+        FILE_DOES_NOT_EXIST = 9006,
+        ERR_ALI_MAIL_CONFIG = 9007,
+        MAIL_SENDING_LIMIT = 9008,
+        MAIL_SEND_FAIL = 9009;
 
     public static $errorMessages = [
 
@@ -96,6 +99,9 @@ class ApiCode
         self::JWT_ALG_EMPTY => 'The alg is invalid !',
         self::NO_PERMISSION_PROCESS => 'No permission to process !',
         self::CONFIG_NOT_FOUND => 'Configuration not found !',
-        self::FILE_DOES_NOT_EXIST => 'File does not exist !'
+        self::FILE_DOES_NOT_EXIST => 'File does not exist !',
+        self::ERR_ALI_MAIL_CONFIG => 'AliYun mail config not found !',
+        self::MAIL_SENDING_LIMIT => 'Mail sending limit !',
+        self::MAIL_SEND_FAIL => 'Mail send fail !'
     ];
 }

@@ -30,7 +30,7 @@ class Verify extends BaseMigration
             $blueprint->string('object', 50)->comment('被验证的对象');
             $blueprint->char('code', 4)->comment('验证码');
             $blueprint->string('ip', 15)->default('')->comment('请求ip地址');
-            $blueprint->tinyInteger('status', false, true, 1)->comment('是否使用 0 未使用 1 使用');
+            $blueprint->tinyInteger('status', false, true, 1)->default(0)->comment('是否使用 0 未使用 1 使用');
             $blueprint->timestamps();
 //            $blueprint->tinyInteger('delete_flag', false, true, 1)->default(0)->comment('软删除 0正常 1删除');
             $blueprint->softDeletes()->comment('删除时间 为NULL未删除');
