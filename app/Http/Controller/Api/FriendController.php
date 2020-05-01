@@ -96,7 +96,7 @@ class FriendController
     {
         try {
             $friendGroupId = $request->parsedQuery('friend_group_id');
-            $result = $this->friendLogic->delFriendGroup($request->user,$friendGroupId);
+            $result = $this->friendLogic->delFriendGroup($request->user, $friendGroupId);
 
             return apiSuccess($result);
         } catch (\Throwable $throwable) {
@@ -113,6 +113,26 @@ class FriendController
     {
         try {
             $result = $this->friendLogic->getFriendGroupByUserId($request->user);
+            return apiSuccess($result);
+        } catch (\Throwable $throwable) {
+            return apiError($throwable->getCode(), $throwable->getMessage());
+        }
+    }
+
+    /**
+     * 获取好友列表
+     * @RequestMapping(route="getRelationList",method={RequestMethod::POST})
+     * @Middleware(AuthMiddleware::class)
+     * @Validate(validator="SearchValidator",fields={"page","limit"})
+     */
+    public function getRelationList(Request $request)
+    {
+        try {
+            $condition = $request->parsedBody('condition') ?? [];
+            $page = $request->parsedBody('page');
+            $limit = $request->parsedBody('limit');
+
+            $result = $this->friendLogic->getRelationList($request->user, $page, $limit, $condition);
             return apiSuccess($result);
         } catch (\Throwable $throwable) {
             return apiError($throwable->getCode(), $throwable->getMessage());

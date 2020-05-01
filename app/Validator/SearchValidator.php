@@ -45,4 +45,13 @@ class SearchValidator
      * @var int
      */
     protected $size = 20;
+
+    /**
+     * @IsInt()
+     * @Required()
+     * @NotEmpty(message="每页数量不能为空")
+     * @Max(value=20)
+     * @var int
+     */
+    protected $limit = 20;
 }

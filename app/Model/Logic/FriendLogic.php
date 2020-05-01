@@ -110,6 +110,12 @@ class FriendLogic
             ]);
     }
 
+    public function getRelationList(int $userId, int $page, int $limit, array $condition)
+    {
+        return $this->friendRelationDao->getRelationList($userId, $page, $limit, $condition);
+
+    }
+
     public function findFriendGroupById(int $friendGroupId)
     {
         $result = $this->friendGroupDao->findFriendGroupById($friendGroupId);
