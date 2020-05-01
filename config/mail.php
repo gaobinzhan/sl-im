@@ -5,14 +5,14 @@
 
 return [
     'aliYun' => [
-        'accountName' => 'admin@email.gaobinzhan.com',
-        'accessKeyId' => 'LTAI4Ft7DENtkuT4CJitCTAM',
-        'accessKeySecret' => 'Qxj9bHNiLEQJ0zu0R8my2JwdJxzIrY',
-        'fromAlias' => 'sl-im',
-        'subject' => '尊敬的{email}用户',
-        'body' => '您的验证码为{code}，10分钟内有效。',
-        'version' => '2015-11-23',
-        'regionId' => 'cn-hangzhou',
-        'host' => 'dm.aliyuncs.com'
+        'accountName' => env('ALI_MAIL_ACCOUNT_NAME', ''),
+        'accessKeyId' => env('ALI_MAIL_ACCESS_KEY_ID', ''),
+        'accessKeySecret' => env('ALI_MAIL_ACCESS_KEY_SECRET', ''),
+        'fromAlias' => env('ALI_MAIL_FORM_ALIAS', 'sl-im'),
+        'subject' => env('ALI_MAIL_SUBJECT', ''),
+        'body' => env('ALI_MAIL_BODY', ''),
+        'version' => env('ALI_MAIL_VERSION', ''),
+        'regionId' => env('ALI_MAIL_REGION_ID', ''),
+        'host' => env('ALI_MAIL_HOST', '')
     ]
 ];
