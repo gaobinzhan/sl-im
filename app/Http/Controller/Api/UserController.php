@@ -98,16 +98,8 @@ class UserController
      */
     public function home(Request $request, Response $response)
     {
-        if (!$userId = checkAuth()) return $response->redirect('/static/login');
         $menus = config('menu');
-        $userInfo = $request->userInfo;
-        return view('user/home', [
-            'menus' => $menus,
-            'userInfo' => $userInfo,
-            'wsUrl' => env('WS_URL'),
-            'webRtcUrl' => env('WEB_RTC_URL'),
-            'stunServer' => 'stun:stun.xten.com'
-        ]);
+        return apiSuccess($menus);
     }
 
 

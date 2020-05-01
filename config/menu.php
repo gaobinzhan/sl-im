@@ -3,26 +3,23 @@
  * @author gaobinzhan <gaobinzhan@gmail.com>
  */
 return [
+
     [
         'title' => '好友管理',
-        'child' => [
+        'name' => 'friend',
+        'icon' => 'layui-icon-user',
+        'list' => [
             [
                 'title' => '创建分组',
-                'id' => 'createFriendGroup',
-                'url' => '/static/createFriendGroup',
-                'width' => '550px',
-                'height' => '400px',
+                'name' => 'createFriendGroup',
             ],
             [
                 'title' => '查找好友',
-                'id' => 'findUser',
-                'url' => '/static/findUser',
-                'width' => '1000px',
-                'height' => '520px',
+                'name' => 'findUser',
             ]
         ]
     ],
-    [
+    /*[
         'title' => '群管理',
         'child' => [
             [
@@ -59,5 +56,5 @@ return [
                 'height' => '520px',
             ]
         ]
-    ]
+    ]*/
 ];

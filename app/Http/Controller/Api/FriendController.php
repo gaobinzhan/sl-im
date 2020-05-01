@@ -66,6 +66,20 @@ class FriendController
     }
 
     /**
+     * @RequestMapping(route="getGroupList")
+     * @Middleware(AuthMiddleware::class)
+     */
+    public function getGroupList(Request $request)
+    {
+        try {
+            $result = $this->friendLogic->getFriendGroupByUserId($request->user);
+            return apiSuccess($result);
+        } catch (\Throwable $throwable) {
+            return apiError($throwable->getCode(), $throwable->getMessage());
+        }
+    }
+
+    /**
      * @RequestMapping(route="getRecommendedFriend",method={RequestMethod::GET})
      * @Middleware(AuthMiddleware::class)
      */

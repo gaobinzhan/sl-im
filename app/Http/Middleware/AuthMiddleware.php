@@ -41,7 +41,7 @@ class AuthMiddleware implements MiddlewareInterface
 
         if (empty($authorization)) {
             $params = array_merge($request->getParsedBody(),$request->getQueryParams());
-            $authorization = $prefix . ($params['access_token'] ?? '');
+            $authorization = $prefix . ($params['token'] ?? '');
         }
 
         $publicKey = config('jwt.public_key');
