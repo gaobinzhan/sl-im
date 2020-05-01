@@ -31,6 +31,8 @@ class UserController
 {
     use AuthHelper;
 
+    use JwtHelper;
+
     /**
      * @Inject()
      * @var UserLogic
@@ -58,13 +60,13 @@ class UserController
         try {
             $email = $request->parsedBody('email');
             $password = $request->parsedBody('password');
+
             /** @var User $userInfo */
             $userInfo = $this->userLogic->login($email, $password);
-            $token = JwtHelper::encrypt($userInfo->getUserId());
-            return $response->withCookie('IM_TOKEN', [
-                'value' => $token,
-                'path' => '/',
-            ])->withData(['code' => 0, 'msg' => 'Success', 'data' => $userInfo]);
+
+            $token = $this->encrypt($userInfo['userId']);
+            $userInfo['token'] = $token;
+            return apiSuccess($userInfo);
         } catch (\Throwable $throwable) {
             return apiError($throwable->getCode(), $throwable->getMessage());
         }
@@ -82,7 +84,7 @@ class UserController
             $email = $request->parsedBody('email');
             $password = $request->parsedBody('password');
             $code = $request->parsedBody('code');
-            $this->userLogic->register($username,$email, $password,$code);
+            $this->userLogic->register($username, $email, $password, $code);
             DB::commit();
             return apiSuccess();
         } catch (\Throwable $throwable) {

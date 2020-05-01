@@ -96,7 +96,7 @@ class UserLogic
         }
         $this->createUserLoginLog($userInfo->getUserId());
 
-        return $userInfo;
+        return $userInfo->toArray();
     }
 
     public function createUserLoginLog(int $userId)

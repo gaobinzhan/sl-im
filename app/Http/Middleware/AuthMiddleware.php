@@ -51,20 +51,20 @@ class AuthMiddleware implements MiddlewareInterface
         }
 
         if (empty($authorization) || !is_string($authorization) || strpos($authorization, $prefix) !== 0) {
-            throw new ApiException('', ApiCode::USER_NOT_FOUND);
+            throw new ApiException('', ApiCode::AUTH_ERROR);
         }
 
         $jwt = substr($authorization, strlen($prefix));
 
         if (strlen(trim($jwt)) <= 0) {
-            throw new ApiException('', ApiCode::USER_NOT_FOUND);
+            throw new ApiException('', ApiCode::AUTH_ERROR);
         }
 
         $payload = JWT::decode($jwt, $publicKey, [config('jwt.alg')]);
 
 
         if (isset($payload->user) && !is_numeric($payload->user)) {
-            throw new ApiException('', ApiCode::USER_NOT_FOUND);
+            throw new ApiException('', ApiCode::AUTH_ERROR);
         }
 
         $request->user = $payload->user;
@@ -72,7 +72,7 @@ class AuthMiddleware implements MiddlewareInterface
         $userInfo = bean('App\Model\Dao\UserDao')->findUserInfoById($request->user);
 
         if (empty($userInfo)) {
-            throw new ApiException('', ApiCode::USER_NOT_FOUND);
+            throw new ApiException('', ApiCode::AUTH_ERROR);
         }
 
         $request->userInfo = $userInfo;
