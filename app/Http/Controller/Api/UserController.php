@@ -105,13 +105,11 @@ class UserController
 
     /**
      * @RequestMapping(route="signOut",method={RequestMethod::GET})
+     * @Middleware(AuthMiddleware::class)
      */
     public function signOut(Request $request, Response $response)
     {
-        return context()->getResponse()->withCookie('IM_TOKEN', [
-            'value' => '',
-            'path' => '/'
-        ])->redirect('/static/login');
+        return apiSuccess();
     }
 
     /**
