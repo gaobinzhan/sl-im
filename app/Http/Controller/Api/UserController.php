@@ -52,6 +52,7 @@ class UserController
     protected $groupLogic;
 
     /**
+     * 用户登录
      * @RequestMapping(route="login",method={RequestMethod::POST})
      * @Validate(validator="UserValidator",fields={"email","password"})
      */
@@ -73,6 +74,7 @@ class UserController
     }
 
     /**
+     * 用户注册
      * @RequestMapping(route="register",method={RequestMethod::POST})
      * @Validate(validator="UserValidator",fields={"username","email","password","code"})
      */
@@ -94,6 +96,7 @@ class UserController
     }
 
     /**
+     * 获取用户菜单
      * @RequestMapping(route="home",method={RequestMethod::GET})
      */
     public function home(Request $request, Response $response)
@@ -104,6 +107,7 @@ class UserController
 
 
     /**
+     * 用户退出
      * @RequestMapping(route="signOut",method={RequestMethod::GET})
      * @Middleware(AuthMiddleware::class)
      */
@@ -160,6 +164,7 @@ class UserController
     }
 
     /**
+     * 用户个人信息
      * @RequestMapping(route="info",method={RequestMethod::GET})
      * @Middleware(AuthMiddleware::class)
      */

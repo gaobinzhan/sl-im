@@ -81,6 +81,35 @@ class FriendLogic
         return $result;
     }
 
+    public function editFriendGroup(int $userId, int $friendGroupId, string $friendGroupName)
+    {
+        /** @var FriendGroup $friendGroupInfo */
+        $friendGroupInfo = $this->findFriendGroupById($friendGroupId);
+        if ($friendGroupInfo->getUserId() !== $userId) throw new \Exception(null, ApiCode::NO_PERMISSION_PROCESS);
+
+        return $this->friendGroupDao->editFriendGroupById($friendGroupId,
+            [
+                'friend_group_name' => $friendGroupName
+            ]
+        );
+    }
+
+    public function delFriendGroup(int $userId, int $friendGroupId)
+    {
+        /** @var FriendGroup $friendGroupInfo */
+        $friendGroupInfo = $this->findFriendGroupById($friendGroupId);
+        if ($friendGroupInfo->getUserId() !== $userId) throw new \Exception(null, ApiCode::NO_PERMISSION_PROCESS);
+
+        $friendRelations = $this->getFriendRelationByFriendGroupIds([$friendGroupId]);
+        if ($friendRelations->count() > 0) {
+            throw new \Exception(null, ApiCode::FRIEND_GROUP_CAN_NOT_DELETE);
+        }
+        return $this->friendGroupDao->editFriendGroupById($friendGroupId,
+            [
+                'deleted_at' => date('Y-m-d H:i:s', time())
+            ]);
+    }
+
     public function findFriendGroupById(int $friendGroupId)
     {
         $result = $this->friendGroupDao->findFriendGroupById($friendGroupId);

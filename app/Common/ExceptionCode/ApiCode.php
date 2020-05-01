@@ -16,6 +16,7 @@ class ApiCode
 {
     //基本错误码 0～1000
     const AUTH_ERROR = 401;
+    const NO_PERMISSION_PROCESS = 402;
 
     //用户错误码 3000～3999
 
@@ -38,8 +39,8 @@ class ApiCode
         FRIEND_NOT_FOUND = 4003,
         FRIEND_NOT_ADD_SELF = 4004,
         FRIEND_RELATION_ALREADY = 4005,
-        FRIEND_CALL_IN_PROGRESS = 4006;
-
+        FRIEND_CALL_IN_PROGRESS = 4006,
+        FRIEND_GROUP_CAN_NOT_DELETE = 4007;
 
     const GROUP_CREATE_FAIL = 5001,
         GROUP_NOT_FOUND = 5002,
@@ -54,7 +55,6 @@ class ApiCode
         JWT_PRIVATE_KEY_EMPTY = 9001,
         JWT_PUBLIC_KEY_EMPTY = 9002,
         JWT_ALG_EMPTY = 9003,
-        NO_PERMISSION_PROCESS = 9004,
         CONFIG_NOT_FOUND = 9005,
         FILE_DOES_NOT_EXIST = 9006,
         ERR_ALI_MAIL_CONFIG = 9007,
@@ -68,6 +68,7 @@ class ApiCode
 
 
         self::AUTH_ERROR => 'Authorization has been denied for this request !',
+        self::NO_PERMISSION_PROCESS => 'No permission to process !',
 
 
         self::USER_NOT_FOUND => 'User not found!',
@@ -89,6 +90,7 @@ class ApiCode
         self::FRIEND_NOT_ADD_SELF => 'You can\'t add yourself as a friend !',
         self::FRIEND_RELATION_ALREADY => 'You\'re already friends !',
         self::FRIEND_CALL_IN_PROGRESS => '对方正在视频通话中', // Video call in progress
+        self::FRIEND_GROUP_CAN_NOT_DELETE => 'There are friends under this group that cannot be deleted !',
 
         self::GROUP_CREATE_FAIL => 'Group creation failed !',
         self::GROUP_NOT_FOUND => 'Group not found !',
@@ -100,7 +102,6 @@ class ApiCode
         self::JWT_PRIVATE_KEY_EMPTY => 'The private key is invalid !',
         self::JWT_PUBLIC_KEY_EMPTY => 'The public key is invalid !',
         self::JWT_ALG_EMPTY => 'The alg is invalid !',
-        self::NO_PERMISSION_PROCESS => 'No permission to process !',
         self::CONFIG_NOT_FOUND => 'Configuration not found !',
         self::FILE_DOES_NOT_EXIST => 'File does not exist !',
         self::ERR_ALI_MAIL_CONFIG => 'AliYun mail config not found !',

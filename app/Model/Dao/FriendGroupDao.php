@@ -39,4 +39,10 @@ class FriendGroupDao
             ->where('user_id', '=', $userId)
             ->get();
     }
+
+    public function editFriendGroupById(int $id, array $data)
+    {
+        return $this->friendGroupEntity::where('friend_group_id', $id)
+            ->update($data);
+    }
 }

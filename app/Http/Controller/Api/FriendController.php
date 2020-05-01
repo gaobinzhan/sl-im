@@ -44,6 +44,7 @@ class FriendController
     protected $userLogic;
 
     /**
+     * 创建好友分组
      * @RequestMapping(route="createFriendGroup",method={RequestMethod::POST})
      * @Middleware(AuthMiddleware::class)
      * @Validate(validator="FriendValidator",fields={"friend_group_name"})
@@ -66,6 +67,45 @@ class FriendController
     }
 
     /**
+     * 编辑好友分组
+     * @RequestMapping(route="editFriendGroup",method={RequestMethod::POST})
+     * @Middleware(AuthMiddleware::class)
+     * @Validate(validator="FriendValidator",fields={"friend_group_id","friend_group_name"})
+     */
+    public function editFriendGroup(Request $request)
+    {
+        try {
+            $friendGroupId = $request->parsedBody('friend_group_id');
+            $friendGroupName = $request->parsedBody('friend_group_name');
+
+            $result = $this->friendLogic->editFriendGroup($request->user, $friendGroupId, $friendGroupName);
+
+            return apiSuccess($result);
+        } catch (\Throwable $throwable) {
+            return apiError($throwable->getCode(), $throwable->getMessage());
+        }
+    }
+
+    /**
+     * 删除好友分组
+     * @RequestMapping(route="delFriendGroup",method={RequestMethod::GET})
+     * @Middleware(AuthMiddleware::class)
+     * @Validate(validator="FriendValidator",fields={"friend_group_id"},type=ValidateType::GET)
+     */
+    public function delFriendGroup(Request $request)
+    {
+        try {
+            $friendGroupId = $request->parsedQuery('friend_group_id');
+            $result = $this->friendLogic->delFriendGroup($request->user,$friendGroupId);
+
+            return apiSuccess($result);
+        } catch (\Throwable $throwable) {
+            return apiError($throwable->getCode(), $throwable->getMessage());
+        }
+    }
+
+    /**
+     * 获取好友分组
      * @RequestMapping(route="getGroupList")
      * @Middleware(AuthMiddleware::class)
      */
