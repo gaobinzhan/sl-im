@@ -17,6 +17,7 @@ class ApiCode
     //基本错误码 0～1000
     const AUTH_ERROR = 401;
     const NO_PERMISSION_PROCESS = 402;
+    const NO_DATA_AVAILABLE = 403;
 
     //用户错误码 3000～3999
 
@@ -40,7 +41,8 @@ class ApiCode
         FRIEND_NOT_ADD_SELF = 4004,
         FRIEND_RELATION_ALREADY = 4005,
         FRIEND_CALL_IN_PROGRESS = 4006,
-        FRIEND_GROUP_CAN_NOT_DELETE = 4007;
+        FRIEND_GROUP_CAN_NOT_DELETE = 4007,
+        FRIEND_RELATION_NOT_FOUND = 4008;
 
     const GROUP_CREATE_FAIL = 5001,
         GROUP_NOT_FOUND = 5002,
@@ -69,6 +71,7 @@ class ApiCode
 
         self::AUTH_ERROR => 'Authorization has been denied for this request !',
         self::NO_PERMISSION_PROCESS => 'No permission to process !',
+        self::NO_DATA_AVAILABLE => 'No data available !',
 
 
         self::USER_NOT_FOUND => 'User not found!',
@@ -98,6 +101,7 @@ class ApiCode
         self::GROUP_RELATION_ALREADY => 'You\'re already a member of the group !',
         self::GROUP_FULL => 'Group full !',
         self::GROUP_NOT_MEMBER => 'You are not a member of this group !',
+        self::FRIEND_RELATION_NOT_FOUND => 'No friends found !',
 
         self::JWT_PRIVATE_KEY_EMPTY => 'The private key is invalid !',
         self::JWT_PUBLIC_KEY_EMPTY => 'The public key is invalid !',

@@ -112,8 +112,26 @@ class FriendLogic
 
     public function getRelationList(int $userId, int $page, int $limit, array $condition)
     {
-        return $this->friendRelationDao->getRelationList($userId, $page, $limit, $condition);
+        $result = $this->friendRelationDao->getRelationList($userId, $page, $limit, $condition);
+        if (empty($result['list'])) throw new \Exception(null, ApiCode::NO_DATA_AVAILABLE);
 
+        return $result;
+
+    }
+
+    public function editFriendRelation(int $userId, int $friendRelationId, int $friendGroupId)
+    {
+        /** @var FriendRelation $friendRelationInfo */
+        $friendRelationInfo = $this->friendRelationDao->findFriendRelationById($friendRelationId);
+        if (!$friendRelationInfo) throw new \Exception(null, ApiCode::FRIEND_RELATION_NOT_FOUND);
+
+        if ($friendRelationInfo->getUserId() !== $userId) throw new \Exception(null, ApiCode::NO_PERMISSION_PROCESS);
+
+        $this->findFriendGroupById($friendGroupId);
+
+        return $this->friendRelationDao->changeFriendRelationById($friendRelationId, [
+            'friend_group_id' => $friendGroupId
+        ]);
     }
 
     public function findFriendGroupById(int $friendGroupId)

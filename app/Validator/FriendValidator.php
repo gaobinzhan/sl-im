@@ -57,6 +57,14 @@ class FriendValidator
     /**
      * @IsInt()
      * @Required()
+     * @NotEmpty()
+     * @var int
+     */
+    protected $friend_relation_id = '';
+
+    /**
+     * @IsInt()
+     * @Required()
      * @NotEmpty(message="接收者编号不能为空")
      * @var int
      */

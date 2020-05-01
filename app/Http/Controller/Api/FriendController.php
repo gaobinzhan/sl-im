@@ -140,6 +140,23 @@ class FriendController
     }
 
     /**
+     * @RequestMapping(route="editFriendRelation",method={RequestMethod::POST})
+     * @Middleware(AuthMiddleware::class)
+     * @Validate(validator="FriendValidator",fields={"friend_relation_id","friend_group_id"})
+     */
+    public function editFriendRelation(Request $request){
+        try {
+            $friendRelationId = $request->parsedBody('friend_relation_id');
+            $friendGroupId = $request->parsedBody('friend_group_id');
+
+            $result = $this->friendLogic->editFriendRelation($request->user, $friendRelationId, $friendGroupId);
+            return apiSuccess($result);
+        } catch (\Throwable $throwable) {
+            return apiError($throwable->getCode(), $throwable->getMessage());
+        }
+    }
+
+    /**
      * @RequestMapping(route="getRecommendedFriend",method={RequestMethod::GET})
      * @Middleware(AuthMiddleware::class)
      */

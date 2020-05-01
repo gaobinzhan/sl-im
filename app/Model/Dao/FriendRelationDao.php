@@ -68,6 +68,12 @@ class FriendRelationDao
             ->get();
     }
 
+    public function findFriendRelationById(int $id){
+        return $this->friendRelationEntity::whereNull('deleted_at')
+            ->where('friend_relation_id',$id)
+            ->first();
+    }
+
     public function getRelationList(int $userId, int $page, int $limit, array $condition)
     {
         return $this->friendRelationEntity::whereNull('friend_relation.deleted_at')
