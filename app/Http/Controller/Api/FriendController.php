@@ -214,6 +214,7 @@ class FriendController
     }
 
     /**
+     * 发起好友申请
      * @RequestMapping(route="apply",method={RequestMethod::POST})
      * @Middleware(AuthMiddleware::class)
      * @Validate(validator="FriendValidator",fields={"receiver_id","friend_group_id","application_reason"})

@@ -117,6 +117,7 @@ class UserController
     }
 
     /**
+     * im面板初始化
      * @RequestMapping(route="init",method={RequestMethod::GET})
      * @Middleware(AuthMiddleware::class)
      */
