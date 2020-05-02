@@ -144,17 +144,17 @@ class FriendLogic
         if ($friendRelationInfo->getUserId() !== $userId) throw new \Exception(null, ApiCode::NO_PERMISSION_PROCESS);
 
         /** @var FriendRelation $check */
-        $check = $this->friendRelationDao->checkIsFriendRelation($friendRelationInfo->getFriendId(),$friendRelationInfo->getUserId());
-        if (!$check) throw new \Exception(null,ApiCode::FRIEND_RELATION_NOT_FOUND);
+        $check = $this->friendRelationDao->checkIsFriendRelation($friendRelationInfo->getFriendId(), $friendRelationInfo->getUserId());
+        if (!$check) throw new \Exception(null, ApiCode::FRIEND_RELATION_NOT_FOUND);
 
         var_dump($check->getFriendRelationId());
 
-        $this->friendRelationDao->changeFriendRelationById($friendRelationId,[
-            'deleted_at' => date('Y-m-d H:i:s',time())
+        $this->friendRelationDao->changeFriendRelationById($friendRelationId, [
+            'deleted_at' => date('Y-m-d H:i:s', time())
         ]);
 
-        $this->friendRelationDao->changeFriendRelationById($check->getFriendRelationId(),[
-            'deleted_at' => date('Y-m-d H:i:s',time())
+        $this->friendRelationDao->changeFriendRelationById($check->getFriendRelationId(), [
+            'deleted_at' => date('Y-m-d H:i:s', time())
         ]);
 
         return true;
@@ -222,9 +222,11 @@ class FriendLogic
         return $this->userDao->getRecommendedFriend($limit);
     }
 
-    public function searchFriend(string $keyword, int $page, int $size)
+    public function searchFriend(array $condition, int $page, int $limit)
     {
-        return $this->userDao->searchFriend($keyword, $page, $size);
+        $result = $this->userDao->searchFriend($condition, $page, $limit);
+        if (empty($result['list'])) throw new \Exception(null, ApiCode::NO_DATA_AVAILABLE);
+        return $result;
     }
 
     public function apply(int $userId, int $receiverId, int $friendGroupId, string $applicationReason)

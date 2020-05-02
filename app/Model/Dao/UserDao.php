@@ -24,44 +24,50 @@ class UserDao
      */
     protected $userEntity;
 
-    public function findUserInfoById(int $userId){
+    public function findUserInfoById(int $userId)
+    {
         return $this->userEntity::whereNull('deleted_at')->find($userId);
     }
 
-    public function findUserInfoByEmail(string $email){
-        return $this->userEntity::where('email','=',$email)->first();
+    public function findUserInfoByEmail(string $email)
+    {
+        return $this->userEntity::where('email', '=', $email)->first();
     }
 
-    public function createUser(array $data){
+    public function createUser(array $data)
+    {
         return $this->userEntity::insert($data);
     }
 
-    public function getUserByIds(array $ids){
+    public function getUserByIds(array $ids)
+    {
         return $this->userEntity::whereNull('deleted_at')
-            ->whereIn('user_id',$ids)
+            ->whereIn('user_id', $ids)
             ->get();
     }
 
-    public function getRecommendedFriend(int $limit){
+    public function getRecommendedFriend(int $limit)
+    {
         return $this->userEntity::whereNull('deleted_at')
-            ->orderBy('created_at','desc')
+            ->orderBy('created_at', 'desc')
             ->limit($limit)
             ->get();
     }
 
-    public function searchFriend(string $keyword, int $page, int $size){
+    public function searchFriend(array $condition, int $page, int $limit)
+    {
         return $this->userEntity::whereNull('deleted_at')
-            ->where(function (Builder $builder) use ($keyword) {
-                $builder->where('user_id','=',$keyword)
-                    ->orWhere('username','like',"%$keyword%")
-                    ->orWhere('email','like',"%$keyword%");
+            ->where(function (Builder $builder) use ($condition) {
+                !empty($condition['username']) && $builder->where('user.username', 'like', "%{$condition['username']}%");
+                !empty($condition['email']) && $builder->where('user.email', $condition['email']);
             })
-            ->paginate($page,$size);
+            ->paginate($page, $limit);
     }
 
-    public function changeUserInfoById(int $userId,array $data){
+    public function changeUserInfoById(int $userId, array $data)
+    {
         return $this->userEntity::whereNull('deleted_at')
-            ->where('user_id','=',$userId)
+            ->where('user_id', '=', $userId)
             ->update($data);
     }
 }

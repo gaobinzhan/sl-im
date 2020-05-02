@@ -180,6 +180,7 @@ class FriendController
     }
 
     /**
+     * 最近注册20位好友
      * @RequestMapping(route="getRecommendedFriend",method={RequestMethod::GET})
      * @Middleware(AuthMiddleware::class)
      */
@@ -194,17 +195,18 @@ class FriendController
     }
 
     /**
+     * 全网搜索好友
      * @RequestMapping(route="search",method={RequestMethod::POST})
      * @Middleware(AuthMiddleware::class)
-     * @Validate(validator="SearchValidator",fields={"keyword","page","size"})
+     * @Validate(validator="SearchValidator",fields={"page","limit"})
      */
     public function searchFriend(Request $request)
     {
         try {
-            $keyword = $request->parsedBody('keyword');
+            $condition = $request->parsedBody('condition') ?? [];
             $page = $request->parsedBody('page');
-            $size = $request->parsedBody('size');
-            $friends = $this->friendLogic->searchFriend($keyword, $page, $size);
+            $limit = $request->parsedBody('limit');
+            $friends = $this->friendLogic->searchFriend($condition, $page, $limit);
             return apiSuccess($friends);
         } catch (\Throwable $throwable) {
             return apiError($throwable->getCode(), $throwable->getMessage());
