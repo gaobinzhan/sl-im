@@ -30,6 +30,7 @@ class GroupController
     protected $groupLogic;
 
     /**
+     * 创建群
      * @RequestMapping(route="create",method={RequestMethod::POST})
      * @Middleware(AuthMiddleware::class)
      * @Validate(validator="GroupValidator",fields={"group_name","avatar","size","introduction","validation"})

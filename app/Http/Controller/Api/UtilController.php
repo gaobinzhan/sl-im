@@ -23,6 +23,7 @@ class UtilController
 {
 
     /**
+     * 上传图片
      * @RequestMapping(route="uploadImg",method={RequestMethod::POST})
      * @Middleware(name=AuthMiddleware::class)
      */

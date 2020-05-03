@@ -75,8 +75,10 @@ class GroupRelationDao
                 'group_relation.group_relation_id',
                 'group_relation.created_at',
                 'group.group_id',
+                'group.size',
                 'group.avatar',
                 'group.group_name',
+                'group.introduction',
                 'user.email'
             ]);
     }
