@@ -5,6 +5,7 @@ namespace App\Model\Dao;
 use App\Model\Entity\GroupRelation;
 use Swoft\Bean\Annotation\Mapping\Bean;
 use Swoft\Bean\Annotation\Mapping\Inject;
+use Swoft\Db\Query\Builder;
 
 /**
  * Class GroupRelationDao
@@ -59,5 +60,24 @@ class GroupRelationDao
         return $this->groupRelationEntity::whereNull('deleted_at')
             ->where('user_id', '=', $userId)
             ->get();
+    }
+
+    public function getSelfGroupRelation(array $condition, int $userId, int $page, int $limit)
+    {
+        return $this->groupRelationEntity::whereNull('group_relation.deleted_at')
+            ->leftJoin('group', 'group.group_id', '=', 'group_relation.group_id')
+            ->leftJoin('user', 'user.user_id', '=', 'group.user_id')
+            ->where('group_relation.user_id', $userId)
+            ->where(function (Builder $builder) use ($condition) {
+                !empty($condition['group_name']) && $builder->where('group.group_name', 'like', "%{$condition['group_name']}%");
+            })
+            ->paginate($page, $limit, [
+                'group_relation.group_relation_id',
+                'group_relation.created_at',
+                'group.group_id',
+                'group.avatar',
+                'group.group_name',
+                'user.email'
+            ]);
     }
 }

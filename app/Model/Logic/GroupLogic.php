@@ -221,7 +221,6 @@ class GroupLogic
         $this->checkGroupSize($groupInfo->getGroupId(), $groupInfo->getSize());
 
 
-
         $pushGroupInfo = [
             'type' => UserApplication::APPLICATION_TYPE_GROUP,
             'avatar' => $groupInfo->getAvatar(),
@@ -285,8 +284,8 @@ class GroupLogic
 
         $userIds = [];
 
-        foreach ($historyInfos['list'] as $historyInfo){
-            array_push($userIds,$historyInfo['fromUserId']);
+        foreach ($historyInfos['list'] as $historyInfo) {
+            array_push($userIds, $historyInfo['fromUserId']);
         }
 
         /** @var User $userInfos */
@@ -311,5 +310,13 @@ class GroupLogic
 
         return $result;
 
+    }
+
+
+    public function getSelfGroupRelation(array $condition, int $userId, int $page, int $limit)
+    {
+        $result = $this->groupRelationDao->getSelfGroupRelation($condition, $userId, $page, $limit);
+        if (empty($result['list'])) throw new \Exception(null, ApiCode::NO_DATA_AVAILABLE);
+        return $result;
     }
 }
