@@ -123,6 +123,15 @@ class GroupLogic
         return $data;
     }
 
+    public function getGroupRelationListById(int $groupId, int $page, int $limit, array $condition)
+    {
+        $this->findGroupById($groupId);
+
+        $result = $this->groupRelationDao->getGroupRelationListById($groupId, $page, $limit, $condition);
+        if (empty($result['list'])) throw new \Exception(null, ApiCode::NO_DATA_AVAILABLE);
+        return $result;
+    }
+
     public function getGroup()
     {
         $request = context()->getRequest();

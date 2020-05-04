@@ -50,7 +50,7 @@ class SearchValidator
      * @IsInt()
      * @Required()
      * @NotEmpty(message="每页数量不能为空")
-     * @Max(value=20)
+     * @Max(value=100)
      * @var int
      */
     protected $limit = 20;

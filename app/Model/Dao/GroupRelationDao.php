@@ -82,4 +82,20 @@ class GroupRelationDao
                 'user.email'
             ]);
     }
+
+    public function getGroupRelationListById(int $groupId, int $page, int $limit, array $condition){
+        return $this->groupRelationEntity::whereNull('group_relation.deleted_at')
+            ->leftJoin('user','group_relation.user_id','user.user_id')
+            ->where('group_relation.group_id',$groupId)
+            ->paginate($page,$limit,[
+                'group_relation.group_relation_id',
+                'group_relation.created_at',
+                'group_relation.group_id',
+                'user.username',
+                'user.avatar',
+                'user.sign',
+                'user.email',
+                'user.user_id'
+            ]);
+    }
 }

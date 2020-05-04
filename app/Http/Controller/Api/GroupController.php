@@ -68,6 +68,27 @@ class GroupController
     }
 
     /**
+     * 获取群成员（列表）
+     * @RequestMapping(route="getGroupRelationList",method={RequestMethod::POST})
+     * @Middleware(AuthMiddleware::class)
+     * @Validate(validator="GroupValidator",fields={"id"})
+     * @Validate(validator="SearchValidator",fields={"page","limit"})
+     */
+    public function getGroupRelationList(Request $request)
+    {
+        try {
+            $groupId = $request->parsedBody('id');
+            $condition = $request->parsedBody('condition') ?? [];
+            $page = $request->parsedBody('page');
+            $limit = $request->parsedBody('limit');
+            $result = $this->groupLogic->getGroupRelationListById(intval($groupId), $page, $limit, $condition);
+            return apiSuccess($result);
+        } catch (\Throwable $throwable) {
+            return apiError($throwable->getCode(), $throwable->getMessage());
+        }
+    }
+
+    /**
      * 获取自己所在的群
      * @RequestMapping(route="getSelfGroupRelation",method={RequestMethod::POST})
      * @Middleware(AuthMiddleware::class)
