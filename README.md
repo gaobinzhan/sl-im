@@ -13,6 +13,8 @@
  
 [sl-im](https://im.gaobinzhan.com) 是基于 [Swoft](https://www.swoft.org) 微服务协程框架和 [Layim](https://www.layui.com/layim/) 网页聊天系统 所开发出来的聊天室。
 
+当前分支为2.x开发版本，如需部署，请下载[releases](https://github.com/gaobinzhan/sl-im/releases)
+
 ## 体验地址
 
 [sl-im](https://im.gaobinzhan.com) https://im.gaobinzhan.com
