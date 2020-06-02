@@ -107,7 +107,7 @@ function wsReceive(event) {
 }
 
 function clearMessageListTimer(result) {
-  let message_id = result.data.message_id ? 'result.data.message_id' : '';
+  let message_id = result.data.message_id ? result.data.message_id : '';
   if (message_id === '') return false;
   clearInterval(messageList[message_id].timer);
   delete messageList[message_id];
